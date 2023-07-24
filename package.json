@@ -1,0 +1,36 @@
+{
+  "name": "vite-template-solid",
+  "version": "0.0.0",
+  "description": "",
+  "scripts": {
+    "start": "vite",
+    "dev": "vite",
+    "build": "vite build",
+    "serve": "vite preview"
+  },
+  "license": "MIT",
+  "dependencies": {
+    "@solid-primitives/resize-observer": "^2.0.18",
+    "@solidjs/meta": "^0.28.5",
+    "@solidjs/router": "^0.8.2",
+    "lightweight-charts": "^4.0.1",
+    "solid-js": "^1.7.8"
+  },
+  "devDependencies": {
+    "@iconify-json/tabler": "^1.1.84",
+    "@tailwindcss/container-queries": "^0.1.1",
+    "@trivago/prettier-plugin-sort-imports": "^4.2.0",
+    "autoprefixer": "^10.4.14",
+    "postcss": "^8.4.27",
+    "prettier": "^2.8.8",
+    "prettier-plugin-tailwindcss": "^0.4.1",
+    "solid-devtools": "^0.27.4",
+    "tailwindcss": "^3.3.3",
+    "typescript": "^5.1.6",
+    "unplugin-auto-import": "^0.16.6",
+    "unplugin-icons": "^0.16.5",
+    "vite": "^4.4.7",
+    "vite-plugin-solid": "^2.7.0",
+    "vite-plugin-solid-svg": "^0.6.4"
+  }
+}
