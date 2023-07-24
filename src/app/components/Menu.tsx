@@ -1,4 +1,4 @@
-import { Button, Input, Labeled } from '/src/components'
+import { Button, Input, Interactive, Labeled } from '/src/components'
 
 import Logo from '/src/assets/svgs/satoshi 2.svg'
 
@@ -308,18 +308,22 @@ export const Menu = (props: Props) => {
         <hr />
         <div class="space-y-6 p-2 pb-4">
           <Labeled label="Github">
-            <Button full>
+            <Interactive
+              component={'a'}
+              href="https://github.com/sholong-org"
+              full
+            >
               <span class="w-full text-left">Source Code</span>
-            </Button>
+            </Interactive>
           </Labeled>
-          <Labeled label="NOSTR" class="text-violet-400/60">
+          <Labeled label="NOSTR" color="violet">
             <Button color="violet" full>
               <span class="w-full select-all text-left">
                 pqopkdqwpdokqwdpokqwdpok
               </span>
             </Button>
           </Labeled>
-          <Labeled label="Bitcoin" class="text-orange-400/60 text-opacity-60">
+          <Labeled label="Bitcoin" color="orange">
             <Button
               color="orange"
               class="leading-tighter select-all break-all text-left text-sm"
@@ -327,7 +331,7 @@ export const Menu = (props: Props) => {
               bc1qelhk22gh3hrycyqvager5803ce2z49mh4k2zja
             </Button>
           </Labeled>
-          <Labeled label="Lightning" class="text-yellow-400/60">
+          <Labeled label="Lightning" color="yellow">
             <Button
               color="yellow"
               class="select-all break-all text-left text-sm"

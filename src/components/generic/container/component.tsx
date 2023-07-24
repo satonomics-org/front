@@ -27,11 +27,11 @@ export default (props: Props) => {
             case 'primary':
               return 'text-black'
             case 'yellow':
-              return 'text-yellow-100'
+              return 'text-yellow-100 selection:bg-yellow-800'
             case 'orange':
-              return 'text-orange-100'
+              return 'text-orange-100 selection:bg-orange-800'
             case 'violet':
-              return 'text-violet-100'
+              return 'text-violet-100 selection:bg-violet-800'
           }
         }),
 

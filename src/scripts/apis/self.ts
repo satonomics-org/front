@@ -1,7 +1,10 @@
 import { createBaseAPI } from '/src/scripts'
 
 const api = createBaseAPI({
-  baseUrl: 'http://localhost:3333',
+  baseUrl:
+    location.protocol === 'https:'
+      ? 'https://sholong.shuttleapp.rs'
+      : 'http://localhost:8000',
 })
 
 const convertRecordToLineData = (record: Record<string, number>) =>
