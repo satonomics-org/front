@@ -8,3 +8,5 @@ type CreateSeries = (
   signal: AbortSignal,
   candlesticks?: CandlestickDataWithVolume[]
 ) => Promise<LightweightCharts.ISeriesApi<any>[]>
+
+type ChartResetter = (() => LightweightCharts.IChartApi | null) | null

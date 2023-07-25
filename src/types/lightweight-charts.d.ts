@@ -49,4 +49,6 @@ declare namespace LightweightCharts {
   export type AutoscaleInfoProvider =
     import('lightweight-charts').AutoscaleInfoProvider
   export type PriceScaleOptions = import('lightweight-charts').PriceScaleOptions
+  export type LogicalRangeChangeEventHandler =
+    import('lightweight-charts').LogicalRangeChangeEventHandler
 }

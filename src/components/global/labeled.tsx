@@ -4,13 +4,15 @@ import { classPropToString } from '/src/components'
 
 export interface Props extends Solid.ParentProps, BaseProps {
   label: string
+  divClass?: ClassProp
+  labelClass?: ClassProp
 }
 
 export const Labeled = (props: Props) => {
   const id = props.label
 
   return (
-    <div class="space-y-1">
+    <div class={classPropToString(['space-y-1', props.divClass])}>
       <label
         for={id}
         class={classPropToString([
@@ -37,6 +39,8 @@ export const Labeled = (props: Props) => {
           }),
 
           'ml-2 break-words font-medium uppercase',
+
+          props.labelClass,
 
           props.class,
         ])}

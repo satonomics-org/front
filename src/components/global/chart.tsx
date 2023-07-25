@@ -6,7 +6,7 @@ import { priceToUSLocale } from '/src/scripts'
 import { classPropToString } from '..'
 
 interface Props {
-  onChartCreated: (chart: LightweightCharts.IChartApi | null) => void
+  onResetChartCreated: (reset: ChartResetter) => void
   class?: ClassProp
 }
 
@@ -19,8 +19,12 @@ export const Chart = (props: Props) => {
     height: div?.clientHeight || 0,
   })
 
-  onMount(() => {
-    if (!div) return
+  const buildChart = () => {
+    if (!div) return null
+
+    try {
+      chart?.remove()
+    } catch {}
 
     const dimensions = computeChartDimensions()
 
@@ -65,22 +69,24 @@ export const Chart = (props: Props) => {
       },
     })
 
-    props.onChartCreated(chart)
+    return chart
+  }
 
-    createResizeObserver(
-      () => div as HTMLDivElement,
-      () => {
-        const chartDimensions = computeChartDimensions()
+  onMount(() => props.onResetChartCreated(buildChart))
 
-        chart?.resize(chartDimensions.width, chartDimensions.height)
-      }
-    )
-  })
+  createResizeObserver(
+    () => div as HTMLDivElement,
+    () => {
+      const chartDimensions = computeChartDimensions()
+
+      chart?.resize(chartDimensions.width, chartDimensions.height)
+    }
+  )
 
   onCleanup(() => {
     chart?.remove()
 
-    props.onChartCreated(null)
+    props.onResetChartCreated(null)
   })
 
   return (

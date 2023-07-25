@@ -15,6 +15,7 @@ export default {
         drukx: ['Druk X'],
       },
       screens: {
+        md: '740px',
         '2xl': '1600px',
       },
     },

@@ -5,34 +5,22 @@ export const createBaseAPI = (parameters: {
     timeout: number
   }
 }) => {
-  const state = {
-    timeoutQueue: [] as number[],
-  }
-
   return {
     baseUrl: parameters.baseUrl,
     fetch: async function (path: string, init?: RequestInit) {
-      while (state.timeoutQueue.length > (parameters.rate?.max || 50)) {
-        await new Promise((resolve) => setTimeout(resolve, 1000))
-      }
+      const url = `${parameters.baseUrl}${path}`
 
-      const timeoutId = setTimeout(() => {
-        const index = state.timeoutQueue.findIndex(
-          (_timeoutId) => _timeoutId === timeoutId
-        )
+      console.log(`fetch: ${url}`)
 
-        index !== -1 && state.timeoutQueue.splice(index, 1)
-      }, parameters.rate?.timeout || 30000) as unknown as number
-
-      state.timeoutQueue.push(timeoutId)
-
-      return fetch(`${parameters.baseUrl}${path}`, init)
+      return fetch(url, init)
     },
     fetchText: async function (path: string, init?: RequestInit) {
       return (await this.fetch(path, init)).text()
     },
     fetchJSON: async function <T = any>(path: string, init?: RequestInit) {
-      return (await this.fetch(path, init)).json() as Promise<T>
+      const response = await this.fetch(path, init)
+
+      return response.json() as Promise<T>
     },
   }
 }

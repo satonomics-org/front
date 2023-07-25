@@ -1,3 +1,4 @@
+import { faviconsPlugin } from '@darkobits/vite-plugin-favicons'
 import autoprefixer from 'autoprefixer'
 import tailwindcss from 'tailwindcss'
 import unpluginAutoImport from 'unplugin-auto-import/vite'
@@ -6,10 +7,16 @@ import unpluginIcons from 'unplugin-icons/vite'
 // @ts-ignore
 import { fileURLToPath } from 'url'
 import { defineConfig } from 'vite'
+import { VitePWA } from 'vite-plugin-pwa'
 import solidPlugin from 'vite-plugin-solid'
 import solidSvg from 'vite-plugin-solid-svg'
 
+import packageJSON from './package.json'
+
 // import devtools from 'solid-devtools/vite';
+
+const logoBlack = './src/assets/svgs/logo/black.svg'
+const logoWhite = './src/assets/svgs/logo/white.svg'
 
 export default defineConfig({
   plugins: [
@@ -21,6 +28,18 @@ export default defineConfig({
     solidPlugin(),
 
     solidSvg(),
+
+    VitePWA({
+      registerType: 'autoUpdate',
+      manifest: false,
+      workbox: {
+        skipWaiting: true,
+        globPatterns: ['**/*.{js,css,html,ico,png,svg,json,woff2,ttf}'],
+      },
+      devOptions: {
+        enabled: true,
+      },
+    }),
 
     unpluginAutoImport({
       imports: ['solid-js', '@solidjs/router'],
@@ -34,6 +53,35 @@ export default defineConfig({
     }),
 
     unpluginIcons({ autoInstall: true, compiler: 'solid' }),
+
+    faviconsPlugin({
+      appName: packageJSON.name[0].toUpperCase() + packageJSON.name.slice(1),
+      appDescription: packageJSON.description,
+      start_url: '',
+      theme_color: '#000000',
+      cache: true,
+      background: '#000000',
+      icons: {
+        favicons: {
+          source: logoWhite,
+          background: '#000000',
+          offset: 5,
+        },
+        android: {
+          source: logoWhite,
+          background: '#000000',
+          offset: 10,
+        },
+        appleIcon: {
+          source: logoWhite,
+          offset: 10,
+        },
+        appleStartup: {
+          source: logoWhite,
+          offset: 15,
+        },
+      },
+    }),
   ],
   server: {
     port: 3000,
