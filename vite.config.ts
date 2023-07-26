@@ -73,10 +73,12 @@ export default defineConfig({
           offset: 10,
         },
         appleIcon: {
+          background: '#000000',
           source: logoWhite,
           offset: 10,
         },
         appleStartup: {
+          background: '#000000',
           source: logoWhite,
           offset: 15,
         },

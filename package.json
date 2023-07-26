@@ -5,7 +5,7 @@
   "scripts": {
     "start": "vite",
     "dev": "vite --host",
-    "build": "vite build",
+    "build": "vite build && sed 's+media=\"(device+media=\"screen and (device+g' dist/index.html | sed 's+</head>+<meta name=\"apple-touch-fullscreen\" content=\"yes\" /></head>+g' > index.html.tmp && mv index.html.tmp dist/index.html",
     "prod": "$npm_execpath run build && vite preview --host",
     "serve": "vite preview"
   },
