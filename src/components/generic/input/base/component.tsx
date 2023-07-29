@@ -14,7 +14,7 @@ import {
 
 type Props = InputPropsWithHTMLAttributes
 
-export default (props: Props) => {
+export const Input = (props: Props) => {
   const [interactiveProps, inputProps] = splitProps(
     removeProps(props, { ...inputBooleanPropsKeysObject, onClick: true }),
     booleanPropsKeysToArray([
@@ -85,7 +85,7 @@ export default (props: Props) => {
     <div
       class={classPropToString([
         props.full && 'w-full',
-        'inline-flex flex-1 space-x-2',
+        'inline-flex flex-1 space-x-1.5',
       ])}
       ref={props.wrapperRef}
       // @ts-ignore

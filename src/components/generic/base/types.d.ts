@@ -19,7 +19,7 @@ interface BasePropsOnly {
 
   size?: SizeProp
 
-  padding?: SizeProp
+  padding?: SizeProp | boolean
 
   color?: ColorProp
 

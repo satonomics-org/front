@@ -26,6 +26,7 @@ import {
 } from './components'
 
 import {
+  Container,
   classPropToString,
   dialogBooleanPropsKeysObject,
   removeProps,
@@ -33,7 +34,7 @@ import {
 
 type Props = DialogPropsWithHTMLAttributes
 
-export default (props: Props) => {
+export const DialogCore = (props: Props) => {
   const [state, setState] = createStore({
     show: false,
     open: false,
@@ -63,9 +64,7 @@ export default (props: Props) => {
   const isAble = createMemo(() => props.moveable || props.resizable)
   const isAttached = createMemo(() => !!props.attach)
   const isMaximized = createMemo(() => props.maximized || state.maximized)
-  const isModal = createMemo(
-    () => isWindowLarge() && !(isAttached() || isAble())
-  )
+  const isModal = createMemo(() => !(isAttached() || isAble()))
   const id = createMemo(
     () =>
       `dialog-${(props.title || props.button?.text?.toString())
@@ -220,7 +219,6 @@ export default (props: Props) => {
         />
       </Show>
 
-      {/* TODO: Use `Container` component here */}
       <dialog
         {...dialogProps}
         id={id()}
@@ -234,7 +232,7 @@ export default (props: Props) => {
             dialog()?.close()
           }
         }}
-        ref={(element) => setDialog(element)}
+        ref={(element) => setDialog(element as HTMLDialogElement)}
         onMouseDown={(event) => {
           event.stopPropagation()
           moveToFront()
@@ -273,29 +271,25 @@ export default (props: Props) => {
           props.moveable && 'md:shadow-xl md:drop-shadow-lg',
 
           isAttached()
-            ? 'absolute max-h-[40vh] min-w-[12rem] space-y-1.5 rounded-xl border-2' // TODO: Check how floating-ui does max-height
+            ? 'absolute max-h-[40vh] min-w-[12rem] space-y-1.5 rounded-xl' // TODO: Check how floating-ui does max-height
             : `${
                 isMaximized()
                   ? 'h-full max-h-full'
-                  : 'bottom-0 top-auto mt-[5vh] max-h-[95vh] rounded-t-2xl border-t-2 md:mt-0 md:h-fit md:max-h-[32rem] md:max-w-2xl md:rounded-b-2xl md:border-2'
+                  : 'md: bottom-0 top-auto mt-[5vh] max-h-[95vh] rounded-t-2xl md:mt-0 md:h-fit md:max-h-[32rem] md:max-w-2xl md:rounded-b-2xl'
               } fixed w-full max-w-full space-y-3`,
-
-          run(() => {
-            switch (props.color) {
-              case 'transparent':
-                return 'bg-transparent'
-              default:
-                return `bg-white`
-            }
-          }),
 
           isMaximized() && 'top-0',
 
-          'm-0 overflow-hidden border-black/5 p-0 text-black opacity-0 transition duration-150 backdrop:bg-transparent open:flex motion-reduce:transform-none motion-reduce:transition-none',
+          'm-0 overflow-hidden border border-white bg-black p-0 text-white opacity-0 transition duration-150 backdrop:bg-transparent open:flex motion-reduce:transform-none motion-reduce:transition-none dark:border-opacity-80 dark:text-opacity-80',
         ])}
       >
         <div class="relative flex w-full">
-          <div class="flex flex-1 flex-col space-y-3">
+          <div
+            class={classPropToString([
+              props.padding !== false && 'space-y-3',
+              'flex flex-1 flex-col',
+            ])}
+          >
             <Show when={!isAttached()}>
               <DialogHeader
                 dialog={dialog()}
@@ -329,6 +323,7 @@ export default (props: Props) => {
               close={close}
               footer={props.footer}
               children={props.children}
+              padding={props.padding}
               form={props.form}
             />
 

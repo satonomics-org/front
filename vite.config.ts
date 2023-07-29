@@ -35,9 +35,27 @@ export default defineConfig({
       workbox: {
         skipWaiting: true,
         globPatterns: ['**/*.{js,css,html,ico,png,svg,json,woff2,ttf}'],
-      },
-      devOptions: {
-        enabled: true,
+        runtimeCaching: [
+          {
+            urlPattern: ({ url }) => {
+              const networkFirst =
+                url.origin === 'https://sholong.shuttleapp.rs' ||
+                url.origin === 'https://api.kraken.com'
+
+              if (networkFirst) {
+                console.log('network first', url)
+              } else {
+                console.log('not network first', url)
+              }
+
+              return networkFirst
+            },
+            handler: 'NetworkFirst',
+            options: {
+              cacheName: 'api-cache',
+            },
+          },
+        ],
       },
     }),
 

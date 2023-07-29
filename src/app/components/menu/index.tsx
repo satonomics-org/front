@@ -6,8 +6,8 @@ import { Footer } from '../footer'
 import { Header } from '../header'
 
 interface Props {
-  selectedSeries: string
-  setSelectedSeries: (id: string) => void
+  selectedPreset: string
+  setSelectedPreset: (id: string) => void
   candlesticks: CandlesticksProp
 }
 
@@ -17,12 +17,8 @@ export const Menu = (props: Props) => {
   })
 
   return (
-    <div class="hidden flex-none flex-col border-r border-white md:flex md:w-64 lg:w-80">
-      <div class="hidden md:block">
-        <Header />
-        <hr />
-      </div>
-      <div class="flex space-x-2 p-2">
+    <>
+      <div class="flex space-x-1.5 p-2">
         <Input
           onInput={(value) => setState('filter', value || '')}
           full
@@ -41,6 +37,6 @@ export const Menu = (props: Props) => {
         <hr />
         <Footer />
       </div>
-    </div>
+    </>
   )
 }

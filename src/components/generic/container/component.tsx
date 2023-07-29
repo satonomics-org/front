@@ -8,9 +8,11 @@ import {
   stylePropToCSSProperties,
 } from '/src/components'
 
-type Props = ContainerPropsWithHTMLAttributes
+interface Props extends ContainerPropsWithHTMLAttributes {
+  ref?: (ref: HTMLElement) => void
+}
 
-export default (props: Props) => {
+export const Container = (props: Props) => {
   const dynamicProps = removeProps(props, [
     baseBooleanPropsKeysObject,
     containerBooleanPropsKeysObject,
@@ -38,8 +40,10 @@ export default (props: Props) => {
         // Background color
         run(() => {
           switch (props.color) {
+            case 'red':
+              return 'bg-red-950'
             case 'primary':
-              return 'bg-white'
+              return 'bg-white dark:bg-opacity-80'
           }
         }),
 
@@ -71,7 +75,7 @@ export default (props: Props) => {
 
         // Padding
         run(() => {
-          switch (props.padding || props.size) {
+          switch (props.padding ?? props.size) {
             case 'xs':
               switch (props.orientation) {
                 case 'horizontal':

@@ -1,12 +1,12 @@
-import { seriesGroups } from '/src/scripts'
+import { presetsGroups, scrollIntoView } from '/src/scripts'
 
 import { Labeled } from '/src/components'
 
-import { Series } from '../../series'
+import { Preset } from '../../preset'
 
 interface Props {
-  selectedSeries: string
-  setSelectedSeries: (id: string) => void
+  selectedPreset: string
+  setSelectedPreset: (id: string) => void
   candlesticks: CandlesticksProp
   filter: string
 }
@@ -14,23 +14,20 @@ interface Props {
 export const List = (props: Props) => {
   return (
     <div class="flex flex-1 flex-col space-y-6 p-2 pb-4">
-      <For each={seriesGroups}>
-        {({ name, list }) => (
-          <Labeled label={name}>
+      <For each={presetsGroups}>
+        {({ name: group, list }) => (
+          <Labeled label={group}>
             <div class="flex flex-col space-y-2">
               <For each={list}>
-                {({ id, text }) => {
+                {({ id, title }) => {
                   let ref: HTMLElement | undefined
 
                   createEffect(
                     on(
                       () => !!props.candlesticks.last,
                       (fetched) => {
-                        if (fetched && props.selectedSeries === id) {
-                          ref?.scrollIntoView({
-                            block: 'nearest',
-                            behavior: 'instant',
-                          })
+                        if (fetched && props.selectedPreset === id) {
+                          scrollIntoView(ref)
                         }
                       }
                     )
@@ -40,18 +37,17 @@ export const List = (props: Props) => {
                     <Show
                       when={
                         props.filter
-                          ? (name + text)
+                          ? (group + title)
                               .toLowerCase()
                               .includes(props.filter.toLowerCase())
                           : true
                       }
                     >
-                      <Series
+                      <Preset
                         id={id}
-                        selectedSeries={props.selectedSeries}
+                        selectedPreset={props.selectedPreset}
                         ref={(_ref) => (ref = _ref)}
-                        onClick={() => props.setSelectedSeries(id)}
-                        text={text}
+                        onClick={() => props.setSelectedPreset(id)}
                       />
                     </Show>
                   )

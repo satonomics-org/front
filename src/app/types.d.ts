@@ -3,10 +3,11 @@ type CandlesticksProp = {
   last: CandlestickDataWithVolume | null
 }
 
-type CreateSeries = (
-  chart: LightweightCharts.IChartApi,
-  signal: AbortSignal,
+type ApplyPreset = (params: {
+  chart: LightweightCharts.IChartApi
+  datasets: DatasetsResources
+  signal?: AbortSignal
   candlesticks?: CandlestickDataWithVolume[]
-) => Promise<LightweightCharts.ISeriesApi<any>[]>
+}) => LightweightCharts.ISeriesApi<any>[]
 
 type ChartResetter = (() => LightweightCharts.IChartApi | null) | null

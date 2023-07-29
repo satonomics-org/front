@@ -6,7 +6,7 @@ interface Props {
   zIndex: number
 }
 
-export default (props: Props) => {
+export const DialogBackdrop = (props: Props) => {
   const [state, setState] = createStore({
     zIndex: 0,
   })
@@ -28,7 +28,7 @@ export default (props: Props) => {
         }}
         class={classPropToString([
           props.open ? 'opacity-100' : 'opacity-0',
-          'fixed inset-0 bg-black/25 blur-sm transition-opacity',
+          'fixed inset-0 bg-black/25 backdrop-blur-[2px] transition-opacity',
         ])}
         style={{
           'z-index': state.zIndex,

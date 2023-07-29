@@ -15,44 +15,49 @@ const convertRecordToLineData = (record: Record<string, number>) =>
     })
   )
 
-const fetchSimpleData = async (path: string, signal: AbortSignal) =>
+const fetchSimpleData = async (path: string, signal?: AbortSignal) =>
   convertRecordToLineData(
     (await api.fetchJSON(path, {
       signal,
-      headers: {
-        // 'Cache-Control': 'public, max-age=600',
-      },
     })) as Record<string, number>
   )
 
 export const selfAPI = {
-  fetchTransactedVolume: (signal: AbortSignal) =>
+  fetchTransactedVolume: (signal?: AbortSignal) =>
     fetchSimpleData(`/transacted-volume`, signal),
-  fetchSTHRealizedPrice: (signal: AbortSignal) =>
+  fetchSTHRealizedPrice: (signal?: AbortSignal) =>
     fetchSimpleData(`/sth-realized-price`, signal),
-  fetchLTHRealizedPrice: (signal: AbortSignal) =>
+  fetchLTHRealizedPrice: (signal?: AbortSignal) =>
     fetchSimpleData(`/lth-realized-price`, signal),
-  fetch2YRealizedPrice: (signal: AbortSignal) =>
+  fetch2YRealizedPrice: (signal?: AbortSignal) =>
     fetchSimpleData(`/2y-realized-price`, signal),
-  fetchNetRealizedProfitAndLoss: (signal: AbortSignal) =>
+  fetchNetRealizedProfitAndLoss: (signal?: AbortSignal) =>
     fetchSimpleData(`/net-realized-pnl`, signal),
-  fetchSOPR: (signal: AbortSignal) => fetchSimpleData(`/sopr`, signal),
-  fetchSharksRealizedPrice: (signal: AbortSignal) =>
+  fetchSOPR: (signal?: AbortSignal) => fetchSimpleData(`/sopr`, signal),
+  fetchPlanktonRealizedPrice: (signal?: AbortSignal) =>
+    fetchSimpleData(`/plankton-realized-price`, signal),
+  fetchShrimpsRealizedPrice: (signal?: AbortSignal) =>
+    fetchSimpleData(`/shrimps-realized-price`, signal),
+  fetchCrabsRealizedPrice: (signal?: AbortSignal) =>
+    fetchSimpleData(`/crabs-realized-price`, signal),
+  fetchFishRealizedPrice: (signal?: AbortSignal) =>
+    fetchSimpleData(`/fish-realized-price`, signal),
+  fetchSharksRealizedPrice: (signal?: AbortSignal) =>
     fetchSimpleData(`/sharks-realized-price`, signal),
-  fetchWhalesRealizedPrice: (signal: AbortSignal) =>
+  fetchWhalesRealizedPrice: (signal?: AbortSignal) =>
     fetchSimpleData(`/whales-realized-price`, signal),
-  fetchHumpbacksRealizedPrice: (signal: AbortSignal) =>
+  fetchHumpbacksRealizedPrice: (signal?: AbortSignal) =>
     fetchSimpleData(`/humpbacks-realized-price`, signal),
 
-  fetchTerminalPrice: (signal: AbortSignal) =>
+  fetchTerminalPrice: (signal?: AbortSignal) =>
     fetchSimpleData(`/terminal-price`, signal),
-  fetchRealizedPrice: (signal: AbortSignal) =>
+  fetchRealizedPrice: (signal?: AbortSignal) =>
     fetchSimpleData(`/realized-price`, signal),
-  fetchBalancedPrice: (signal: AbortSignal) =>
+  fetchBalancedPrice: (signal?: AbortSignal) =>
     fetchSimpleData(`/balanced-price`, signal),
-  fetchCVDD: (signal: AbortSignal) => fetchSimpleData(`/cvdd`, signal),
-  fetchFundingRates: (signal: AbortSignal) =>
+  fetchCVDD: (signal?: AbortSignal) => fetchSimpleData(`/cvdd`, signal),
+  fetchFundingRates: (signal?: AbortSignal) =>
     fetchSimpleData(`/funding-rates`, signal),
-  fetchVDDMultiple: (signal: AbortSignal) =>
+  fetchVDDMultiple: (signal?: AbortSignal) =>
     fetchSimpleData(`/vdd-multiple`, signal),
 }

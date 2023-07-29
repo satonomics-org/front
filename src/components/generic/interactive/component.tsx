@@ -10,7 +10,7 @@ import {
 
 interface Props extends MergePropsWithHTMLProps<InteractiveProps> {}
 
-export default (props: Props) => {
+export const Interactive = (props: Props) => {
   const containerProps = removeProps(props, interactiveBooleanPropsKeysObject)
 
   // TODO: Instead of removing tell what we wanna keep
@@ -44,7 +44,7 @@ export default (props: Props) => {
               default:
                 return [
                   props.color === 'transparent' && 'hover:bg-black/5',
-                  'hover:border-white',
+                  'hover:border-white hover:dark:border-opacity-80',
                   'hover:brightness-[0.95] active:brightness-90',
                 ]
             }

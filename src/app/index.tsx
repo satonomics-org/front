@@ -1,21 +1,31 @@
 import { Meta, Title } from '@solidjs/meta'
 
-import { krakenAPI, priceToUSLocale, run, seriesGroups } from '/src/scripts'
+import {
+  cleanChart,
+  krakenAPI,
+  presetsGroups,
+  priceToUSLocale,
+  run,
+  scrollIntoView,
+  selectPreset,
+  updatePriceLine,
+} from '/src/scripts'
 
-import { cleanChart, selectSeries, updatePriceLine } from './scripts'
+import { createDarkModeTimer, createDatasetsResources } from './scripts'
 
-import { Chart, Labeled, classPropToString } from '/src/components'
+import { Chart, DialogCore, Labeled, classPropToString } from '/src/components'
 
 import { Header } from './components/header'
+import { Live } from './components/live'
 import { Menu } from './components/menu'
-import { Series } from './components/series'
+import { Preset } from './components/preset'
 
 import { env } from '../env'
 import packageJSONRaw from '/src/../package.json?raw'
 
 const packageJSON = JSON.parse(packageJSONRaw)
 
-const LOCAL_STORAGE_KEY = 'series'
+const LOCAL_STORAGE_KEY = 'preset'
 
 export const App = () => {
   const [state, setState] = createStore({
@@ -25,13 +35,20 @@ export const App = () => {
       last: null,
     } as CandlesticksProp,
     indicators: {},
-    selectedSeries: localStorage.getItem(LOCAL_STORAGE_KEY) || 'minimal',
+    selectedPreset: localStorage.getItem(LOCAL_STORAGE_KEY) || 'minimal',
+    live: false,
+    datasets: createDatasetsResources(),
   })
 
+  createDarkModeTimer()
+
   let cleanWebSocket: (() => void) | undefined
+  let scrollablePresets: HTMLDivElement | undefined
+  let openDialog: DialogOpenFunction | undefined
+  let closeDialog: DialogCloseFunction | undefined
 
   createEffect(() =>
-    localStorage.setItem(LOCAL_STORAGE_KEY, state.selectedSeries)
+    localStorage.setItem(LOCAL_STORAGE_KEY, state.selectedPreset)
   )
 
   createEffect(
@@ -52,7 +69,7 @@ export const App = () => {
     let ws: WebSocket | null = null
 
     const initWebSocket = () => {
-      const ws = krakenAPI.createLiveCandleWebsocket((candle) => {
+      ws = krakenAPI.createLiveCandleWebsocket((candle) => {
         console.log(`new: ${candle.close}`)
 
         if (!state.candlesticks.last) return
@@ -64,8 +81,14 @@ export const App = () => {
         }
       })
 
-      ws.addEventListener('open', () => console.log('ws: open'))
-      ws.addEventListener('close', () => console.log('ws: close'))
+      ws.addEventListener('open', () => {
+        console.log('ws: open')
+        setState('live', true)
+      })
+      ws.addEventListener('close', () => {
+        console.log('ws: close')
+        setState('live', false)
+      })
     }
 
     initWebSocket()
@@ -85,9 +108,20 @@ export const App = () => {
     }
   })
 
-  createEffect(() =>
-    selectSeries(state.candlesticks, state.resetChart, state.selectedSeries)
-  )
+  createEffect(() => {
+    const {
+      resetChart,
+      selectedPreset,
+      datasets,
+      candlesticks: { last },
+    } = state
+
+    if (last) {
+      untrack(() => {
+        selectPreset(state.candlesticks, resetChart, selectedPreset, datasets)
+      })
+    }
+  })
 
   onCleanup(() => {
     cleanChart()
@@ -96,8 +130,8 @@ export const App = () => {
 
   createEffect(() =>
     setGroupName(
-      seriesGroups.find((group) =>
-        group.list.map((series) => series.id).includes(state.selectedSeries)
+      presetsGroups.find((group) =>
+        group.list.map((series) => series.id).includes(state.selectedPreset)
       )?.name || ''
     )
   )
@@ -116,45 +150,49 @@ export const App = () => {
 
       <div
         class={classPropToString([
-          '!h-[100dvh] h-screen overflow-hidden  border border-white md:mr-[1px]',
+          // state.dark && 'dark',
+          '!h-[100dvh] h-screen overflow-hidden  border border-white  dark:border-opacity-80 dark:text-white/80 md:mr-[1px]',
           env.standalone && 'rounded-b-[3.25rem] md:rounded-none',
         ])}
       >
-        <div class="flex h-full w-full flex-col md:flex-row">
-          <Menu
-            selectedSeries={state.selectedSeries}
-            setSelectedSeries={(id: string) => setState('selectedSeries', id)}
-            candlesticks={state.candlesticks}
-          />
+        <div class="flex h-full w-full flex-col dark:text-opacity-80 md:flex-row">
+          <div class="hidden flex-none flex-col border-r border-white dark:border-opacity-80 md:flex md:w-64 lg:w-80">
+            <Header />
+            <hr />
+            <Menu
+              selectedPreset={state.selectedPreset}
+              setSelectedPreset={(id: string) => setState('selectedPreset', id)}
+              candlesticks={state.candlesticks}
+            />
+          </div>
 
           <div class="md:hidden">
             <Header />
             <hr />
           </div>
-          <div class="h-full w-full flex-1 overflow-x-hidden">
+          <div class="relative h-full w-full flex-1 overflow-x-hidden">
             <Chart
-              onResetChartCreated={(reset) => setState({ resetChart: reset })}
+              onResetChartCreated={(resetChart) => setState({ resetChart })}
               class={[state.candlesticks.last ? 'opacity-100' : 'opacity-0']}
             />
+            <Live live={state.live} />
           </div>
           <div class="md:hidden">
             <hr />
             <Labeled label={groupName()} class="inline-block pl-14 pt-3">
               <div
+                ref={scrollablePresets}
                 class={classPropToString([
-                  'flex snap-x snap-mandatory space-x-6 overflow-x-auto px-12',
+                  'flex snap-x snap-mandatory space-x-4 overflow-x-auto px-12',
                   env.standalone ? 'pb-8' : 'pb-4',
                 ])}
                 onScroll={(event) => {
-                  console.log('event', event)
-
                   Array.from(event.target.children).find((div) => {
                     const observer = new IntersectionObserver(
                       (entries) => {
                         if (entries[0].isIntersecting) {
-                          setState('selectedSeries', div.id)
+                          setState('selectedPreset', div.id)
                         }
-
                         observer.disconnect()
                       },
                       {
@@ -166,34 +204,30 @@ export const App = () => {
                   })
                 }}
               >
-                <For each={seriesGroups}>
-                  {({ name, list }) => (
+                <For each={presetsGroups}>
+                  {({ list }) => (
                     <For each={list}>
-                      {({ id, text }) => {
+                      {({ id }) => {
                         let ref: HTMLElement | undefined
 
                         createEffect(
                           on(
                             () => !!state.candlesticks.last,
                             (fetched) => {
-                              if (fetched && state.selectedSeries === id) {
-                                ref?.scrollIntoView({
-                                  block: 'nearest',
-                                  behavior: 'instant',
-                                })
+                              if (fetched && state.selectedPreset === id) {
+                                scrollIntoView(ref)
                               }
                             }
                           )
                         )
 
                         return (
-                          <Series
+                          <Preset
                             id={id}
-                            selectedSeries={state.selectedSeries}
+                            selectedPreset={state.selectedPreset}
                             leftIcon={IconTablerList}
                             ref={(_ref) => (ref = _ref)}
-                            onClick={() => {}}
-                            text={text}
+                            onClick={() => openDialog?.(true)}
                             class="w-full flex-shrink-0 snap-center"
                           />
                         )
@@ -203,6 +237,30 @@ export const App = () => {
                 </For>
               </div>
             </Labeled>
+            <DialogCore
+              title="Select Preset"
+              onOpenCreated={(_openDialog) => (openDialog = _openDialog)}
+              onCloseCreated={(_closeDialog) => (closeDialog = _closeDialog)}
+              closeable
+              padding={false}
+              full
+            >
+              <Menu
+                candlesticks={state.candlesticks}
+                selectedPreset={state.selectedPreset}
+                setSelectedPreset={(id) => {
+                  setState('selectedPreset', id)
+
+                  closeDialog?.()
+
+                  scrollIntoView(
+                    Array.from(scrollablePresets?.children || []).find(
+                      (element) => element.id === id
+                    )
+                  )
+                }}
+              />
+            </DialogCore>
           </div>
         </div>
       </div>

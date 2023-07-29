@@ -5,7 +5,7 @@ import { classPropToString } from '/src/components'
 import { DialogForm } from '.'
 import { HIDDEN_CLOSE_BUTTON_CLASS } from '../scripts'
 
-interface Props extends Solid.ParentProps {
+interface Props extends Solid.ParentProps, BaseProps {
   isAttached: boolean
   close: (element?: HTMLElement) => void
   color?: ColorProp
@@ -13,12 +13,13 @@ interface Props extends Solid.ParentProps {
   form?: Solid.JSX.Element
 }
 
-export default (props: Props) => {
+export const DialogBody = (props: Props) => {
   return (
     <div
       class={classPropToString([
         run(() => {
-          if (props.color === 'transparent') return ''
+          if (props.color === 'transparent' || props.padding === false)
+            return ''
 
           let classes = '!mt-0 '
 
