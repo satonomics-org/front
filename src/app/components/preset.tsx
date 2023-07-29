@@ -1,6 +1,6 @@
 import { marked } from 'marked'
 
-import { presetsGroups } from '/src/scripts'
+import { presetsGroups, scrollIntoView } from '/src/scripts'
 
 import { Button, Dialog, classPropToString } from '/src/components'
 
@@ -14,6 +14,8 @@ interface Props {
 }
 
 export const Preset = (props: Props) => {
+  let ref: HTMLDivElement | undefined
+
   const color = createMemo(() =>
     props.selectedPreset === props.id ? 'primary' : undefined
   )
@@ -34,17 +36,25 @@ export const Preset = (props: Props) => {
     })
   )
 
+  const _scrollIntoView = () => scrollIntoView(ref, 'smooth')
+
   return (
     <div
       id={props.id}
-      ref={props.ref}
+      ref={(_ref) => {
+        ref = _ref
+        props.ref(_ref)
+      }}
       class={classPropToString(['flex space-x-1.5', props.class])}
     >
       <Button
         full
         color={color()}
         leftIcon={props.leftIcon}
-        onClick={props.onClick}
+        onClick={() => {
+          props.onClick()
+          _scrollIntoView()
+        }}
       >
         <span class="truncate">{title()}</span>
       </Button>
@@ -55,6 +65,7 @@ export const Preset = (props: Props) => {
         button={{
           color: color(),
           icon: IconTablerInfoCircleFilled,
+          onClick: () => _scrollIntoView(),
         }}
       >
         <div innerHTML={description()} />

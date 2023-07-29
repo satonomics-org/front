@@ -1,5 +1,6 @@
 import { createLineSeries, resetLeftPriceScale } from '/src/scripts'
 
+import { realizedPriceColor } from '../../realized/price'
 import { balancedPriceColor } from '../balanced'
 import { cvddColor } from '../cvdd'
 import { terminalPriceColor } from '../terminal'
@@ -8,6 +9,12 @@ export const applyPreset: ApplyPreset = ({ chart, datasets }) => {
   resetLeftPriceScale(chart)
 
   return [
+    {
+      dataset: datasets.terminalPrice,
+      color: terminalPriceColor,
+      title: 'Terminal',
+      autoscale: false,
+    },
     {
       dataset: datasets.cvdd,
       color: cvddColor,
@@ -21,9 +28,9 @@ export const applyPreset: ApplyPreset = ({ chart, datasets }) => {
       autoscale: false,
     },
     {
-      dataset: datasets.terminalPrice,
-      color: terminalPriceColor,
-      title: 'Terminal',
+      dataset: datasets.realizedPrice,
+      color: realizedPriceColor,
+      title: 'Realized',
       autoscale: false,
     },
   ].map(({ dataset, color, autoscale, title }) => {

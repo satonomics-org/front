@@ -1,23 +1,29 @@
 import { LineStyle } from 'lightweight-charts'
 
-import { colors, getCandleToColor, presetsGroups } from '/src/scripts'
+import {
+  createCandlesticksSeries,
+  getCandleToColor,
+  presetsGroups,
+  setMinMaxMarkers,
+} from '/src/scripts'
 
-import { createAutoscaleInfoProvider } from './autoScale'
-import { setMinMaxMarkers } from './markers'
-
-let abortController: AbortController | undefined
-let candlestickSeries: LightweightCharts.ISeriesApi<'Candlestick'> | undefined
-let priceLine: LightweightCharts.IPriceLine | undefined
-let chart: LightweightCharts.IChartApi | null = null
-let range: LightweightCharts.LogicalRange | null = null
+const state = {
+  abortController: undefined as AbortController | undefined,
+  candlestickSeries: undefined as
+    | LightweightCharts.ISeriesApi<'Candlestick'>
+    | undefined,
+  chart: null as LightweightCharts.IChartApi | null,
+  priceLine: undefined as LightweightCharts.IPriceLine | undefined,
+  range: null as LightweightCharts.LogicalRange | null,
+}
 
 export const updatePriceLine = (last: CandlestickDataWithVolume | null) => {
-  if (!last || !chart) return
+  if (!last || !state.chart) return
 
   try {
-    candlestickSeries?.update({ ...last })
+    state.candlestickSeries?.update({ ...last })
 
-    priceLine?.applyOptions({
+    state.priceLine?.applyOptions({
       price: last.close,
       color: getCandleToColor(last),
     })
@@ -39,65 +45,57 @@ export const selectPreset = async (
 
   const { list: candlesticksList } = candlesticks
 
-  chart = resetChart?.() || null
+  state.chart = resetChart?.() || null
 
-  if (!chart || !candlesticksList.length) return
+  if (!state.chart || !candlesticksList.length) return
 
-  abortController = new AbortController()
+  state.abortController = new AbortController()
 
   try {
     applyPreset?.({
-      chart,
-      signal: abortController.signal,
+      chart: state.chart,
+      signal: state.abortController.signal,
       candlesticks: candlesticksList,
       datasets,
     })
 
-    createCandlesticksSeries(chart, candlesticks)
+    applyPriceCandlesticksSeries(state.chart, candlesticks)
 
-    if (range) {
-      chart.timeScale().setVisibleLogicalRange(range)
+    if (state.range) {
+      state.chart.timeScale().setVisibleLogicalRange(state.range)
     }
 
-    chart
+    state.chart
       .timeScale()
-      .subscribeVisibleLogicalRangeChange((_range) => (range = _range))
+      .subscribeVisibleLogicalRangeChange((_range) => (state.range = _range))
   } catch {}
 }
 
 export const cleanChart = () => {
-  abortController?.abort()
+  state.abortController?.abort()
 
-  priceLine = undefined
-  candlestickSeries = undefined
+  state.priceLine = undefined
+  state.candlestickSeries = undefined
 
   try {
-    chart?.remove()
+    state.chart?.remove()
   } catch {}
 
-  chart = null
+  state.chart = null
 }
 
-const createCandlesticksSeries = (
+const applyPriceCandlesticksSeries = (
   chart: LightweightCharts.IChartApi,
-  candlesticks: CandlesticksProp
+  candlesticks: CandlesticksProp,
+  inverseColors?: boolean
 ) => {
   const { last, list } = candlesticks
 
-  if (!chart || !list.length) return
+  if (!list.length) return
 
-  candlestickSeries = chart.addCandlestickSeries({
-    upColor: colors.green,
-    downColor: colors.red,
-    wickUpColor: colors.green,
-    wickDownColor: colors.red,
-    borderVisible: false,
-    priceLineVisible: false,
-    lastValueVisible: false,
-    autoscaleInfoProvider: createAutoscaleInfoProvider(true),
-  })
+  state.candlestickSeries = createCandlesticksSeries(chart, inverseColors)
 
-  candlestickSeries.setData(
+  state.candlestickSeries.setData(
     list.map((data) => ({
       ...data,
     }))
@@ -115,9 +113,9 @@ const createCandlesticksSeries = (
     axisLabelTextColor: '',
   }
 
-  priceLine = candlestickSeries.createPriceLine(priceLineOptions)
+  state.priceLine = state.candlestickSeries.createPriceLine(priceLineOptions)
 
-  setMinMaxMarkers(chart, candlestickSeries, list)
+  setMinMaxMarkers(chart, state.candlestickSeries, list)
 
   last && updatePriceLine(last)
 }

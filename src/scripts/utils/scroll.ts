@@ -1,5 +1,8 @@
-export const scrollIntoView = (element?: Element) =>
+export const scrollIntoView = (
+  element?: Element,
+  behavior: ScrollBehavior = 'instant'
+) =>
   element?.scrollIntoView({
     block: 'nearest',
-    behavior: 'instant',
+    behavior,
   })

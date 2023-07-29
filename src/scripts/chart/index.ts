@@ -1,6 +1,7 @@
 export * from './area'
 export * from './autoScale'
 export * from './baseLine'
+export * from './candlesticks'
 export * from './defaults'
 export * from './histogram'
 export * from './line'
