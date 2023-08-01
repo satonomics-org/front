@@ -2,6 +2,7 @@ import {
   colors,
   createHistogramSeries,
   createLineSeries,
+  monthlyMovingAverage,
   movingAverage,
   resetLeftPriceScale,
 } from '/src/scripts'
@@ -43,7 +44,7 @@ export const applyPreset: ApplyPreset = ({ chart, candlesticks }) => {
     volume.setData(dataset)
 
     ma.setData(
-      movingAverage(dataset, 30).map((data) => ({
+      monthlyMovingAverage(dataset).map((data) => ({
         time: data.time,
         value: data.value,
       }))

@@ -1,9 +1,8 @@
-import { createLineSeries, resetLeftPriceScale } from '/src/scripts'
-
-import { realizedPriceColor } from '../../realized/price'
-import { balancedPriceColor } from '../balanced'
-import { cvddColor } from '../cvdd'
-import { terminalPriceColor } from '../terminal'
+import {
+  assignedColors,
+  createLineSeries,
+  resetLeftPriceScale,
+} from '/src/scripts'
 
 export const applyPreset: ApplyPreset = ({ chart, datasets }) => {
   resetLeftPriceScale(chart)
@@ -11,25 +10,25 @@ export const applyPreset: ApplyPreset = ({ chart, datasets }) => {
   return [
     {
       dataset: datasets.terminalPrice,
-      color: terminalPriceColor,
+      color: assignedColors.terminal,
       title: 'Terminal',
       autoscale: false,
     },
     {
       dataset: datasets.cvdd,
-      color: cvddColor,
+      color: assignedColors.cvdd,
       title: 'CVDD',
       autoscale: false,
     },
     {
       dataset: datasets.balancedPrice,
-      color: balancedPriceColor,
+      color: assignedColors.balanced,
       title: 'Balanced',
       autoscale: false,
     },
     {
       dataset: datasets.realizedPrice,
-      color: realizedPriceColor,
+      color: assignedColors.realized,
       title: 'Realized',
       autoscale: false,
     },

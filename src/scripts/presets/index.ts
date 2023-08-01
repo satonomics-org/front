@@ -4,22 +4,25 @@ import { derivativesPresetsGroup } from './derivatives'
 import { entitiesPresetsGroup } from './entities'
 import { holdersPresetsGroup } from './holders'
 import { marketPresetsGroup } from './market'
+import { minersPresetsGroup } from './miners'
 import { realizedPresetsGroup } from './realized'
-import { unrealizedPresetsGroup } from './unrealized'
+import { supplyPresetsGroup } from './supply'
 
 // Add:
 // - Sats per dollar
-//  - Priced in ounces of gold
+//  - Priced in ounces of gold (https://data.nasdaq.com/data/LBMA/GOLD-gold-price-london-fixing)
+// https://www.longtermtrends.net/
 // Miners
 // - Dollars per hash
 
 export const presetsGroups = [
   basicPresetsGroup,
   marketPresetsGroup,
+  realizedPresetsGroup,
   holdersPresetsGroup,
   entitiesPresetsGroup,
   daysDestroyedPresetsGroup,
-  realizedPresetsGroup,
-  unrealizedPresetsGroup,
+  minersPresetsGroup,
+  supplyPresetsGroup,
   derivativesPresetsGroup,
 ]

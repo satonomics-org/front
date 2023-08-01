@@ -6,22 +6,23 @@ type AreaOptions = LightweightCharts.DeepPartial<
 
 export const createAreaSeries = (params: {
   chart: LightweightCharts.IChartApi
-  dataset: LightweightCharts.LineData[]
   color?: string
   options?: AreaOptions
+  title?: string
 }) => {
-  const { chart, dataset, options } = params
+  const { chart, options, title, color } = params
 
   const seriesOptions: AreaOptions = {
     priceScaleId: 'left',
     ...defaultSeriesOptions,
+    lineColor: color,
+    topColor: color,
+    bottomColor: color,
     ...options,
-    // color,
+    title,
   }
 
   const series = chart.addAreaSeries(seriesOptions)
-
-  series.setData(dataset)
 
   return series
 }

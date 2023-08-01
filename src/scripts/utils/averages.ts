@@ -2,10 +2,9 @@ export const average = (values: number[]) =>
   values.reduce((total, currentValue) => total + currentValue, 0) /
   values.length
 
-export const movingAverage = (
-  dataset: LightweightCharts.SingleValueData[],
-  interval: number
-) =>
+type Dataset = LightweightCharts.SingleValueData[]
+
+export const movingAverage = (dataset: Dataset, interval: number) =>
   dataset.map((data, index) => ({
     ...data,
     value:
@@ -17,3 +16,12 @@ export const movingAverage = (
               .map((data) => data.value)
           ),
   }))
+
+export const weeklyMovingAverage = (dataset: Dataset) =>
+  movingAverage(dataset, 7)
+
+export const monthlyMovingAverage = (dataset: Dataset) =>
+  movingAverage(dataset, 30)
+
+export const yearlyMovingAverage = (dataset: Dataset) =>
+  movingAverage(dataset, 365)

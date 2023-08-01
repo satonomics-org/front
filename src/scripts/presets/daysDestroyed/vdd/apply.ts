@@ -30,7 +30,7 @@ export const applyPreset: ApplyPreset = ({ chart, datasets }) => {
             : data.value >= 1
             ? colors.orange
             : colors.green
-        }66`
+        }88`
 
         return {
           ...data,

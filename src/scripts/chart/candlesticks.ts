@@ -4,8 +4,13 @@ export const createCandlesticksSeries = (
   chart: LightweightCharts.IChartApi,
   inverseColors: boolean = false
 ) => {
-  const upColor = inverseColors ? colors.red : colors.green
-  const downColor = inverseColors ? colors.green : colors.red
+  const leftPriceScaleVisible = chart.priceScale('left').options().visible
+
+  const setOpacity = (color: string) =>
+    leftPriceScaleVisible ? `${color}88` : color
+
+  const upColor = setOpacity(inverseColors ? colors.red : colors.green)
+  const downColor = setOpacity(inverseColors ? colors.green : colors.red)
 
   const candlestickSeries = chart.addCandlestickSeries({
     upColor,

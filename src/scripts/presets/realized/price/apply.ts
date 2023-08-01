@@ -1,13 +1,15 @@
-import { createLineSeries, resetLeftPriceScale } from '/src/scripts'
-
-import { realizedPriceColor } from '.'
+import {
+  assignedColors,
+  createLineSeries,
+  resetLeftPriceScale,
+} from '/src/scripts'
 
 export const applyPreset: ApplyPreset = ({ chart, datasets }) => {
   resetLeftPriceScale(chart)
 
   const series = createLineSeries({
     chart,
-    color: realizedPriceColor,
+    color: assignedColors.realized,
     autoscale: false,
   })
 

@@ -1,9 +1,8 @@
-import { createLineSeries, resetLeftPriceScale } from '/src/scripts'
-
-import { twoYearRealizedPriceColor } from '../2y'
-import { realizedPriceColor } from '../../realized/price'
-import { lthRealizedPriceColor } from '../lth'
-import { sthRealizedPriceColor } from '../sth'
+import {
+  assignedColors,
+  createLineSeries,
+  resetLeftPriceScale,
+} from '/src/scripts'
 
 export const applyPreset: ApplyPreset = ({ chart, datasets }) => {
   resetLeftPriceScale(chart)
@@ -11,22 +10,22 @@ export const applyPreset: ApplyPreset = ({ chart, datasets }) => {
   return [
     {
       dataset: datasets.realizedPrice,
-      color: realizedPriceColor,
+      color: assignedColors.realized,
       title: 'All',
     },
     {
       dataset: datasets.lthRealizedPrice,
-      color: lthRealizedPriceColor,
+      color: assignedColors.lth,
       title: 'LTH',
     },
     {
       dataset: datasets.twoYearRealizedPrice,
-      color: twoYearRealizedPriceColor,
+      color: assignedColors.twoYear,
       title: '<2y',
     },
     {
       dataset: datasets.sthRealizedPrice,
-      color: sthRealizedPriceColor,
+      color: assignedColors.sth,
       autoscale: false,
       title: 'STH',
     },

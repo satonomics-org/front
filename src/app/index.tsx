@@ -1,6 +1,7 @@
 import { Meta, Title } from '@solidjs/meta'
 
 import {
+  backEndAPI,
   cleanChart,
   krakenAPI,
   presetsGroups,
@@ -59,7 +60,7 @@ export const App = () => {
   )
 
   createEffect(async () => {
-    const candlesticks = await krakenAPI.fetchCandlesticks()
+    const candlesticks = await backEndAPI.fetchCandlesticks()
 
     setState('candlesticks', {
       list: candlesticks,

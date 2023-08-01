@@ -1,5 +1,6 @@
 import {
   colors,
+  createBaseLineSeries,
   createHistogramSeries,
   resetLeftPriceScale,
 } from '/src/scripts'
@@ -7,9 +8,11 @@ import {
 export const applyPreset: ApplyPreset = ({ chart, datasets }) => {
   resetLeftPriceScale(chart, { visible: true })
 
-  const series = createHistogramSeries({
+  const series = createBaseLineSeries({
     chart,
-    color: `${colors.blue}88`,
+    topColor: `${colors.green}88`,
+    bottomColor: `${colors.red}88`,
+    base: 1,
     options: {
       priceScaleId: 'left',
     },

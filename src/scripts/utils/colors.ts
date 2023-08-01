@@ -24,3 +24,21 @@ export const colors = {
 
 export const getCandleToColor = (candle: LightweightCharts.CandlestickData) =>
   (candle.close || 1) > (candle.open || 0) ? colors.green : colors.red
+
+export const assignedColors = {
+  crabs: colors.red,
+  fish: colors.lime,
+  humpbacks: colors.violet,
+  plankton: colors.emerald,
+  sharks: colors.teal,
+  shrimps: colors.pink,
+  whales: colors.blue,
+  realized: colors.orange,
+  twoYear: colors.purple,
+  lth: colors.cyan,
+  sth: colors.yellow,
+  balanced: colors.yellow,
+  cvdd: colors.lime,
+  midPoint: colors.amber,
+  terminal: colors.red,
+}

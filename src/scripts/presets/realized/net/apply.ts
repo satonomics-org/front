@@ -1,25 +1,29 @@
 import {
   colors,
-  createBaseLineSeries,
   createHistogramSeries,
-  movingAverage,
+  createLineSeries,
   resetLeftPriceScale,
+  weeklyMovingAverage,
 } from '/src/scripts'
 
 export const applyPreset: ApplyPreset = ({ chart, datasets }) => {
   resetLeftPriceScale(chart, { visible: true })
 
-  const raw = createHistogramSeries({
+  const daily = createHistogramSeries({
     chart,
-    color: `${colors.blue}88`,
     options: {
       priceScaleId: 'left',
     },
+    title: 'Raw',
   })
 
-  const ma = createBaseLineSeries({
+  const weekly = createLineSeries({
     chart,
-    color: `${colors.orange}bb`,
+    color: colors.white,
+    options: {
+      priceScaleId: 'left',
+    },
+    title: '1W MA',
   })
 
   const { netRealizedProfitAndLoss } = datasets
@@ -27,10 +31,17 @@ export const applyPreset: ApplyPreset = ({ chart, datasets }) => {
   netRealizedProfitAndLoss.fetch()
 
   createEffect(() => {
-    raw.setData(netRealizedProfitAndLoss.values() || [])
+    const dataset = netRealizedProfitAndLoss.values() || []
 
-    ma.setData(movingAverage(netRealizedProfitAndLoss.values() || [], 7))
+    daily.setData(
+      dataset.map((data) => ({
+        ...data,
+        color: data.value < 0 ? colors.pink : colors.teal,
+      }))
+    )
+
+    weekly.setData(weeklyMovingAverage(dataset))
   })
 
-  return [raw, ma]
+  return [daily, weekly]
 }

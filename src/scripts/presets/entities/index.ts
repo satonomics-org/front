@@ -1,22 +1,12 @@
-import { allEntitiesPreset } from './all'
-import { crabsPreset } from './crabs'
-import { fishPreset } from './fish'
-import { humpbacksPreset } from './humpbacks'
-import { planktonPreset } from './plankton'
-import { sharksPreset } from './sharks'
-import { shrimpsPreset } from './shrimps'
-import { whalesPreset } from './whales'
+import { entitiesBalancesPreset } from './balances'
+import { entitiesDistributionPreset } from './distribution'
+import { realizedPricePresets } from './realizedPrice'
 
 export const entitiesPresetsGroup = {
   name: 'Entities',
   list: [
-    allEntitiesPreset,
-    planktonPreset,
-    shrimpsPreset,
-    crabsPreset,
-    fishPreset,
-    sharksPreset,
-    whalesPreset,
-    humpbacksPreset,
+    entitiesDistributionPreset,
+    entitiesBalancesPreset,
+    ...realizedPricePresets,
   ],
 }

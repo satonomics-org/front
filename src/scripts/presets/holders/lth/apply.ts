@@ -1,6 +1,8 @@
-import { createLineSeries, resetLeftPriceScale } from '/src/scripts'
-
-import { lthRealizedPriceColor } from '.'
+import {
+  assignedColors,
+  createLineSeries,
+  resetLeftPriceScale,
+} from '/src/scripts'
 
 export const applyPreset: ApplyPreset = ({ chart, datasets }) => {
   resetLeftPriceScale(chart)
@@ -18,7 +20,7 @@ export const applyPreset: ApplyPreset = ({ chart, datasets }) => {
   ].map(({ multiplier, autoscale }) => {
     const series = createLineSeries({
       chart,
-      color: lthRealizedPriceColor,
+      color: assignedColors.lth,
       multiplier,
       autoscale,
       title: `x${multiplier}`,

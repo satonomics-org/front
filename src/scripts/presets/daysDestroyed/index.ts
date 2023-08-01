@@ -11,8 +11,8 @@ export const daysDestroyedPresetsGroup = {
     allDDPreset,
     balancedPreset,
     cvddPreset,
-    terminalPreset,
     midPointPreset,
+    terminalPreset,
     vddPreset,
   ],
 }
