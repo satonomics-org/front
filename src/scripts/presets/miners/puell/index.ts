@@ -1,9 +1,10 @@
-// import { applyPreset } from './apply'
+import { applyPreset } from './apply'
+
 import description from './description.md?raw'
 
-export const minersRevenueBitcoinPreset = {
+export const puellMultiplePreset = {
   id: 'puellMultiple',
   title: 'Puell Multiple',
-  apply: undefined,
   description,
+  apply: applyPreset,
 }

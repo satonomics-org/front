@@ -25,6 +25,4 @@ export const applyPreset: ApplyPreset = ({ chart, datasets }) => {
   createEffect(() => {
     series.setData(sopr.values() || [])
   })
-
-  return [series]
 }

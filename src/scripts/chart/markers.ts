@@ -1,11 +1,16 @@
-import { colors, priceToUSLocale, sortWhitespaceDataArray } from '/src/scripts'
+import {
+  colors,
+  getCurrentWhiteColor,
+  priceToUSLocale,
+  sortWhitespaceDataArray,
+} from '/src/scripts'
 
 export const setMinMaxMarkers = (
   chart: LightweightCharts.IChartApi,
   series: LightweightCharts.ISeriesApi<any>,
   candlesticks: LightweightCharts.CandlestickData[]
 ) => {
-  const leftPriceScaleVisible = chart.priceScale('left').options().visible
+  const isLeftPriceScaleVisible = chart.priceScale('left').options().visible
 
   chart.timeScale().subscribeVisibleLogicalRangeChange((range) => {
     const slicedDataList = range
@@ -50,7 +55,9 @@ export const setMinMaxMarkers = (
           markers.push({
             ...params.markerOptions,
             time: candle.time,
-            color: leftPriceScaleVisible ? `${colors.white}88` : colors.white,
+            color: isLeftPriceScaleVisible
+              ? `${colors.white}88`
+              : getCurrentWhiteColor(),
             size: 0,
             text: priceToUSLocale(value),
           })

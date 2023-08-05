@@ -28,6 +28,4 @@ export const applyPreset: ApplyPreset = ({ chart, datasets }) => {
   supplyInLoss.fetch()
 
   createEffect(() => series.setData(supplyInLoss.values() || []))
-
-  return [series]
 }

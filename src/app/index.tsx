@@ -14,12 +14,9 @@ import {
 
 import { createDarkModeTimer, createDatasetsResources } from './scripts'
 
-import { Chart, DialogCore, Labeled, classPropToString } from '/src/components'
+import { Header, Live, Menu, Preset } from './components'
 
-import { Header } from './components/header'
-import { Live } from './components/live'
-import { Menu } from './components/menu'
-import { Preset } from './components/preset'
+import { Chart, DialogCore, Labeled, classPropToString } from '/src/components'
 
 import { env } from '../env'
 import packageJSONRaw from '/src/../package.json?raw'

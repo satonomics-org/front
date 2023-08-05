@@ -1,25 +1,10 @@
-import {
-  assignedColors,
-  createLineSeries,
-  resetLeftPriceScale,
-} from '/src/scripts'
+import { applyQuantilesPreset, assignedColors } from '/src/scripts'
 
-export const applyPreset: ApplyPreset = ({ chart, datasets }) => {
-  resetLeftPriceScale(chart)
-
-  const series = createLineSeries({
+export const applyPreset: ApplyPreset = ({ chart, datasets, candlesticks }) => {
+  applyQuantilesPreset({
     chart,
+    datasetResource: datasets.cvdd,
     color: assignedColors.cvdd,
-    autoscale: false,
+    candlesticks,
   })
-
-  const { cvdd } = datasets
-
-  cvdd.fetch()
-
-  createEffect(() => {
-    series.setData(cvdd.values() || [])
-  })
-
-  return [series]
 }

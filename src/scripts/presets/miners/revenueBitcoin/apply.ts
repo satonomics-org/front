@@ -1,9 +1,10 @@
 import {
   colors,
+  computeMonthlyMovingAverage,
+  computeWeeklyMovingAverage,
+  computeYearlyMovingAverage,
   createLineSeries,
-  monthlyMovingAverage,
   resetLeftPriceScale,
-  yearlyMovingAverage,
 } from '/src/scripts'
 
 export const applyPreset: ApplyPreset = ({ chart, datasets }) => {
@@ -22,16 +23,23 @@ export const applyPreset: ApplyPreset = ({ chart, datasets }) => {
     title: 'Raw',
   })
 
-  const monthly = createLineSeries({
+  const weekly = createLineSeries({
     chart,
     color: colors.orange,
+    options,
+    title: '1W MA',
+  })
+
+  const monthly = createLineSeries({
+    chart,
+    color: colors.yellow,
     options,
     title: '1M MA',
   })
 
   const yearly = createLineSeries({
     chart,
-    color: colors.yellow,
+    color: colors.white,
     options,
     title: '1Y MA',
   })
@@ -46,11 +54,8 @@ export const applyPreset: ApplyPreset = ({ chart, datasets }) => {
     }))
 
     daily.setData(dataset)
-
-    monthly.setData(monthlyMovingAverage(dataset))
-
-    yearly.setData(yearlyMovingAverage(dataset))
+    weekly.setData(computeWeeklyMovingAverage(dataset))
+    monthly.setData(computeMonthlyMovingAverage(dataset))
+    yearly.setData(computeYearlyMovingAverage(dataset))
   })
-
-  return [daily, monthly, yearly]
 }

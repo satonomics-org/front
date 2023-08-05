@@ -1,5 +1,7 @@
-export * from './averages'
+export * from './math'
+
 export * from './colors'
+export * from './dark'
 export * from './date'
 export * from './debounce'
 export * from './locale'

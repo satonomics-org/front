@@ -1,7 +1,7 @@
 import { createResizeObserver } from '@solid-primitives/resize-observer'
 import { CrosshairMode, PriceScaleMode, createChart } from 'lightweight-charts'
 
-import { priceToUSLocale } from '/src/scripts'
+import { getCurrentWhiteColor, priceToUSLocale } from '/src/scripts'
 
 import { classPropToString } from '..'
 
@@ -28,6 +28,8 @@ export const Chart = (props: Props) => {
 
     const dimensions = computeChartDimensions()
 
+    const white = getCurrentWhiteColor()
+
     chart = createChart(div, {
       ...dimensions,
       layout: {
@@ -35,32 +37,32 @@ export const Chart = (props: Props) => {
           .getComputedStyle(document.body)
           .getPropertyValue('font-family'),
         background: { color: '#00000000' },
-        textColor: '#fff',
+        textColor: white,
       },
       grid: {
         vertLines: { visible: false },
         horzLines: { visible: false },
       },
       leftPriceScale: {
-        borderColor: '#fff',
+        borderColor: white,
       },
       rightPriceScale: {
         scaleMargins: { bottom: 0.2, top: 0.2 },
         mode: PriceScaleMode.Logarithmic,
-        borderColor: '#fff',
+        borderColor: white,
       },
       timeScale: {
-        borderColor: '#fff',
+        borderColor: white,
       },
       crosshair: {
         mode: CrosshairMode.Normal,
         horzLine: {
-          color: '#fff',
-          labelBackgroundColor: '#fff',
+          color: white,
+          labelBackgroundColor: white,
         },
         vertLine: {
-          color: '#fff',
-          labelBackgroundColor: '#fff',
+          color: white,
+          labelBackgroundColor: white,
         },
       },
       localization: {

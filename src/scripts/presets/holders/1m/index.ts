@@ -2,9 +2,9 @@ import { applyPreset } from './apply'
 
 import description from './description.md?raw'
 
-export const midPointPreset = {
-  id: 'mid',
-  title: 'Mid Point Price',
+export const oneMonthPreset = {
+  id: '<1M',
+  title: '<1M Holders Realized Price',
   apply: applyPreset,
   description,
 }

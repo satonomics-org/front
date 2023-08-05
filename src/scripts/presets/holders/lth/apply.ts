@@ -1,44 +1,10 @@
-import {
-  assignedColors,
-  createLineSeries,
-  resetLeftPriceScale,
-} from '/src/scripts'
+import { applyQuantilesPreset, assignedColors } from '/src/scripts'
 
-export const applyPreset: ApplyPreset = ({ chart, datasets }) => {
-  resetLeftPriceScale(chart)
-
-  return [
-    { multiplier: 30 },
-    { multiplier: 10 },
-    { multiplier: 4 },
-    { multiplier: 2 },
-    {
-      multiplier: 1,
-      autoscale: false,
-    },
-    { multiplier: 0.8 },
-  ].map(({ multiplier, autoscale }) => {
-    const series = createLineSeries({
-      chart,
-      color: assignedColors.lth,
-      multiplier,
-      autoscale,
-      title: `x${multiplier}`,
-    })
-
-    const { lthRealizedPrice } = datasets
-
-    lthRealizedPrice.fetch()
-
-    createEffect(() => {
-      series.setData(
-        (lthRealizedPrice.values() || []).map(({ time, value }) => ({
-          time,
-          value: value * multiplier,
-        }))
-      )
-    })
-
-    return series
+export const applyPreset: ApplyPreset = ({ chart, datasets, candlesticks }) => {
+  applyQuantilesPreset({
+    chart,
+    datasetResource: datasets.lthRealizedPrice,
+    color: assignedColors.lth,
+    candlesticks,
   })
 }

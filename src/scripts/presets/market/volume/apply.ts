@@ -1,9 +1,9 @@
 import {
   colors,
+  computeMonthlyMovingAverage,
+  computeMovingAverage,
   createHistogramSeries,
   createLineSeries,
-  monthlyMovingAverage,
-  movingAverage,
   resetLeftPriceScale,
 } from '/src/scripts'
 
@@ -44,12 +44,10 @@ export const applyPreset: ApplyPreset = ({ chart, candlesticks }) => {
     volume.setData(dataset)
 
     ma.setData(
-      monthlyMovingAverage(dataset).map((data) => ({
+      computeMonthlyMovingAverage(dataset).map((data) => ({
         time: data.time,
         value: data.value,
       }))
     )
   })
-
-  return [volume, ma]
 }

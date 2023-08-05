@@ -1,25 +1,10 @@
-import {
-  assignedColors,
-  createLineSeries,
-  resetLeftPriceScale,
-} from '/src/scripts'
+import { applyQuantilesPreset, assignedColors } from '/src/scripts'
 
-export const applyPreset: ApplyPreset = ({ chart, datasets }) => {
-  resetLeftPriceScale(chart)
-
-  const series = createLineSeries({
+export const applyPreset: ApplyPreset = ({ chart, datasets, candlesticks }) => {
+  applyQuantilesPreset({
     chart,
+    datasetResource: datasets.balancedPrice,
     color: assignedColors.balanced,
-    autoscale: false,
+    candlesticks,
   })
-
-  const { balancedPrice } = datasets
-
-  balancedPrice.fetch()
-
-  createEffect(() => {
-    series.setData(balancedPrice.values() || [])
-  })
-
-  return [series]
 }

@@ -8,8 +8,7 @@ export const applyPreset: ApplyPreset = ({ chart, datasets }) => {
   resetLeftPriceScale(chart, {
     visible: true,
   })
-
-  return [
+  ;[
     {
       dataset: datasets.humpbacksDistribution,
       color: assignedColors.humpbacks,
@@ -67,7 +66,5 @@ export const applyPreset: ApplyPreset = ({ chart, datasets }) => {
     createEffect(() => {
       series.setData(dataset.values() || [])
     })
-
-    return series
   })
 }

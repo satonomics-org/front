@@ -44,6 +44,12 @@ export const backEndAPI = {
     fetchSimpleData(`/sth-realized-price`, signal),
   fetchLTHRealizedPrice: (signal?: AbortSignal) =>
     fetchSimpleData(`/lth-realized-price`, signal),
+  fetch1MRealizedPrice: (signal?: AbortSignal) =>
+    fetchSimpleData(`/1m-realized-price`, signal),
+  fetch3MRealizedPrice: (signal?: AbortSignal) =>
+    fetchSimpleData(`/3m-realized-price`, signal),
+  fetch1YRealizedPrice: (signal?: AbortSignal) =>
+    fetchSimpleData(`/1y-realized-price`, signal),
   fetch2YRealizedPrice: (signal?: AbortSignal) =>
     fetchSimpleData(`/2y-realized-price`, signal),
   fetchNetRealizedProfitAndLoss: (signal?: AbortSignal) =>

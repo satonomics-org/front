@@ -8,12 +8,15 @@ import { minersPresetsGroup } from './miners'
 import { realizedPresetsGroup } from './realized'
 import { supplyPresetsGroup } from './supply'
 
+export * from './templates'
+
 // Add:
 // - Sats per dollar
 //  - Priced in ounces of gold (https://data.nasdaq.com/data/LBMA/GOLD-gold-price-london-fixing)
 // https://www.longtermtrends.net/
 // Miners
 // - Dollars per hash
+// Vs Global monetary liquidity
 
 export const presetsGroups = [
   basicPresetsGroup,

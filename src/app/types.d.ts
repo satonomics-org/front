@@ -8,6 +8,6 @@ type ApplyPreset = (params: {
   datasets: DatasetsResources
   signal?: AbortSignal
   candlesticks?: CandlestickDataWithVolume[]
-}) => LightweightCharts.ISeriesApi<any>[]
+}) => void
 
 type ChartResetter = (() => LightweightCharts.IChartApi | null) | null

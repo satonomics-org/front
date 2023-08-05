@@ -1,9 +1,11 @@
 import {
   colors,
+  computeMonthlyMovingAverage,
+  computeWeeklyMovingAverage,
   createHistogramSeries,
   createLineSeries,
+  getCurrentWhiteColor,
   resetLeftPriceScale,
-  weeklyMovingAverage,
 } from '/src/scripts'
 
 export const applyPreset: ApplyPreset = ({ chart, datasets }) => {
@@ -19,7 +21,16 @@ export const applyPreset: ApplyPreset = ({ chart, datasets }) => {
 
   const weekly = createLineSeries({
     chart,
-    color: colors.white,
+    color: colors.yellow,
+    options: {
+      priceScaleId: 'left',
+    },
+    title: '1W MA',
+  })
+
+  const monthly = createLineSeries({
+    chart,
+    color: getCurrentWhiteColor(),
     options: {
       priceScaleId: 'left',
     },
@@ -36,12 +47,12 @@ export const applyPreset: ApplyPreset = ({ chart, datasets }) => {
     daily.setData(
       dataset.map((data) => ({
         ...data,
-        color: data.value < 0 ? colors.pink : colors.teal,
+        color: `${data.value < 0 ? colors.pink : colors.teal}88`,
       }))
     )
 
-    weekly.setData(weeklyMovingAverage(dataset))
-  })
+    weekly.setData(computeWeeklyMovingAverage(dataset))
 
-  return [daily, weekly]
+    monthly.setData(computeMonthlyMovingAverage(dataset))
+  })
 }

@@ -4,7 +4,7 @@ import description from './description.md?raw'
 
 export const lthPreset = {
   id: 'lth',
-  title: 'Long Term Holders',
+  title: 'Long Term Holders Realized Price',
   apply: applyPreset,
   description,
 }

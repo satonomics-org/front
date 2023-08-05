@@ -37,7 +37,16 @@ export const createDatasetsResources = () => {
     transactedVolume: createDatasetResource(backEndAPI.fetchTransactedVolume),
     sthRealizedPrice: createDatasetResource(backEndAPI.fetchSTHRealizedPrice),
     lthRealizedPrice: createDatasetResource(backEndAPI.fetchLTHRealizedPrice),
-    twoYearRealizedPrice: createDatasetResource(
+    oneMonthRealizedPrice: createDatasetResource(
+      backEndAPI.fetch1MRealizedPrice
+    ),
+    threeMonthsRealizedPrice: createDatasetResource(
+      backEndAPI.fetch3MRealizedPrice
+    ),
+    oneYearRealizedPrice: createDatasetResource(
+      backEndAPI.fetch1YRealizedPrice
+    ),
+    twoYearsRealizedPrice: createDatasetResource(
       backEndAPI.fetch2YRealizedPrice
     ),
     netRealizedProfitAndLoss: createDatasetResource(
