@@ -19,11 +19,11 @@ export const createLineSeries = (params: {
   const seriesOptions: LineOptions = {
     ...defaultLineOptions,
     color: isDefault ? color : `${color}88`,
+    title,
     ...options,
     ...(options?.priceScaleId || autoscale === false
       ? { autoscaleInfoProvider: undefined }
       : {}),
-    title,
   }
 
   const series = chart.addLineSeries(seriesOptions)

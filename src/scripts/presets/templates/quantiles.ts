@@ -8,12 +8,19 @@ import {
 
 export const applyQuantilesPreset = (params: {
   chart: LightweightCharts.IChartApi
-  datasetResource: DatasetResource
-  color: string
+  color?: string
+  datasetResource?: DatasetResource
+  dataset?: LightweightCharts.SingleValueData[]
   candlesticks?: CandlestickDataWithVolume[]
   left?: true
 }) => {
-  const { chart, datasetResource, candlesticks, color, left } = params
+  const {
+    chart,
+    datasetResource,
+    candlesticks,
+    left,
+    dataset: _dataset,
+  } = params
 
   resetLeftPriceScale(chart, {
     visible: left,
@@ -26,7 +33,7 @@ export const applyQuantilesPreset = (params: {
     title: 'Price',
   })
 
-  const quantilesSeriesList = createQuantilesLineSeries(chart, color, left)
+  const quantilesSeriesList = createQuantilesLineSeries(chart, left)
 
   const mvrvSeries = left
     ? createLineSeries({
@@ -38,15 +45,15 @@ export const applyQuantilesPreset = (params: {
       })
     : undefined
 
-  datasetResource.fetch()
+  datasetResource?.fetch()
 
   createEffect(() => {
-    const dataset = datasetResource.values() || []
+    const dataset = datasetResource?.values() || _dataset || []
 
     series.setData(
       dataset.map((data) => ({
         ...data,
-      }))
+      })),
     )
 
     setQuantilesDatasets(quantilesSeriesList, dataset, candlesticks, mvrvSeries)

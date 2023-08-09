@@ -43,6 +43,9 @@ export const createDatasetsResources = () => {
     threeMonthsRealizedPrice: createDatasetResource(
       backEndAPI.fetch3MRealizedPrice
     ),
+    sixMonthsRealizedPrice: createDatasetResource(
+      backEndAPI.fetch6MRealizedPrice
+    ),
     oneYearRealizedPrice: createDatasetResource(
       backEndAPI.fetch1YRealizedPrice
     ),
@@ -106,6 +109,13 @@ export const createDatasetsResources = () => {
     minersRevenue: createDatasetResource(backEndAPI.fetchMinersRevenue),
     supplyInProfit: createDatasetResource(backEndAPI.fetchSupplyInProfit),
     supplyInLoss: createDatasetResource(backEndAPI.fetchSupplyInLoss),
+    lthSupply: createDatasetResource(backEndAPI.fetchLTHSupply),
+    sthSupply: createDatasetResource(backEndAPI.fetchSTHSupply),
+    lthInProfit: createDatasetResource(backEndAPI.fetchLTHInProfit),
+    sthInProfit: createDatasetResource(backEndAPI.fetchSTHInProfit),
+    lthInLoss: createDatasetResource(backEndAPI.fetchLTHInLoss),
+    sthInLoss: createDatasetResource(backEndAPI.fetchSTHInLoss),
+    hashrate: createDatasetResource(backEndAPI.fetchHashrate),
   }
 
   return datasets

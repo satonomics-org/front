@@ -5,42 +5,42 @@ export const applyPreset: ApplyPreset = ({ chart, datasets }) => {
     chart,
     list: [
       {
-        dataset: datasets.realizedPrice,
+        datasetResource: datasets.realizedPrice,
         color: assignedColors.realized,
         title: 'Combined',
       },
       {
-        dataset: datasets.humpbacksRealizedPrice,
+        datasetResource: datasets.humpbacksRealizedPrice,
         color: assignedColors.humpbacks,
         title: 'Humpbacks',
       },
       {
-        dataset: datasets.whalesRealizedPrice,
+        datasetResource: datasets.whalesRealizedPrice,
         color: assignedColors.whales,
         title: 'Whales',
       },
       {
-        dataset: datasets.sharksRealizedPrice,
+        datasetResource: datasets.sharksRealizedPrice,
         color: assignedColors.sharks,
         title: 'Sharks',
       },
       {
-        dataset: datasets.fishRealizedPrice,
+        datasetResource: datasets.fishRealizedPrice,
         color: assignedColors.fish,
         title: 'Fish',
       },
       {
-        dataset: datasets.crabsRealizedPrice,
+        datasetResource: datasets.crabsRealizedPrice,
         color: assignedColors.crabs,
         title: 'Crabs',
       },
       {
-        dataset: datasets.shrimpsRealizedPrice,
+        datasetResource: datasets.shrimpsRealizedPrice,
         color: assignedColors.shrimps,
         title: 'Shrimps',
       },
       {
-        dataset: datasets.planktonRealizedPrice,
+        datasetResource: datasets.planktonRealizedPrice,
         color: assignedColors.plankton,
         title: 'Plankton',
       },

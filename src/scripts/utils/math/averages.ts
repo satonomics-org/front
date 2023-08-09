@@ -4,7 +4,10 @@ export const computeAverage = (values: number[]) =>
 
 type Dataset = LightweightCharts.SingleValueData[]
 
-export const computeMovingAverage = (dataset: Dataset, interval: number) =>
+export const computeMovingAverage = (
+  dataset: Dataset,
+  interval: number,
+): Dataset =>
   dataset.map((data, index) => ({
     ...data,
     value: computeAverage([

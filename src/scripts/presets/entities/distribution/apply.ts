@@ -13,19 +13,16 @@ export const applyPreset: ApplyPreset = ({ chart, datasets }) => {
       dataset: datasets.humpbacksDistribution,
       color: assignedColors.humpbacks,
       title: 'Humpbacks',
-      autoscale: false,
     },
     {
       dataset: datasets.whalesDistribution,
       color: assignedColors.whales,
       title: 'Whales',
-      autoscale: false,
     },
     {
       dataset: datasets.sharksDistribution,
       color: assignedColors.sharks,
       title: 'Sharks',
-      autoscale: false,
     },
     {
       dataset: datasets.fishDistribution,
@@ -35,26 +32,22 @@ export const applyPreset: ApplyPreset = ({ chart, datasets }) => {
     {
       dataset: datasets.crabsDistribution,
       color: assignedColors.crabs,
-      autoscale: false,
       title: 'Crabs',
     },
     {
       dataset: datasets.shrimpsDistribution,
       color: assignedColors.shrimps,
-      autoscale: false,
       title: 'Shrimps',
     },
     {
       dataset: datasets.planktonDistribution,
       color: assignedColors.plankton,
-      autoscale: false,
       title: 'Plankton',
     },
-  ].map(({ dataset, color, autoscale, title }) => {
+  ].map(({ dataset, color, title }) => {
     const series = createLineSeries({
       chart,
       color,
-      autoscale,
       title,
       options: {
         priceScaleId: 'left',

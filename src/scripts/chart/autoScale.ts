@@ -9,11 +9,3 @@ export const createAutoscaleInfoProvider =
 
     return autoScaleInfo || getInfo()
   }
-
-export const percentageAutoscaleInfoProvider: LightweightCharts.AutoscaleInfoProvider =
-  () => ({
-    priceRange: {
-      minValue: 0,
-      maxValue: 100,
-    },
-  })

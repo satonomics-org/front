@@ -43,7 +43,7 @@ export const DialogBody = (props: Props) => {
           return classes
         }),
 
-        'flex-1 overflow-y-auto @container',
+        'flex flex-1 flex-col overflow-y-auto @container',
       ])}
     >
       <button

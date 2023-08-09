@@ -5,37 +5,42 @@ export const applyPreset: ApplyPreset = ({ chart, datasets }) => {
     chart,
     list: [
       {
-        dataset: datasets.realizedPrice,
+        datasetResource: datasets.realizedPrice,
         color: assignedColors.realized,
         title: 'All',
       },
       {
-        dataset: datasets.lthRealizedPrice,
+        datasetResource: datasets.lthRealizedPrice,
         color: assignedColors.lth,
         title: 'LTH',
       },
       {
-        dataset: datasets.twoYearsRealizedPrice,
+        datasetResource: datasets.twoYearsRealizedPrice,
         color: assignedColors.twoYears,
         title: '<2Y',
       },
       {
-        dataset: datasets.oneYearRealizedPrice,
+        datasetResource: datasets.oneYearRealizedPrice,
         color: assignedColors.oneYear,
         title: '<1Y',
       },
       {
-        dataset: datasets.sthRealizedPrice,
+        datasetResource: datasets.sixMonthsRealizedPrice,
+        color: assignedColors.sixMonths,
+        title: '<6M',
+      },
+      {
+        datasetResource: datasets.sthRealizedPrice,
         color: assignedColors.sth,
         title: 'STH',
       },
       {
-        dataset: datasets.threeMonthsRealizedPrice,
+        datasetResource: datasets.threeMonthsRealizedPrice,
         color: assignedColors.threeMonths,
         title: '<3M',
       },
       {
-        dataset: datasets.oneMonthRealizedPrice,
+        datasetResource: datasets.oneMonthRealizedPrice,
         color: assignedColors.oneMonth,
         title: '<1M',
       },

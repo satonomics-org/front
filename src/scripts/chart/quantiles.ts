@@ -4,8 +4,7 @@ const USABLE_CANDLESTICKS_START_DATE = '2012-01-01'
 
 export const createQuantilesLineSeries = (
   chart: LightweightCharts.IChartApi,
-  color: string,
-  left?: true
+  left?: true,
 ) =>
   [
     {
@@ -63,27 +62,26 @@ export const setQuantilesDatasets = (
   quantilesList: ReturnType<typeof createQuantilesLineSeries>,
   dataset: LightweightCharts.SingleValueData[],
   candlesticks: CandlestickDataWithVolume[] | undefined,
-  mvrvSeries?: LightweightCharts.ISeriesApi<'Line'>
-  // meanSeries?: LightweightCharts.ISeriesApi<'Line'>
+  mvrvSeries?: LightweightCharts.ISeriesApi<'Line'>,
 ) => {
   const firstIndexWithData =
     candlesticks?.findIndex(
-      (candlestick) => candlestick.time === dataset.at(0)?.time
+      (candlestick) => candlestick.time === dataset.at(0)?.time,
     ) || 0
 
   const indexAtFirstUsableDate =
     candlesticks?.findIndex(
-      (candlestick) => candlestick.time === USABLE_CANDLESTICKS_START_DATE
+      (candlestick) => candlestick.time === USABLE_CANDLESTICKS_START_DATE,
     ) || 0
 
   const firstCandlestickIndex = Math.max(
     firstIndexWithData,
-    indexAtFirstUsableDate
+    indexAtFirstUsableDate,
   )
 
   const usableCandlesticks = (candlesticks || []).slice(
     firstCandlestickIndex,
-    dataset.length + firstIndexWithData
+    dataset.length + firstIndexWithData,
   )
 
   const datasetIndexOffset = firstCandlestickIndex - firstIndexWithData
@@ -96,19 +94,12 @@ export const setQuantilesDatasets = (
     usableCandlesticks,
     dataset,
     datasetIndexOffset,
-    mvrvSeries
+    mvrvSeries,
   )
-
-  // const means = computeMean(mvrv)
-
-  // if (meanSeries) {
-  //   meanSeries.setData(means)
-  // }
 
   const quantilesDatasets = computeQuantiles({
     mvrv,
     quantilesList: quantilesList.map((q) => q.percentage),
-    // means,
   })
 
   quantilesList.forEach(({ series, percentage }, quantilesIndex) => {
@@ -126,7 +117,7 @@ export const setQuantilesDatasets = (
             // means[dataIndex].value *
             quantileValue.value,
         }
-      })
+      }),
     )
   })
 }
@@ -136,23 +127,19 @@ const MEDIAN = 0.5
 const computeQuantiles = (params: {
   mvrv: LightweightCharts.SingleValueData[]
   quantilesList: number[]
-  // means: LightweightCharts.SingleValueData[]
 }) => {
   const { mvrv, quantilesList } = params
 
   let sorted: number[] = []
 
   const quantiles: LightweightCharts.SingleValueData[][] = new Array(
-    quantilesList.length
+    quantilesList.length,
   )
     .fill(0)
     .map(() => [])
 
   mvrv.forEach((data, dataIndex) => {
-    const insertValue = data.value
-    // const insertValue = data.value / means[dataIndex].value
-
-    sortedInsert(sorted, insertValue)
+    sortedInsert(sorted, data.value)
 
     const currentDatasetLength = dataIndex + 1
 
@@ -182,7 +169,7 @@ const computeMVRV = (
   candlesticks: CandlestickDataWithVolume[],
   dataset: LightweightCharts.SingleValueData[],
   offset: number,
-  series?: LightweightCharts.ISeriesApi<'Line'>
+  series?: LightweightCharts.ISeriesApi<'Line'>,
 ) => {
   const mvrv = candlesticks.map(({ time, close }, index) => {
     const data = dataset[index + offset]
@@ -201,7 +188,7 @@ const computeMVRV = (
   return mvrv
 }
 
-const computeMean = (dataset: LightweightCharts.SingleValueData[]) => {
+const computeMeans = (dataset: LightweightCharts.SingleValueData[]) => {
   const means: LightweightCharts.SingleValueData[] = []
 
   dataset.forEach((data) => {

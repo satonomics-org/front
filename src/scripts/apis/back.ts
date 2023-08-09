@@ -48,6 +48,8 @@ export const backEndAPI = {
     fetchSimpleData(`/1m-realized-price`, signal),
   fetch3MRealizedPrice: (signal?: AbortSignal) =>
     fetchSimpleData(`/3m-realized-price`, signal),
+  fetch6MRealizedPrice: (signal?: AbortSignal) =>
+    fetchSimpleData(`/6m-realized-price`, signal),
   fetch1YRealizedPrice: (signal?: AbortSignal) =>
     fetchSimpleData(`/1y-realized-price`, signal),
   fetch2YRealizedPrice: (signal?: AbortSignal) =>
@@ -97,7 +99,6 @@ export const backEndAPI = {
     fetchSimpleData(`/whales-distribution`, signal),
   fetchHumpbacksDistribution: (signal?: AbortSignal) =>
     fetchSimpleData(`/humpbacks-distribution`, signal),
-
   fetchTerminalPrice: (signal?: AbortSignal) =>
     fetchSimpleData(`/terminal-price`, signal),
   fetchRealizedPrice: (signal?: AbortSignal) =>
@@ -115,4 +116,17 @@ export const backEndAPI = {
     fetchSimpleData(`/supply-in-profit`, signal),
   fetchSupplyInLoss: (signal?: AbortSignal) =>
     fetchSimpleData(`/supply-in-loss`, signal),
+  fetchLTHSupply: (signal?: AbortSignal) =>
+    fetchSimpleData(`/lth-supply`, signal),
+  fetchSTHSupply: (signal?: AbortSignal) =>
+    fetchSimpleData(`/sth-supply`, signal),
+  fetchLTHInProfit: (signal?: AbortSignal) =>
+    fetchSimpleData(`/lth-in-profit`, signal),
+  fetchSTHInProfit: (signal?: AbortSignal) =>
+    fetchSimpleData(`/sth-in-profit`, signal),
+  fetchLTHInLoss: (signal?: AbortSignal) =>
+    fetchSimpleData(`/lth-in-loss`, signal),
+  fetchSTHInLoss: (signal?: AbortSignal) =>
+    fetchSimpleData(`/sth-in-loss`, signal),
+  fetchHashrate: (signal?: AbortSignal) => fetchSimpleData(`/hashrate`, signal),
 }

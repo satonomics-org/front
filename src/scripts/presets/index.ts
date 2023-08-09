@@ -5,6 +5,7 @@ import { entitiesPresetsGroup } from './entities'
 import { holdersPresetsGroup } from './holders'
 import { marketPresetsGroup } from './market'
 import { minersPresetsGroup } from './miners'
+import { movingAveragesPresetsGroup } from './movingAverages'
 import { realizedPresetsGroup } from './realized'
 import { supplyPresetsGroup } from './supply'
 
@@ -21,6 +22,7 @@ export * from './templates'
 export const presetsGroups = [
   basicPresetsGroup,
   marketPresetsGroup,
+  movingAveragesPresetsGroup,
   realizedPresetsGroup,
   holdersPresetsGroup,
   entitiesPresetsGroup,

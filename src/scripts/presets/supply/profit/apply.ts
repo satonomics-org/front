@@ -1,7 +1,7 @@
 import {
+  assignedColors,
   colors,
-  createAreaSeries,
-  percentageAutoscaleInfoProvider,
+  createLineSeries,
   resetLeftPriceScale,
 } from '/src/scripts'
 
@@ -10,22 +10,46 @@ export const applyPreset: ApplyPreset = ({ chart, datasets }) => {
     visible: true,
     scaleMargins: {
       bottom: 0,
-      top: 0,
+      top: 0.75,
     },
   })
 
-  const series = createAreaSeries({
+  const all = createLineSeries({
     chart,
-    color: `${colors.teal}66`,
+    color: colors.white,
     options: {
       priceScaleId: 'left',
-      autoscaleInfoProvider: percentageAutoscaleInfoProvider,
     },
+    title: 'All',
   })
 
-  const { supplyInProfit } = datasets
+  const sth = createLineSeries({
+    chart,
+    color: assignedColors.sth,
+    options: {
+      priceScaleId: 'left',
+    },
+    title: 'STH',
+  })
+
+  const lth = createLineSeries({
+    chart,
+    color: assignedColors.lth,
+    options: {
+      priceScaleId: 'left',
+    },
+    title: 'LTH',
+  })
+
+  const { supplyInProfit, sthInProfit, lthInProfit } = datasets
 
   supplyInProfit.fetch()
+  sthInProfit.fetch()
+  lthInProfit.fetch()
 
-  createEffect(() => series.setData(supplyInProfit.values() || []))
+  createEffect(() => {
+    all.setData(supplyInProfit.values() || [])
+    lth.setData(lthInProfit.values() || [])
+    sth.setData(sthInProfit.values() || [])
+  })
 }

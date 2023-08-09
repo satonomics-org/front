@@ -9,6 +9,7 @@ type DatasetsResourcesKey =
   | 'lthRealizedPrice'
   | 'oneMonthRealizedPrice'
   | 'threeMonthsRealizedPrice'
+  | 'sixMonthsRealizedPrice'
   | 'oneYearRealizedPrice'
   | 'twoYearsRealizedPrice'
   | 'netRealizedProfitAndLoss'
@@ -43,5 +44,12 @@ type DatasetsResourcesKey =
   | 'minersRevenue'
   | 'supplyInProfit'
   | 'supplyInLoss'
+  | 'lthSupply'
+  | 'sthSupply'
+  | 'lthInLoss'
+  | 'sthInLoss'
+  | 'lthInProfit'
+  | 'sthInProfit'
+  | 'hashrate'
 
 type DatasetsResources = Record<DatasetsResourcesKey, DatasetResource>
