@@ -1,5 +1,8 @@
 declare namespace Solid {
+  export type Signal<T> = import('solid-js').Signal<T>
   export type Accessor<T> = import('solid-js').Accessor<T>
+  export type Setter<T> = import('solid-js').Setter<T>
+  export type SignalOptions<T> = import('solid-js').SignalOptions<T>
 
   export type Component<T = {}> = import('solid-js').Component<T>
 
@@ -9,17 +12,15 @@ declare namespace Solid {
 
   export type EffectFunction<
     Prev,
-    Next extends Prev = Prev
+    Next extends Prev = Prev,
   > = import('solid-js').EffectFunction<Prev, Next>
-
-  export type Setter<T> = import('solid-js').Setter<T>
 
   namespace JSX {
     export type Element = import('solid-js').JSXElement
 
     export type EventHandlerUnion<
       T,
-      E extends Event
+      E extends Event,
     > = import('solid-js').JSX.EventHandlerUnion<T, E>
 
     export type CSSProperties = import('solid-js').JSX.CSSProperties

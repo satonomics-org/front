@@ -6,5 +6,5 @@ export const puellMultiplePreset = {
   id: 'puellMultiple',
   title: 'Puell Multiple',
   description,
-  apply: applyPreset,
+  applyPreset,
 }

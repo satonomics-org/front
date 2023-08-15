@@ -2,13 +2,10 @@ import { Button, Input } from '/src/components'
 
 import { List } from './components/list'
 
-import { Footer } from '../footer'
-import { Header } from '../header'
-
 interface Props {
   selectedPreset: string
   setSelectedPreset: (id: string) => void
-  candlesticks: CandlesticksProp
+  candlesticksFetched: boolean
 }
 
 export const Menu = (props: Props) => {
@@ -32,11 +29,7 @@ export const Menu = (props: Props) => {
         />
       </div>
       <hr />
-      <div class="flex flex-1 flex-col overflow-y-auto">
-        <List {...props} filter={state.filter} />
-        <hr />
-        <Footer />
-      </div>
+      <List {...props} filter={state.filter} />
     </>
   )
 }

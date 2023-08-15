@@ -5,6 +5,6 @@ import description from './description.md?raw'
 export const soprPreset = {
   id: 'sopr',
   title: 'SOPR',
-  apply: applyPreset,
+  applyPreset,
   description,
 }

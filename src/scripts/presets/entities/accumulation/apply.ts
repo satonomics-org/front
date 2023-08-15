@@ -84,8 +84,9 @@ export const applyPreset: ApplyPreset = ({ chart, datasets }) => {
           { color: colors.blue500, range: [-2, -1.5] },
           { color: colors.blue400, range: [-1.5, -1] },
           { color: colors.blue300, range: [-1, -0.5] },
-          { color: colors.blue200, range: [-0.5, 0] },
-          { color: colors.red200, range: [0, 0.5] },
+          { color: colors.blue200, range: [-0.5, -0.125] },
+          { color: colors.white, range: [-0.125, 0.125] },
+          { color: colors.red200, range: [0.125, 0.5] },
           { color: colors.red300, range: [0.5, 1] },
           { color: colors.red400, range: [1, 1.5] },
           { color: colors.red500, range: [1.5, 2] },
@@ -100,7 +101,7 @@ export const applyPreset: ApplyPreset = ({ chart, datasets }) => {
           time,
           value: size,
           color: getColor((value / values[index].value - 1) * 100),
-        }))
+        })),
       )
     })
   })

@@ -6,5 +6,5 @@ export const hashratePreset = {
   id: 'hashrate',
   title: 'Hashrate',
   description,
-  apply: applyPreset,
+  applyPreset,
 }

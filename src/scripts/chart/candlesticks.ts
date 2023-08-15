@@ -27,7 +27,7 @@ export const createCandlesticksSeries = (
 }
 
 export const convertCandlesticksToSingleValueDataset = (
-  candlesticks?: CandlestickDataWithVolume[],
+  candlesticks?: CandlestickDataWithVolume[] | null,
 ): LightweightCharts.SingleValueData[] =>
   (candlesticks || []).map(({ time, close }) => ({
     time,

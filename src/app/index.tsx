@@ -1,9 +1,9 @@
 import { Meta, Title } from '@solidjs/meta'
 
 import {
-  backEndAPI,
   cleanChart,
-  krakenAPI,
+  createDatasets,
+  createResources,
   presetsGroups,
   priceToUSLocale,
   run,
@@ -12,7 +12,7 @@ import {
   updatePriceLine,
 } from '/src/scripts'
 
-import { createDarkModeTimer, createDatasetsResources } from './scripts'
+import { createDarkModeTimer } from './scripts'
 
 import { Header, Live, Menu, Preset } from './components'
 
@@ -26,121 +26,68 @@ const packageJSON = JSON.parse(packageJSONRaw)
 const LOCAL_STORAGE_KEY = 'preset'
 
 export const App = () => {
+  const urlParams = new URLSearchParams(window.location.search)
+
   const [state, setState] = createStore({
     resetChart: null as ChartResetter,
-    candlesticks: {
-      list: [],
-      last: null,
-    } as CandlesticksProp,
-    indicators: {},
-    selectedPreset: localStorage.getItem(LOCAL_STORAGE_KEY) || 'minimal',
-    live: false,
-    datasets: createDatasetsResources(),
+    selectedPreset:
+      urlParams.get(LOCAL_STORAGE_KEY) ||
+      localStorage.getItem(LOCAL_STORAGE_KEY) ||
+      'minimal',
   })
+
+  const resources = createResources()
+
+  const datasets = createDatasets(resources)
 
   createDarkModeTimer()
 
-  let cleanWebSocket: (() => void) | undefined
   let scrollablePresets: HTMLDivElement | undefined
   let openDialog: DialogOpenFunction | undefined
   let closeDialog: DialogCloseFunction | undefined
 
-  createEffect(() =>
+  createEffect(() => {
     localStorage.setItem(LOCAL_STORAGE_KEY, state.selectedPreset)
-  )
 
-  createEffect(
-    on(
-      () => ({ ...state.candlesticks.last }),
-      () => updatePriceLine(state.candlesticks.last)
-    )
-  )
-
-  createEffect(async () => {
-    const candlesticks = await backEndAPI.fetchCandlesticks()
-
-    setState('candlesticks', {
-      list: candlesticks,
-      last: candlesticks.at(-1),
-    })
-
-    let ws: WebSocket | null = null
-
-    const initWebSocket = () => {
-      ws = krakenAPI.createLiveCandleWebsocket((candle) => {
-        console.log(`new: ${candle.close}`)
-
-        if (!state.candlesticks.last) return
-
-        setState('candlesticks', 'last', { ...candle })
-
-        if (candlesticks.at(-1)?.time !== candle.time) {
-          setState('candlesticks', 'list', (l) => [...l, candle])
-        }
-      })
-
-      ws.addEventListener('open', () => {
-        console.log('ws: open')
-        setState('live', true)
-      })
-      ws.addEventListener('close', () => {
-        console.log('ws: close')
-        setState('live', false)
-      })
-    }
-
-    initWebSocket()
-
-    const reinitWebSocket = () => {
-      if (!ws || ws.readyState === ws.CLOSED) {
-        console.log('ws: focus reopen')
-        initWebSocket()
-      }
-    }
-
-    document.addEventListener('focus', reinitWebSocket)
-
-    cleanWebSocket = () => {
-      document.removeEventListener('focus', reinitWebSocket)
-      ws?.close()
-    }
+    urlParams.set(LOCAL_STORAGE_KEY, state.selectedPreset)
+    window.history.pushState(null, '', urlParams.toString())
   })
+
+  const lastCandle = createMemo(() => datasets.candlesticks.values()?.at(-1))
+
+  const candlesticksFetched = createMemo(() => !!lastCandle())
+
+  createEffect(() => updatePriceLine(lastCandle()))
 
   createEffect(() => {
-    const {
-      resetChart,
-      selectedPreset,
-      datasets,
-      candlesticks: { last },
-    } = state
+    const { resetChart, selectedPreset } = state
 
-    if (last) {
+    if (candlesticksFetched()) {
       untrack(() => {
-        selectPreset(state.candlesticks, resetChart, selectedPreset, datasets)
+        selectPreset({
+          candlesticks: datasets.candlesticks.values() || [],
+          resetChart,
+          id: selectedPreset,
+          datasets,
+        })
       })
     }
   })
 
-  onCleanup(() => {
-    cleanChart()
-    cleanWebSocket?.()
-  })
+  onCleanup(cleanChart)
 
-  createEffect(() =>
-    setGroupName(
+  const groupName = createMemo(
+    () =>
       presetsGroups.find((group) =>
-        group.list.map((series) => series.id).includes(state.selectedPreset)
-      )?.name || ''
-    )
+        group.list.map((series) => series.id).includes(state.selectedPreset),
+      )?.name || '',
   )
-
-  const [groupName, setGroupName] = createSignal('')
 
   return (
     <>
       <Title>
         {run(() => {
-          const { last } = state.candlesticks
+          const last = lastCandle()
           return `${last ? `${priceToUSLocale(last.close)} | ` : ''}sholong`
         })}
       </Title>
@@ -148,7 +95,6 @@ export const App = () => {
 
       <div
         class={classPropToString([
-          // state.dark && 'dark',
           '!h-[100dvh] h-screen overflow-hidden  border border-white  dark:border-opacity-80 dark:text-white/80 md:mr-[1px]',
           env.standalone && 'rounded-b-[3.25rem] md:rounded-none',
         ])}
@@ -160,7 +106,7 @@ export const App = () => {
             <Menu
               selectedPreset={state.selectedPreset}
               setSelectedPreset={(id: string) => setState('selectedPreset', id)}
-              candlesticks={state.candlesticks}
+              candlesticksFetched={candlesticksFetched()}
             />
           </div>
 
@@ -171,9 +117,9 @@ export const App = () => {
           <div class="relative h-full w-full flex-1 overflow-x-hidden">
             <Chart
               onResetChartCreated={(resetChart) => setState({ resetChart })}
-              class={[state.candlesticks.last ? 'opacity-100' : 'opacity-0']}
+              class={[lastCandle() ? 'opacity-100' : 'opacity-0']}
             />
-            <Live live={state.live} />
+            <Live live={resources.candlesticks.live()} />
           </div>
           <div class="md:hidden">
             <hr />
@@ -195,7 +141,7 @@ export const App = () => {
                       },
                       {
                         threshold: 1,
-                      }
+                      },
                     )
 
                     observer.observe(div)
@@ -210,13 +156,13 @@ export const App = () => {
 
                         createEffect(
                           on(
-                            () => !!state.candlesticks.last,
+                            () => candlesticksFetched(),
                             (fetched) => {
                               if (fetched && state.selectedPreset === id) {
                                 scrollIntoView(ref)
                               }
-                            }
-                          )
+                            },
+                          ),
                         )
 
                         return (
@@ -244,7 +190,7 @@ export const App = () => {
               full
             >
               <Menu
-                candlesticks={state.candlesticks}
+                candlesticksFetched={candlesticksFetched()}
                 selectedPreset={state.selectedPreset}
                 setSelectedPreset={(id) => {
                   setState('selectedPreset', id)
@@ -253,8 +199,8 @@ export const App = () => {
 
                   scrollIntoView(
                     Array.from(scrollablePresets?.children || []).find(
-                      (element) => element.id === id
-                    )
+                      (element) => element.id === id,
+                    ),
                   )
                 }}
               />

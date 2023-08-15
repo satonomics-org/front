@@ -6,9 +6,9 @@ import { realizedPricePresets } from './realizedPrice'
 export const entitiesPresetsGroup = {
   name: 'Entities',
   list: [
-    entitiesAccumulationPreset,
     entitiesDistributionPreset,
     entitiesBalancesPreset,
+    entitiesAccumulationPreset,
     ...realizedPricePresets,
   ],
 }

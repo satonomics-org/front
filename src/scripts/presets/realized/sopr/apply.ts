@@ -1,9 +1,4 @@
-import {
-  colors,
-  createBaseLineSeries,
-  createHistogramSeries,
-  resetLeftPriceScale,
-} from '/src/scripts'
+import { colors, createBaseLineSeries, resetLeftPriceScale } from '/src/scripts'
 
 export const applyPreset: ApplyPreset = ({ chart, datasets }) => {
   resetLeftPriceScale(chart, { visible: true })

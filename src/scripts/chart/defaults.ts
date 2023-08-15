@@ -1,3 +1,5 @@
+import { LineType } from 'lightweight-charts'
+
 import { createAutoscaleInfoProvider } from './autoScale'
 
 export const defaultSeriesOptions: LightweightCharts.DeepPartial<LightweightCharts.SeriesOptionsCommon> =
@@ -12,5 +14,6 @@ export const defaultLineOptions: LightweightCharts.DeepPartial<
   LightweightCharts.LineStyleOptions & LightweightCharts.SeriesOptionsCommon
 > = {
   ...defaultSeriesOptions,
+  lineType: LineType.Curved,
   autoscaleInfoProvider: createAutoscaleInfoProvider(),
 }

@@ -5,6 +5,6 @@ import description from './description.md?raw'
 export const entitiesAccumulationPreset = {
   id: 'entitiesAccumulation',
   title: 'Entities Accumulation',
-  apply: applyPreset,
+  applyPreset,
   description,
 }

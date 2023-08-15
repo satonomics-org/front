@@ -5,6 +5,6 @@ import description from './description.md?raw'
 export const oneMonthPreset = {
   id: '<1M',
   title: '<1M Holders Realized Price',
-  apply: applyPreset,
+  applyPreset,
   description,
 }

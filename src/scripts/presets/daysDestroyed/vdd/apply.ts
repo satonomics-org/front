@@ -37,7 +37,7 @@ export const applyPreset: ApplyPreset = ({ chart, datasets }) => {
           value: data.value * 100,
           color: color,
         }
-      })
+      }),
     )
   })
 }

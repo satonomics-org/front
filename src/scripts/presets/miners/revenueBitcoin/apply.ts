@@ -1,9 +1,9 @@
-import { applyMovingAveragesPreset } from '/src/scripts'
+import { applyAveragesPreset } from '/src/scripts'
 
 export const applyPreset: ApplyPreset = ({ chart, datasets }) => {
-  applyMovingAveragesPreset({
+  applyAveragesPreset({
     chart,
-    dataset: datasets.minersRevenue,
+    dataset: datasets.minersRevenueInBitcoin,
     gradient: 'red',
     log: true,
   })

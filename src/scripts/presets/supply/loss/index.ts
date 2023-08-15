@@ -6,5 +6,5 @@ export const lossPreset = {
   id: 'supplyInLoss',
   title: 'Supply In Loss',
   description,
-  apply: applyPreset,
+  applyPreset,
 }

@@ -6,5 +6,5 @@ export const lthPreset = {
   id: 'lthSupply',
   title: 'Long Term Supply',
   description,
-  apply: applyPreset,
+  applyPreset,
 }

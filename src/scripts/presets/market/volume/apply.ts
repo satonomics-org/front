@@ -7,7 +7,7 @@ import {
   resetLeftPriceScale,
 } from '/src/scripts'
 
-export const applyPreset: ApplyPreset = ({ chart, candlesticks }) => {
+export const applyPreset: ApplyPreset = ({ chart, datasets }) => {
   resetLeftPriceScale(chart, {
     visible: true,
     scaleMargins: {
@@ -28,6 +28,8 @@ export const applyPreset: ApplyPreset = ({ chart, candlesticks }) => {
     },
   })
 
+  const candlesticks = datasets.candlesticks.values()
+
   createEffect(() => {
     const dataset = (candlesticks || []).map((candle) => {
       const color = `${
@@ -47,7 +49,7 @@ export const applyPreset: ApplyPreset = ({ chart, candlesticks }) => {
       computeMonthlyMovingAverage(dataset).map((data) => ({
         time: data.time,
         value: data.value,
-      }))
+      })),
     )
   })
 }

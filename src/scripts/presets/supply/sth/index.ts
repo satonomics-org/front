@@ -6,5 +6,5 @@ export const sthPreset = {
   id: 'sthSupply',
   title: 'Short Term Supply',
   description,
-  apply: applyPreset,
+  applyPreset,
 }

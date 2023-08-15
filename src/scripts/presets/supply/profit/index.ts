@@ -6,5 +6,5 @@ export const profitPreset = {
   id: 'supplyInProfit',
   title: 'Supply In Profit',
   description,
-  apply: applyPreset,
+  applyPreset,
 }

@@ -1,10 +1,10 @@
-import { applyMovingAveragesPreset } from '/src/scripts'
+import { applyAveragesPreset } from '/src/scripts'
 
 export const applyPreset: ApplyPreset = ({ chart, datasets }) => {
-  applyMovingAveragesPreset({
+  applyAveragesPreset({
     chart,
     dataset: datasets.hashrate,
-    gradient: 'green',
+    gradient: 'red',
     log: true,
   })
 }

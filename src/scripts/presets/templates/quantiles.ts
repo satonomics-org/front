@@ -1,32 +1,24 @@
 import {
+  USABLE_CANDLESTICKS_START_DATE,
   colors,
   createLineSeries,
   createQuantilesLineSeries,
   resetLeftPriceScale,
-  setQuantilesDatasets,
 } from '/src/scripts'
 
 export const applyQuantilesPreset = (params: {
   chart: LightweightCharts.IChartApi
+  dataset: DatasetWithQuantiles
   color?: string
-  datasetResource?: DatasetResource
-  dataset?: LightweightCharts.SingleValueData[]
-  candlesticks?: CandlestickDataWithVolume[]
   left?: true
 }) => {
-  const {
-    chart,
-    datasetResource,
-    candlesticks,
-    left,
-    dataset: _dataset,
-  } = params
+  const { chart, dataset, left } = params
 
   resetLeftPriceScale(chart, {
     visible: left,
   })
 
-  const series = createLineSeries({
+  const mainSeries = createLineSeries({
     chart,
     color: colors.white,
     autoscale: false,
@@ -35,27 +27,42 @@ export const applyQuantilesPreset = (params: {
 
   const quantilesSeriesList = createQuantilesLineSeries(chart, left)
 
-  const mvrvSeries = left
-    ? createLineSeries({
-        chart,
-        color: colors.white,
-        options: {
-          priceScaleId: 'left',
-        },
-      })
-    : undefined
-
-  datasetResource?.fetch()
+  dataset?.fetch()
 
   createEffect(() => {
-    const dataset = datasetResource?.values() || _dataset || []
+    const values = dataset?.values()
 
-    series.setData(
-      dataset.map((data) => ({
+    if (!values || !dataset.quantiles[50]()?.at(0)) return
+
+    mainSeries.setData(
+      values.map((data) => ({
         ...data,
       })),
     )
 
-    setQuantilesDatasets(quantilesSeriesList, dataset, candlesticks, mvrvSeries)
+    Object.entries(quantilesSeriesList).forEach(
+      ([quantileKey, quantileSeries]) => {
+        const offset = values.findIndex(
+          (value) => value.time === USABLE_CANDLESTICKS_START_DATE,
+        )
+
+        quantileSeries.setData(
+          values.slice(offset).map(({ time }, dataIndex) => {
+            const quantileData =
+              dataset.quantiles[quantileKey as unknown as QuantileKey]()?.[
+                dataIndex
+              ]
+
+            if (time !== quantileData?.time)
+              throw Error(`Unsynced data (${time} vs ${quantileData?.time})`)
+
+            return {
+              time,
+              value: quantileData.value,
+            }
+          }),
+        )
+      },
+    )
   })
 }

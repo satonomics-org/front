@@ -1,4 +1,4 @@
-import { createBaseAPI, dateToString } from '/src/scripts'
+import { createBaseAPI } from '/src/scripts'
 
 const api = createBaseAPI({
   baseUrl:
@@ -12,121 +12,77 @@ const convertRecordToLineData = (record: Record<string, number>) =>
     ([time, value]): LightweightCharts.SingleValueData => ({
       time,
       value: value ?? NaN,
-    })
+    }),
   )
 
-const fetchSimpleData = async (path: string, signal?: AbortSignal) =>
-  convertRecordToLineData(
-    (await api.fetchJSON(path, {
-      signal,
-    })) as Record<string, number>
-  )
+const fetchSimpleData = async (path: string) =>
+  convertRecordToLineData((await api.fetchJSON(path)) as Record<string, number>)
 
 export const backEndAPI = {
-  async fetchCandlesticks(signal?: AbortSignal) {
-    const candlesticks = await import('/src/assets/data/btcusd.json').then(
-      (i) => i.default as CandlestickDataWithVolume[]
-    )
+  async fetchCandlesticks() {
+    const cachedCandlesticks = await import(
+      '/src/assets/data/btcusd.json'
+    ).then((i) => i.default as CandlestickDataWithVolume[])
 
-    const since = new Date(candlesticks.at(-1)?.time || 0).valueOf() / 1000
+    const since =
+      new Date(cachedCandlesticks.at(-1)?.time || 0).valueOf() / 1000
+
+    const candlesticks = Array.from(cachedCandlesticks)
 
     candlesticks.push(
-      ...((await api.fetchJSON(`/candlesticks?since=${since}`, {
-        signal,
-      })) as CandlestickDataWithVolume[])
+      ...((await api.fetchJSON(
+        `/candlesticks?since=${since}`,
+      )) as CandlestickDataWithVolume[]),
     )
 
     return candlesticks
   },
-  fetchTransactedVolume: (signal?: AbortSignal) =>
-    fetchSimpleData(`/transacted-volume`, signal),
-  fetchSTHRealizedPrice: (signal?: AbortSignal) =>
-    fetchSimpleData(`/sth-realized-price`, signal),
-  fetchLTHRealizedPrice: (signal?: AbortSignal) =>
-    fetchSimpleData(`/lth-realized-price`, signal),
-  fetch1MRealizedPrice: (signal?: AbortSignal) =>
-    fetchSimpleData(`/1m-realized-price`, signal),
-  fetch3MRealizedPrice: (signal?: AbortSignal) =>
-    fetchSimpleData(`/3m-realized-price`, signal),
-  fetch6MRealizedPrice: (signal?: AbortSignal) =>
-    fetchSimpleData(`/6m-realized-price`, signal),
-  fetch1YRealizedPrice: (signal?: AbortSignal) =>
-    fetchSimpleData(`/1y-realized-price`, signal),
-  fetch2YRealizedPrice: (signal?: AbortSignal) =>
-    fetchSimpleData(`/2y-realized-price`, signal),
-  fetchNetRealizedProfitAndLoss: (signal?: AbortSignal) =>
-    fetchSimpleData(`/net-realized-pnl`, signal),
-  fetchSOPR: (signal?: AbortSignal) => fetchSimpleData(`/sopr`, signal),
-  fetchPlanktonRealizedPrice: (signal?: AbortSignal) =>
-    fetchSimpleData(`/plankton-realized-price`, signal),
-  fetchShrimpsRealizedPrice: (signal?: AbortSignal) =>
-    fetchSimpleData(`/shrimps-realized-price`, signal),
-  fetchCrabsRealizedPrice: (signal?: AbortSignal) =>
-    fetchSimpleData(`/crabs-realized-price`, signal),
-  fetchFishRealizedPrice: (signal?: AbortSignal) =>
-    fetchSimpleData(`/fish-realized-price`, signal),
-  fetchSharksRealizedPrice: (signal?: AbortSignal) =>
-    fetchSimpleData(`/sharks-realized-price`, signal),
-  fetchWhalesRealizedPrice: (signal?: AbortSignal) =>
-    fetchSimpleData(`/whales-realized-price`, signal),
-  fetchHumpbacksRealizedPrice: (signal?: AbortSignal) =>
-    fetchSimpleData(`/humpbacks-realized-price`, signal),
-  fetchPlanktonBalances: (signal?: AbortSignal) =>
-    fetchSimpleData(`/plankton-balances`, signal),
-  fetchShrimpsBalances: (signal?: AbortSignal) =>
-    fetchSimpleData(`/shrimps-balances`, signal),
-  fetchCrabsBalances: (signal?: AbortSignal) =>
-    fetchSimpleData(`/crabs-balances`, signal),
-  fetchFishBalances: (signal?: AbortSignal) =>
-    fetchSimpleData(`/fish-balances`, signal),
-  fetchSharksBalances: (signal?: AbortSignal) =>
-    fetchSimpleData(`/sharks-balances`, signal),
-  fetchWhalesBalances: (signal?: AbortSignal) =>
-    fetchSimpleData(`/whales-balances`, signal),
-  fetchHumpbacksBalances: (signal?: AbortSignal) =>
-    fetchSimpleData(`/humpbacks-balances`, signal),
-  fetchPlanktonDistribution: (signal?: AbortSignal) =>
-    fetchSimpleData(`/plankton-distribution`, signal),
-  fetchShrimpsDistribution: (signal?: AbortSignal) =>
-    fetchSimpleData(`/shrimps-distribution`, signal),
-  fetchCrabsDistribution: (signal?: AbortSignal) =>
-    fetchSimpleData(`/crabs-distribution`, signal),
-  fetchFishDistribution: (signal?: AbortSignal) =>
-    fetchSimpleData(`/fish-distribution`, signal),
-  fetchSharksDistribution: (signal?: AbortSignal) =>
-    fetchSimpleData(`/sharks-distribution`, signal),
-  fetchWhalesDistribution: (signal?: AbortSignal) =>
-    fetchSimpleData(`/whales-distribution`, signal),
-  fetchHumpbacksDistribution: (signal?: AbortSignal) =>
-    fetchSimpleData(`/humpbacks-distribution`, signal),
-  fetchTerminalPrice: (signal?: AbortSignal) =>
-    fetchSimpleData(`/terminal-price`, signal),
-  fetchRealizedPrice: (signal?: AbortSignal) =>
-    fetchSimpleData(`/realized-price`, signal),
-  fetchBalancedPrice: (signal?: AbortSignal) =>
-    fetchSimpleData(`/balanced-price`, signal),
-  fetchCVDD: (signal?: AbortSignal) => fetchSimpleData(`/cvdd`, signal),
-  fetchFundingRates: (signal?: AbortSignal) =>
-    fetchSimpleData(`/funding-rates`, signal),
-  fetchVDDMultiple: (signal?: AbortSignal) =>
-    fetchSimpleData(`/vdd-multiple`, signal),
-  fetchMinersRevenue: (signal?: AbortSignal) =>
-    fetchSimpleData(`/miners-revenue`, signal),
-  fetchSupplyInProfit: (signal?: AbortSignal) =>
-    fetchSimpleData(`/supply-in-profit`, signal),
-  fetchSupplyInLoss: (signal?: AbortSignal) =>
-    fetchSimpleData(`/supply-in-loss`, signal),
-  fetchLTHSupply: (signal?: AbortSignal) =>
-    fetchSimpleData(`/lth-supply`, signal),
-  fetchSTHSupply: (signal?: AbortSignal) =>
-    fetchSimpleData(`/sth-supply`, signal),
-  fetchLTHInProfit: (signal?: AbortSignal) =>
-    fetchSimpleData(`/lth-in-profit`, signal),
-  fetchSTHInProfit: (signal?: AbortSignal) =>
-    fetchSimpleData(`/sth-in-profit`, signal),
-  fetchLTHInLoss: (signal?: AbortSignal) =>
-    fetchSimpleData(`/lth-in-loss`, signal),
-  fetchSTHInLoss: (signal?: AbortSignal) =>
-    fetchSimpleData(`/sth-in-loss`, signal),
-  fetchHashrate: (signal?: AbortSignal) => fetchSimpleData(`/hashrate`, signal),
+  fetchTransactedVolume: () => fetchSimpleData(`/transacted-volume`),
+  fetchSTHRealizedPrice: () => fetchSimpleData(`/sth-realized-price`),
+  fetchLTHRealizedPrice: () => fetchSimpleData(`/lth-realized-price`),
+  fetch1MRealizedPrice: () => fetchSimpleData(`/1m-realized-price`),
+  fetch3MRealizedPrice: () => fetchSimpleData(`/3m-realized-price`),
+  fetch6MRealizedPrice: () => fetchSimpleData(`/6m-realized-price`),
+  fetch1YRealizedPrice: () => fetchSimpleData(`/1y-realized-price`),
+  fetch2YRealizedPrice: () => fetchSimpleData(`/2y-realized-price`),
+  fetchNetRealizedProfitAndLoss: () => fetchSimpleData(`/net-realized-pnl`),
+  fetchSOPR: () => fetchSimpleData(`/sopr`),
+  fetchPlanktonRealizedPrice: () => fetchSimpleData(`/plankton-realized-price`),
+  fetchShrimpsRealizedPrice: () => fetchSimpleData(`/shrimps-realized-price`),
+  fetchCrabsRealizedPrice: () => fetchSimpleData(`/crabs-realized-price`),
+  fetchFishRealizedPrice: () => fetchSimpleData(`/fish-realized-price`),
+  fetchSharksRealizedPrice: () => fetchSimpleData(`/sharks-realized-price`),
+  fetchWhalesRealizedPrice: () => fetchSimpleData(`/whales-realized-price`),
+  fetchHumpbacksRealizedPrice: () =>
+    fetchSimpleData(`/humpbacks-realized-price`),
+  fetchPlanktonBalances: () => fetchSimpleData(`/plankton-balances`),
+  fetchShrimpsBalances: () => fetchSimpleData(`/shrimps-balances`),
+  fetchCrabsBalances: () => fetchSimpleData(`/crabs-balances`),
+  fetchFishBalances: () => fetchSimpleData(`/fish-balances`),
+  fetchSharksBalances: () => fetchSimpleData(`/sharks-balances`),
+  fetchWhalesBalances: () => fetchSimpleData(`/whales-balances`),
+  fetchHumpbacksBalances: () => fetchSimpleData(`/humpbacks-balances`),
+  fetchPlanktonDistribution: () => fetchSimpleData(`/plankton-distribution`),
+  fetchShrimpsDistribution: () => fetchSimpleData(`/shrimps-distribution`),
+  fetchCrabsDistribution: () => fetchSimpleData(`/crabs-distribution`),
+  fetchFishDistribution: () => fetchSimpleData(`/fish-distribution`),
+  fetchSharksDistribution: () => fetchSimpleData(`/sharks-distribution`),
+  fetchWhalesDistribution: () => fetchSimpleData(`/whales-distribution`),
+  fetchHumpbacksDistribution: () => fetchSimpleData(`/humpbacks-distribution`),
+  fetchTerminalPrice: () => fetchSimpleData(`/terminal-price`),
+  fetchRealizedPrice: () => fetchSimpleData(`/realized-price`),
+  fetchBalancedPrice: () => fetchSimpleData(`/balanced-price`),
+  fetchCVDD: () => fetchSimpleData(`/cvdd`),
+  fetchFundingRates: () => fetchSimpleData(`/funding-rates`),
+  fetchVDDMultiple: () => fetchSimpleData(`/vdd-multiple`),
+  fetchMinersRevenue: () => fetchSimpleData(`/miners-revenue`),
+  fetchSupplyInProfit: () => fetchSimpleData(`/supply-in-profit`),
+  fetchSupplyInLoss: () => fetchSimpleData(`/supply-in-loss`),
+  fetchLTHSupply: () => fetchSimpleData(`/lth-supply`),
+  fetchSTHSupply: () => fetchSimpleData(`/sth-supply`),
+  fetchLTHInProfit: () => fetchSimpleData(`/lth-in-profit`),
+  fetchSTHInProfit: () => fetchSimpleData(`/sth-in-profit`),
+  fetchLTHInLoss: () => fetchSimpleData(`/lth-in-loss`),
+  fetchSTHInLoss: () => fetchSimpleData(`/sth-in-loss`),
+  fetchHashrate: () => fetchSimpleData(`/hashrate`),
 }

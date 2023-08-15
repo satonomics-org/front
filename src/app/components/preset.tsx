@@ -17,14 +17,14 @@ export const Preset = (props: Props) => {
   let ref: HTMLDivElement | undefined
 
   const color = createMemo(() =>
-    props.selectedPreset === props.id ? 'primary' : undefined
+    props.selectedPreset === props.id ? 'primary' : undefined,
   )
 
   const preset = createMemo(() =>
     presetsGroups
       .map((group) => group.list)
       .flat()
-      .find((preset) => preset.id === props.id)
+      .find((preset) => preset.id === props.id),
   )
 
   const title = createMemo(() => preset()?.title || '')
@@ -33,7 +33,7 @@ export const Preset = (props: Props) => {
     marked.parse(preset()?.description || '', {
       mangle: false,
       headerIds: false,
-    })
+    }),
   )
 
   const _scrollIntoView = () => scrollIntoView(ref, 'smooth')
@@ -58,7 +58,7 @@ export const Preset = (props: Props) => {
       >
         <span class="truncate">{title()}</span>
       </Button>
-      <Dialog
+      {/* <Dialog
         color={undefined}
         closeable
         title={title()}
@@ -69,7 +69,7 @@ export const Preset = (props: Props) => {
         }}
       >
         <div innerHTML={description()} />
-      </Dialog>
+      </Dialog> */}
     </div>
   )
 }

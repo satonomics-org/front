@@ -5,6 +5,6 @@ import description from './description.md?raw'
 export const balancedPreset = {
   id: 'balanced',
   title: 'Balanced Price',
-  apply: applyPreset,
+  applyPreset,
   description,
 }

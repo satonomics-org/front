@@ -1,8 +1,8 @@
 import { dateToString } from '/src/scripts'
 
 export const krakenAPI = {
-  createLiveCandleWebsocket: function (
-    callback: (candle: CandlestickDataWithVolume) => void
+  createLiveCandleWebsocket(
+    callback: (candle: CandlestickDataWithVolume) => void,
   ) {
     const ws = new WebSocket('wss://ws.kraken.com')
 
@@ -15,7 +15,7 @@ export const krakenAPI = {
             name: 'ohlc',
             interval: 1440,
           },
-        })
+        }),
       )
     })
 

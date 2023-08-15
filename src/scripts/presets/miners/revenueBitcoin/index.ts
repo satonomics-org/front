@@ -5,6 +5,6 @@ import description from './description.md?raw'
 export const minersRevenueBitcoinPreset = {
   id: 'minersBitcoinRevenue',
   title: 'Revenue in Bitcoin',
-  apply: applyPreset,
+  applyPreset,
   description,
 }

@@ -26,6 +26,8 @@ export const Chart = (props: Props) => {
       chart?.remove()
     } catch {}
 
+    console.log('chart: create')
+
     const dimensions = computeChartDimensions()
 
     const white = getCurrentWhiteColor()
@@ -82,7 +84,7 @@ export const Chart = (props: Props) => {
       const chartDimensions = computeChartDimensions()
 
       chart?.resize(chartDimensions.width, chartDimensions.height)
-    }
+    },
   )
 
   onCleanup(() => {

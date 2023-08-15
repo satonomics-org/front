@@ -17,7 +17,7 @@ const state = {
   range: null as LightweightCharts.LogicalRange | null,
 }
 
-export const updatePriceLine = (last: CandlestickDataWithVolume | null) => {
+export const updatePriceLine = (last?: CandlestickDataWithVolume) => {
   if (!last || !state.chart) return
 
   try {
@@ -30,32 +30,32 @@ export const updatePriceLine = (last: CandlestickDataWithVolume | null) => {
   } catch {}
 }
 
-export const selectPreset = async (
-  candlesticks: CandlesticksProp,
-  resetChart: ChartResetter | undefined,
-  id: string,
-  datasets: DatasetsResources
-) => {
+export const selectPreset = async (params: {
+  candlesticks: CandlestickDataWithVolume[]
+  resetChart: ChartResetter | undefined
+  id: string
+  datasets: Datasets
+}) => {
+  const { candlesticks, resetChart, id, datasets } = params
+
+  console.log(`preset: ${id}`)
+
   const applyPreset = presetsGroups
     .map((group) => group.list)
     .flat()
-    .find((preset) => preset.id === id)?.apply
+    .find((preset) => preset.id === id)?.applyPreset
 
   cleanChart()
 
-  const { list: candlesticksList } = candlesticks
-
   state.chart = resetChart?.() || null
 
-  if (!state.chart || !candlesticksList.length) return
+  if (!state.chart || !candlesticks.length) return
 
   state.abortController = new AbortController()
 
   try {
     applyPreset?.({
       chart: state.chart,
-      signal: state.abortController.signal,
-      candlesticks: candlesticksList,
       datasets,
     })
 
@@ -86,19 +86,15 @@ export const cleanChart = () => {
 
 const applyPriceCandlesticksSeries = (
   chart: LightweightCharts.IChartApi,
-  candlesticks: CandlesticksProp,
-  inverseColors?: boolean
+  candlesticks: CandlestickDataWithVolume[],
+  inverseColors?: boolean,
 ) => {
-  const { last, list } = candlesticks
-
-  if (!list.length) return
-
   state.candlestickSeries = createCandlesticksSeries(chart, inverseColors)
 
   state.candlestickSeries.setData(
-    list.map((data) => ({
+    candlesticks.map((data) => ({
       ...data,
-    }))
+    })),
   )
 
   const priceLineOptions: LightweightCharts.PriceLineOptions = {
@@ -115,7 +111,7 @@ const applyPriceCandlesticksSeries = (
 
   state.priceLine = state.candlestickSeries.createPriceLine(priceLineOptions)
 
-  setMinMaxMarkers(chart, state.candlestickSeries, list)
+  setMinMaxMarkers(chart, state.candlestickSeries, candlesticks)
 
-  last && updatePriceLine(last)
+  updatePriceLine(candlesticks.at(-1))
 }

@@ -48,7 +48,7 @@ export const applyPreset: ApplyPreset = ({ chart, datasets }) => {
       dataset.map((data) => ({
         ...data,
         color: `${data.value < 0 ? colors.pink : colors.teal}88`,
-      }))
+      })),
     )
 
     weekly.setData(computeWeeklyMovingAverage(dataset))

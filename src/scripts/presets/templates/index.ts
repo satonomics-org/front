@@ -1,3 +1,3 @@
 export * from './lines'
-export * from './movingAverages'
+export * from './averages'
 export * from './quantiles'

@@ -7,13 +7,13 @@ import { Preset } from '../../preset'
 interface Props {
   selectedPreset: string
   setSelectedPreset: (id: string) => void
-  candlesticks: CandlesticksProp
+  candlesticksFetched: boolean
   filter: string
 }
 
 export const List = (props: Props) => {
   return (
-    <div class="flex flex-1 flex-col space-y-6 p-2 pb-4">
+    <div class="flex flex-1 flex-col space-y-6 overflow-y-auto p-2 pb-4">
       <For each={presetsGroups}>
         {({ name: group, list }) => (
           <Labeled label={group}>
@@ -24,13 +24,13 @@ export const List = (props: Props) => {
 
                   createEffect(
                     on(
-                      () => !!props.candlesticks.last,
+                      () => props.candlesticksFetched,
                       (fetched) => {
                         if (fetched && props.selectedPreset === id) {
                           scrollIntoView(ref)
                         }
-                      }
-                    )
+                      },
+                    ),
                   )
 
                   return (

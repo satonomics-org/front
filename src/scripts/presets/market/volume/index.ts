@@ -5,6 +5,6 @@ import description from './description.md?raw'
 export const marketVolumePreset = {
   id: 'marketVolume',
   title: 'Market Volume',
-  apply: applyPreset,
+  applyPreset,
   description,
 }

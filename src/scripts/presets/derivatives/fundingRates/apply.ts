@@ -23,7 +23,7 @@ export const applyPreset: ApplyPreset = ({ chart, datasets }) => {
         ...data,
         value: data.value * 100,
         color: `${data.value >= 0 ? colors.green : colors.red}bb`,
-      }))
+      })),
     )
   })
 }
