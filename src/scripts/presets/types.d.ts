@@ -1,5 +1,5 @@
 type ApplyPreset = (params: {
-  chart: LightweightCharts.IChartApi
+  chart: IChartApi
   datasets: Datasets
   titlesPrefix?: string
 }) => void

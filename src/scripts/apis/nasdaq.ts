@@ -9,13 +9,13 @@ export const nasdaqAPI = {
     return (
       (await api.fetchJSON(`/11304240/data`)).dataset_data.data as [
         date: string,
-        price: number
+        price: number,
       ][]
     ).map(
-      ([date, price]): LightweightCharts.SingleValueData => ({
+      ([date, price]): SingleValueData => ({
         time: date,
         value: price,
-      })
+      }),
     )
   },
 }

@@ -1,8 +1,8 @@
-type IconProp = string | ((...args: any[]) => Solid.JSX.Element) | true
+type IconProp = string | ((...args: any[]) => JSXElement) | true
 
 type ClassProp = string | (ClassProp | string | false | undefined)[]
 
-type StyleProp = string | Solid.JSX.CSSProperties
+type StyleProp = string | CSSProperties
 
 type BooleanPropsKeysObject<Props> = {
   [T in keyof Required<Props>]: boolean
@@ -10,5 +10,5 @@ type BooleanPropsKeysObject<Props> = {
 
 type MergePropsWithHTMLProps<
   T,
-  HTMLAttributes extends Solid.JSX.HTMLAttributes = Solid.JSX.HTMLAttributes
-> = T & Omit<HTMLAttributes, keyof T>
+  AnyHTMLAttributes extends HTMLAttributes = HTMLAttributes,
+> = T & Omit<AnyHTMLAttributes, keyof T>

@@ -1,8 +1,4 @@
-import {
-  assignedColors,
-  createLineSeries,
-  resetLeftPriceScale,
-} from '/src/scripts'
+import { colors, createLineSeries, resetLeftPriceScale } from '/src/scripts'
 
 export const applyPreset: ApplyPreset = ({ chart, datasets }) => {
   resetLeftPriceScale(chart, {
@@ -11,47 +7,44 @@ export const applyPreset: ApplyPreset = ({ chart, datasets }) => {
   ;[
     {
       dataset: datasets.humpbacksDistribution,
-      color: assignedColors.humpbacks,
+      color: colors.humpbacks,
       title: 'Humpbacks',
     },
     {
       dataset: datasets.whalesDistribution,
-      color: assignedColors.whales,
+      color: colors.whales,
       title: 'Whales',
     },
     {
       dataset: datasets.sharksDistribution,
-      color: assignedColors.sharks,
+      color: colors.sharks,
       title: 'Sharks',
     },
     {
       dataset: datasets.fishDistribution,
-      color: assignedColors.fish,
+      color: colors.fish,
       title: 'Fish',
     },
     {
       dataset: datasets.crabsDistribution,
-      color: assignedColors.crabs,
+      color: colors.crabs,
       title: 'Crabs',
     },
     {
       dataset: datasets.shrimpsDistribution,
-      color: assignedColors.shrimps,
+      color: colors.shrimps,
       title: 'Shrimps',
     },
     {
       dataset: datasets.planktonDistribution,
-      color: assignedColors.plankton,
+      color: colors.plankton,
       title: 'Plankton',
     },
   ].map(({ dataset, color, title }) => {
-    const series = createLineSeries({
-      chart,
+    const series = createLineSeries(chart, {
       color,
       title,
-      options: {
-        priceScaleId: 'left',
-      },
+      priceScaleId: 'left',
     })
 
     dataset.fetch()

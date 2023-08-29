@@ -1,9 +1,9 @@
-import { applyQuantilesPreset, assignedColors } from '/src/scripts'
+import { applyQuantilesPreset, colors } from '/src/scripts'
 
 export const applyPreset: ApplyPreset = ({ chart, datasets }) => {
   applyQuantilesPreset({
     chart,
     dataset: datasets.crabsRealizedPrice,
-    color: assignedColors.crabs,
+    color: colors.crabs,
   })
 }

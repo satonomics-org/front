@@ -1,19 +1,15 @@
-type DatasetWithQuantiles = Dataset<LightweightCharts.SingleValueData> &
-  QuantilesAddOn
+type DatasetWithQuantiles = Dataset<SingleValueData> & QuantilesAddOn
 
 type QuantilesAddOn = {
-  quantiles: Quantiles<LightweightCharts.SingleValueData>
+  quantiles: Quantiles<SingleValueData>
 }
 
 type Quantiles<
-  Value = LightweightCharts.SingleValueData,
-  Values = Solid.Accessor<Value[] | null>,
+  Value = SingleValueData,
+  Values = Accessor<Value[] | null>,
 > = Record<QuantileKey, Values>
 
-type QuantileSignals = Record<
-  QuantileKey,
-  Solid.Signal<LightweightCharts.SingleValueData[] | null>
->
+type QuantileSignals = Record<QuantileKey, Signal<SingleValueData[] | null>>
 
 type QuantileKey =
   | 0.1

@@ -1,41 +1,36 @@
-import {
-  assignedColors,
-  createLineSeries,
-  resetLeftPriceScale,
-} from '/src/scripts'
+import { colors, createLineSeries, resetLeftPriceScale } from '/src/scripts'
 
 export const applyPreset: ApplyPreset = ({ chart, datasets }) => {
   resetLeftPriceScale(chart)
   ;[
     {
       dataset: datasets.terminalPrice,
-      color: assignedColors.terminal,
+      color: colors.terminal,
       title: 'Terminal',
-      autoscale: false,
+      autoscale: undefined,
     },
     {
       dataset: datasets.cvdd,
-      color: assignedColors.cvdd,
+      color: colors.cvdd,
       title: 'CVDD',
-      autoscale: false,
+      autoscale: undefined,
     },
     {
       dataset: datasets.balancedPrice,
-      color: assignedColors.balanced,
+      color: colors.balanced,
       title: 'Balanced',
-      autoscale: false,
+      autoscale: undefined,
     },
     {
       dataset: datasets.realizedPrice,
-      color: assignedColors.realized,
+      color: colors.realized,
       title: 'Realized',
-      autoscale: false,
+      autoscale: undefined,
     },
   ].map(({ dataset, color, autoscale, title }) => {
-    const series = createLineSeries({
-      chart,
+    const series = createLineSeries(chart, {
       color,
-      autoscale,
+      autoscaleInfoProvider: autoscale,
       title,
     })
 

@@ -14,16 +14,14 @@ export const classPropToString = (classes?: ClassProp): string =>
         .trim()
     : classes || ''
 
-export const stylePropToCSSProperties = (
-  style?: string | Solid.JSX.CSSProperties
-) => {
+export const stylePropToCSSProperties = (style?: string | CSSProperties) => {
   if (!style) {
     return undefined
   } else if (typeof style === 'object') {
     return style
   }
 
-  const styleObject: Solid.JSX.CSSProperties = {}
+  const styleObject: CSSProperties = {}
 
   ;(style || '').replace(/([\w-]+)\s*:\s*([^;]+)/g, (_, prop, value) => {
     styleObject[prop] = value
@@ -40,7 +38,7 @@ export const booleanPropsKeysToArray = (propsKeys: BooleanPropsKeys) => {
           ...previous,
           ...current,
         }),
-        {}
+        {},
       )
     : propsKeys
 
@@ -49,5 +47,5 @@ export const booleanPropsKeysToArray = (propsKeys: BooleanPropsKeys) => {
 
 export const removeProps = <T extends RecordAny>(
   props: T,
-  propsKeys: BooleanPropsKeys
+  propsKeys: BooleanPropsKeys,
 ) => splitProps(props, booleanPropsKeysToArray(propsKeys))[1]

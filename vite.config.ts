@@ -17,14 +17,10 @@ import packageJSON from './package.json'
 
 const logoBlack = './src/assets/svgs/logo/black.svg'
 const logoWhite = './src/assets/svgs/logo/white.svg'
+const black = '#000000'
 
 export default defineConfig({
   plugins: [
-    /* 
-    Uncomment the following line to enable solid-devtools.
-    For more info see https://github.com/thetarnav/solid-devtools/tree/main/packages/extension#readme
-    */
-    // devtools(),
     solidPlugin(),
 
     solidSvg(),
@@ -76,27 +72,27 @@ export default defineConfig({
       appName: packageJSON.name[0].toUpperCase() + packageJSON.name.slice(1),
       appDescription: packageJSON.description,
       start_url: '',
-      theme_color: '#000000',
+      theme_color: black,
       cache: true,
-      background: '#000000',
+      background: black,
       icons: {
         favicons: {
           source: logoWhite,
-          background: '#000000',
+          background: black,
           offset: 5,
         },
         android: {
           source: logoWhite,
-          background: '#000000',
+          background: black,
           offset: 10,
         },
         appleIcon: {
-          background: '#000000',
+          background: black,
           source: logoWhite,
           offset: 10,
         },
         appleStartup: {
-          background: '#000000',
+          background: black,
           source: logoWhite,
           offset: 15,
         },

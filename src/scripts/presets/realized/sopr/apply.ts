@@ -5,8 +5,8 @@ export const applyPreset: ApplyPreset = ({ chart, datasets }) => {
 
   const series = createBaseLineSeries({
     chart,
-    topColor: `${colors.green}88`,
-    bottomColor: `${colors.red}88`,
+    topColor: `${colors.up}88`,
+    bottomColor: `${colors.down}88`,
     base: 1,
     options: {
       priceScaleId: 'left',

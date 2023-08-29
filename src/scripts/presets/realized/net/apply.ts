@@ -11,29 +11,20 @@ import {
 export const applyPreset: ApplyPreset = ({ chart, datasets }) => {
   resetLeftPriceScale(chart, { visible: true })
 
-  const daily = createHistogramSeries({
-    chart,
-    options: {
-      priceScaleId: 'left',
-    },
+  const daily = createHistogramSeries(chart, {
+    priceScaleId: 'left',
     title: 'Raw',
   })
 
-  const weekly = createLineSeries({
-    chart,
-    color: colors.yellow,
-    options: {
-      priceScaleId: 'left',
-    },
+  const weekly = createLineSeries(chart, {
+    color: colors.yellow[500],
+    priceScaleId: 'left',
     title: '1W MA',
   })
 
-  const monthly = createLineSeries({
-    chart,
+  const monthly = createLineSeries(chart, {
     color: getCurrentWhiteColor(),
-    options: {
-      priceScaleId: 'left',
-    },
+    priceScaleId: 'left',
     title: '1W MA',
   })
 
@@ -47,7 +38,7 @@ export const applyPreset: ApplyPreset = ({ chart, datasets }) => {
     daily.setData(
       dataset.map((data) => ({
         ...data,
-        color: `${data.value < 0 ? colors.pink : colors.teal}88`,
+        color: `${data.value < 0 ? colors.pink[500] : colors.teal[500]}88`,
       })),
     )
 

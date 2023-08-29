@@ -13,9 +13,7 @@ export const applyPreset: ApplyPreset = ({ chart, datasets }) => {
     },
   })
 
-  const series = createHistogramSeries({
-    chart,
-  })
+  const series = createHistogramSeries(chart)
 
   const { vddMultiple } = datasets
 
@@ -26,10 +24,10 @@ export const applyPreset: ApplyPreset = ({ chart, datasets }) => {
       (vddMultiple.values() || []).map((data) => {
         const color = `${
           data.value >= 3
-            ? colors.red
+            ? colors.red[500]
             : data.value >= 1
-            ? colors.orange
-            : colors.green
+            ? colors.orange[500]
+            : colors.green[500]
         }88`
 
         return {

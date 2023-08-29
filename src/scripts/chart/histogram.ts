@@ -1,24 +1,15 @@
 import { defaultSeriesOptions } from './defaults'
 
-type HistogramOptions = LightweightCharts.DeepPartial<
-  LightweightCharts.HistogramStyleOptions &
-    LightweightCharts.SeriesOptionsCommon
->
+type HistogramOptions = DeepPartial<HistogramStyleOptions & SeriesOptionsCommon>
 
-export const createHistogramSeries = (params: {
-  chart: LightweightCharts.IChartApi
-  color?: string
-  options?: HistogramOptions
-  title?: string
-}) => {
-  const { chart, color, options, title } = params
-
+export const createHistogramSeries = (
+  chart: IChartApi,
+  options?: HistogramOptions,
+) => {
   const seriesOptions: HistogramOptions = {
     priceScaleId: 'left',
     ...defaultSeriesOptions,
     ...options,
-    color,
-    title,
   }
 
   const series = chart.addHistogramSeries(seriesOptions)

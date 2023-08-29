@@ -4,12 +4,7 @@ import {
   computeYearlyMovingAverage,
 } from '/src/scripts'
 
-type SingleValueData = LightweightCharts.SingleValueData
-
-export const addAverages = <
-  Value extends
-    LightweightCharts.WhitespaceData = LightweightCharts.SingleValueData,
->(
+export const addAverages = <Value extends WhitespaceData = SingleValueData>(
   _dataset: Dataset<Value>,
 ): Dataset<Value> & AveragesAddOn => {
   const averagesSignals: AveragesSignals = {
@@ -43,10 +38,7 @@ export const addAverages = <
   }
 }
 
-export const computeAverages = <
-  Value extends
-    LightweightCharts.WhitespaceData = LightweightCharts.SingleValueData,
->(
+export const computeAverages = <Value extends WhitespaceData = SingleValueData>(
   averages: AveragesSignals,
   dataset: Value[],
 ) => {

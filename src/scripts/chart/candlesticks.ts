@@ -1,7 +1,7 @@
 import { colors, createAutoscaleInfoProvider } from '/src/scripts'
 
 export const createCandlesticksSeries = (
-  chart: LightweightCharts.IChartApi,
+  chart: IChartApi,
   inverseColors: boolean = false,
 ) => {
   const leftPriceScaleVisible = chart.priceScale('left').options().visible
@@ -9,8 +9,8 @@ export const createCandlesticksSeries = (
   const setOpacity = (color: string) =>
     leftPriceScaleVisible ? `${color}88` : color
 
-  const upColor = setOpacity(inverseColors ? colors.red : colors.green)
-  const downColor = setOpacity(inverseColors ? colors.green : colors.red)
+  const upColor = setOpacity(inverseColors ? colors.down : colors.up)
+  const downColor = setOpacity(inverseColors ? colors.up : colors.down)
 
   const candlestickSeries = chart.addCandlestickSeries({
     upColor,
@@ -28,7 +28,7 @@ export const createCandlesticksSeries = (
 
 export const convertCandlesticksToSingleValueDataset = (
   candlesticks?: CandlestickDataWithVolume[] | null,
-): LightweightCharts.SingleValueData[] =>
+): SingleValueData[] =>
   (candlesticks || []).map(({ time, close }) => ({
     time,
     value: close,

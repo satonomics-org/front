@@ -2,6 +2,7 @@ import { Meta, Title } from '@solidjs/meta'
 
 import {
   cleanChart,
+  createASS,
   createDatasets,
   createResources,
   presetsGroups,
@@ -28,13 +29,14 @@ const LOCAL_STORAGE_KEY = 'preset'
 export const App = () => {
   const urlParams = new URLSearchParams(window.location.search)
 
-  const [state, setState] = createStore({
-    resetChart: null as ChartResetter,
-    selectedPreset:
+  const state = {
+    resetChart: createASS(null as ChartResetter),
+    selectedPreset: createASS(
       urlParams.get(LOCAL_STORAGE_KEY) ||
-      localStorage.getItem(LOCAL_STORAGE_KEY) ||
-      'minimal',
-  })
+        localStorage.getItem(LOCAL_STORAGE_KEY) ||
+        'minimal',
+    ),
+  }
 
   const resources = createResources()
 
@@ -47,9 +49,9 @@ export const App = () => {
   let closeDialog: DialogCloseFunction | undefined
 
   createEffect(() => {
-    localStorage.setItem(LOCAL_STORAGE_KEY, state.selectedPreset)
+    localStorage.setItem(LOCAL_STORAGE_KEY, state.selectedPreset())
 
-    urlParams.set(LOCAL_STORAGE_KEY, state.selectedPreset)
+    urlParams.set(LOCAL_STORAGE_KEY, state.selectedPreset())
     window.history.pushState(null, '', urlParams.toString())
   })
 
@@ -66,8 +68,8 @@ export const App = () => {
       untrack(() => {
         selectPreset({
           candlesticks: datasets.candlesticks.values() || [],
-          resetChart,
-          id: selectedPreset,
+          resetChart: resetChart(),
+          id: selectedPreset(),
           datasets,
         })
       })
@@ -79,7 +81,7 @@ export const App = () => {
   const groupName = createMemo(
     () =>
       presetsGroups.find((group) =>
-        group.list.map((series) => series.id).includes(state.selectedPreset),
+        group.list.map((series) => series.id).includes(state.selectedPreset()),
       )?.name || '',
   )
 
@@ -104,8 +106,8 @@ export const App = () => {
             <Header />
             <hr />
             <Menu
-              selectedPreset={state.selectedPreset}
-              setSelectedPreset={(id: string) => setState('selectedPreset', id)}
+              selectedPreset={state.selectedPreset()}
+              setSelectedPreset={(id: string) => state.selectedPreset.set(id)}
               candlesticksFetched={candlesticksFetched()}
             />
           </div>
@@ -116,7 +118,12 @@ export const App = () => {
           </div>
           <div class="relative h-full w-full flex-1 overflow-x-hidden">
             <Chart
-              onResetChartCreated={(resetChart) => setState({ resetChart })}
+              onResetChartCreated={(resetChart) => {
+                const [r, setR] = createSignal<ChartResetter>(null)
+                setR(resetChart)
+
+                state.resetChart.set(resetChart)
+              }}
               class={[lastCandle() ? 'opacity-100' : 'opacity-0']}
             />
             <Live live={resources.candlesticks.live()} />
@@ -135,7 +142,7 @@ export const App = () => {
                     const observer = new IntersectionObserver(
                       (entries) => {
                         if (entries[0].isIntersecting) {
-                          setState('selectedPreset', div.id)
+                          state.selectedPreset.set(div.id)
                         }
                         observer.disconnect()
                       },
@@ -158,7 +165,7 @@ export const App = () => {
                           on(
                             () => candlesticksFetched(),
                             (fetched) => {
-                              if (fetched && state.selectedPreset === id) {
+                              if (fetched && state.selectedPreset() === id) {
                                 scrollIntoView(ref)
                               }
                             },
@@ -168,7 +175,7 @@ export const App = () => {
                         return (
                           <Preset
                             id={id}
-                            selectedPreset={state.selectedPreset}
+                            selectedPreset={state.selectedPreset()}
                             leftIcon={IconTablerList}
                             ref={(_ref) => (ref = _ref)}
                             onClick={() => openDialog?.(true)}
@@ -191,9 +198,9 @@ export const App = () => {
             >
               <Menu
                 candlesticksFetched={candlesticksFetched()}
-                selectedPreset={state.selectedPreset}
+                selectedPreset={state.selectedPreset()}
                 setSelectedPreset={(id) => {
-                  setState('selectedPreset', id)
+                  state.selectedPreset.set(id)
 
                   closeDialog?.()
 

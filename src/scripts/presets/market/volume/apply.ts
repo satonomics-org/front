@@ -1,7 +1,7 @@
 import {
   colors,
   computeMonthlyMovingAverage,
-  computeMovingAverage,
+  convertCandleToColor,
   createHistogramSeries,
   createLineSeries,
   resetLeftPriceScale,
@@ -16,25 +16,18 @@ export const applyPreset: ApplyPreset = ({ chart, datasets }) => {
     },
   })
 
-  const volume = createHistogramSeries({
-    chart,
-  })
+  const volume = createHistogramSeries(chart)
 
-  const ma = createLineSeries({
-    chart,
+  const ma = createLineSeries(chart, {
     color: `${colors.white}88`,
-    options: {
-      priceScaleId: 'left',
-    },
+    priceScaleId: 'left',
   })
 
   const candlesticks = datasets.candlesticks.values()
 
   createEffect(() => {
     const dataset = (candlesticks || []).map((candle) => {
-      const color = `${
-        candle.close > candle.open ? colors.green : colors.red
-      }88`
+      const color = `${convertCandleToColor(candle)}88`
 
       return {
         time: candle.time,

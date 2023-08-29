@@ -9,30 +9,21 @@ export const applyPreset: ApplyPreset = ({ chart, datasets }) => {
     },
   })
 
-  const all = createLineSeries({
-    chart,
+  const all = createLineSeries(chart, {
     color: colors.white,
-    options: {
-      priceScaleId: 'left',
-    },
+    priceScaleId: 'left',
     title: 'STH',
   })
 
-  const loss = createLineSeries({
-    chart,
-    color: colors.red,
-    options: {
-      priceScaleId: 'left',
-    },
+  const loss = createLineSeries(chart, {
+    color: colors.loss,
+    priceScaleId: 'left',
     title: 'Loss',
   })
 
-  const profit = createLineSeries({
-    chart,
-    color: colors.green,
-    options: {
-      priceScaleId: 'left',
-    },
+  const profit = createLineSeries(chart, {
+    color: colors.profit,
+    priceScaleId: 'left',
     title: 'Profit',
   })
 

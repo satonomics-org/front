@@ -1,13 +1,10 @@
 interface Resource<
-  Value extends
-    LightweightCharts.WhitespaceData = LightweightCharts.SingleValueData,
+  Value extends WhitespaceData = SingleValueData,
   Values = Value[] | null,
 > {
   fetch: () => void
-  values: Solid.Accessor<Values>
-  setValues: Solid.Setter<Values>
-  live: Solid.Accessor<boolean>
-  setLive: Solid.Setter<boolean>
+  values: ASS<Values>
+  live: ASS<boolean>
 }
 
 type ResourceKey =
@@ -63,7 +60,7 @@ type ResourceKey =
 interface Resources
   extends Record<
     Exclude<ResourceKey, 'candlesticks'>,
-    Resource<LightweightCharts.SingleValueData>
+    Resource<SingleValueData>
   > {
   candlesticks: CandlesticksResource
 }

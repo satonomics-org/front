@@ -2,12 +2,10 @@ import { colors } from '/src/scripts'
 
 import { defaultSeriesOptions } from './defaults'
 
-type BaseLineOptions = LightweightCharts.DeepPartial<
-  LightweightCharts.BaselineStyleOptions & LightweightCharts.SeriesOptionsCommon
->
+type BaseLineOptions = DeepPartial<BaselineStyleOptions & SeriesOptionsCommon>
 
 export const createBaseLineSeries = (params: {
-  chart: LightweightCharts.IChartApi
+  chart: IChartApi
   color?: string
   topColor?: string
   topLineColor?: string

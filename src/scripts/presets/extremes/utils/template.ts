@@ -7,18 +7,17 @@ type RecordQuantile<T> = Record<
 >
 
 export const applyExtremesPreset = (
-  chart: LightweightCharts.IChartApi,
+  chart: IChartApi,
   datasets: DatasetWithQuantiles[],
   extremesColors: RecordQuantile<string>,
   titlesPrefix?: string,
 ) => {
   const createObject = (title: string, color: string) => ({
-    series: createLineSeries({
-      chart,
+    series: createLineSeries(chart, {
       title: `${titlesPrefix || ''}${title}`,
       color: `${color}bb`,
     }),
-    dataset: [] as LightweightCharts.SingleValueData[],
+    dataset: [] as SingleValueData[],
   })
 
   const mid = createObject('Mid', colors.white)

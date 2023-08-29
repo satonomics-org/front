@@ -3,7 +3,7 @@ import { PriceScaleMode } from 'lightweight-charts'
 import { colors, createLineSeries, resetLeftPriceScale } from '/src/scripts'
 
 export const applyAveragesPreset = (params: {
-  chart: LightweightCharts.IChartApi
+  chart: IChartApi
   dataset: DatasetWithAverages
   gradient: 'red' | 'green' | 'violet'
   log?: boolean
@@ -22,47 +22,43 @@ export const applyAveragesPreset = (params: {
   const palette =
     gradient === 'red'
       ? {
-          daily: colors.red,
-          weekly: colors.orange,
-          monthly: colors.yellow,
+          daily: colors.red[500],
+          weekly: colors.orange[500],
+          monthly: colors.yellow[500],
         }
       : gradient === 'green'
       ? {
-          daily: colors.green,
-          weekly: colors.lime,
-          monthly: colors.yellow,
+          daily: colors.green[500],
+          weekly: colors.lime[500],
+          monthly: colors.yellow[500],
         }
       : {
-          daily: colors.violet,
-          weekly: colors.blue,
-          monthly: colors.cyan,
+          daily: colors.violet[500],
+          weekly: colors.blue[500],
+          monthly: colors.cyan[500],
         }
 
-  const daily = createLineSeries({
-    chart,
+  const daily = createLineSeries(chart, {
+    ...options,
     color: `${palette.daily}aa`,
-    options,
     title: 'Raw',
   })
 
-  const weekly = createLineSeries({
-    chart,
+  const weekly = createLineSeries(chart, {
+    ...options,
     color: palette.weekly,
-    options,
     title: '1W MA',
   })
 
-  const monthly = createLineSeries({
-    chart,
+  const monthly = createLineSeries(chart, {
+    ...options,
     color: palette.monthly,
-    options,
     title: '1M MA',
   })
 
-  const yearly = createLineSeries({
-    chart,
+  const yearly = createLineSeries(chart, {
+    ...options,
     color: `${colors.white}bb`,
-    options,
     title: '1Y MA',
   })
 

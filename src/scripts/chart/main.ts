@@ -1,21 +1,42 @@
 import { LineStyle } from 'lightweight-charts'
 
 import {
+  convertCandleToColor,
   createCandlesticksSeries,
-  getCandleToColor,
+  createLineSeries,
+  dateToString,
   presetsGroups,
   setMinMaxMarkers,
 } from '/src/scripts'
 
 const state = {
-  abortController: undefined as AbortController | undefined,
-  candlestickSeries: undefined as
-    | LightweightCharts.ISeriesApi<'Candlestick'>
-    | undefined,
-  chart: null as LightweightCharts.IChartApi | null,
-  priceLine: undefined as LightweightCharts.IPriceLine | undefined,
-  range: null as LightweightCharts.LogicalRange | null,
+  candlestickSeries: undefined as ISeriesApi<'Candlestick'> | undefined,
+  chart: null as IChartApi | null,
+  priceLine: undefined as IPriceLine | undefined,
+  range: null as LogicalRange | null,
 }
+
+const phantomDataset: WhitespaceData[] = []
+
+const setPhantomDataset = () => {
+  const date = new Date(
+    (phantomDataset.at(-1)?.time as string | undefined) || '2009-01-02',
+  )
+
+  const todayValueOf = new Date().valueOf()
+
+  const tickDate = () => date.setUTCDate(date.getUTCDate() + 1)
+
+  tickDate()
+
+  while (date.valueOf() <= todayValueOf) {
+    phantomDataset.push({ time: dateToString(date) })
+
+    tickDate()
+  }
+}
+
+setPhantomDataset()
 
 export const updatePriceLine = (last?: CandlestickDataWithVolume) => {
   if (!last || !state.chart) return
@@ -25,7 +46,7 @@ export const updatePriceLine = (last?: CandlestickDataWithVolume) => {
 
     state.priceLine?.applyOptions({
       price: last.close,
-      color: getCandleToColor(last),
+      color: convertCandleToColor(last),
     })
   } catch {}
 }
@@ -51,29 +72,33 @@ export const selectPreset = async (params: {
 
   if (!state.chart || !candlesticks.length) return
 
-  state.abortController = new AbortController()
+  const { chart } = state
 
   try {
+    const phantom = createLineSeries(chart)
+
+    setPhantomDataset()
+
+    phantom.setData(phantomDataset.map((data) => ({ ...data })))
+
     applyPreset?.({
-      chart: state.chart,
+      chart,
       datasets,
     })
 
-    applyPriceCandlesticksSeries(state.chart, candlesticks)
+    applyPriceCandlesticksSeries(chart, candlesticks)
 
     if (state.range) {
-      state.chart.timeScale().setVisibleLogicalRange(state.range)
+      chart.timeScale().setVisibleLogicalRange(state.range)
     }
 
-    state.chart
+    chart
       .timeScale()
       .subscribeVisibleLogicalRangeChange((_range) => (state.range = _range))
   } catch {}
 }
 
 export const cleanChart = () => {
-  state.abortController?.abort()
-
   state.priceLine = undefined
   state.candlestickSeries = undefined
 
@@ -85,7 +110,7 @@ export const cleanChart = () => {
 }
 
 const applyPriceCandlesticksSeries = (
-  chart: LightweightCharts.IChartApi,
+  chart: IChartApi,
   candlesticks: CandlestickDataWithVolume[],
   inverseColors?: boolean,
 ) => {
@@ -97,7 +122,7 @@ const applyPriceCandlesticksSeries = (
     })),
   )
 
-  const priceLineOptions: LightweightCharts.PriceLineOptions = {
+  const priceLineOptions: PriceLineOptions = {
     price: 0,
     color: 'transparent',
     lineVisible: true,

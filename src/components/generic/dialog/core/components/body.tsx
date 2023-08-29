@@ -5,12 +5,12 @@ import { classPropToString } from '/src/components'
 import { DialogForm } from '.'
 import { HIDDEN_CLOSE_BUTTON_CLASS } from '../scripts'
 
-interface Props extends Solid.ParentProps, BaseProps {
+interface Props extends ParentProps, BaseProps {
   isAttached: boolean
   close: (element?: HTMLElement) => void
   color?: ColorProp
-  footer?: Solid.JSX.Element // TODO
-  form?: Solid.JSX.Element
+  footer?: JSXElement // TODO
+  form?: JSXElement
 }
 
 export const DialogBody = (props: Props) => {

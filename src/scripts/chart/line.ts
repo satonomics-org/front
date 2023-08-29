@@ -1,29 +1,16 @@
-import { defaultLineOptions } from './defaults'
+import { LineType } from 'lightweight-charts'
 
-type LineOptions = LightweightCharts.DeepPartial<
-  LightweightCharts.LineStyleOptions & LightweightCharts.SeriesOptionsCommon
->
+import { createAutoscaleInfoProvider } from './autoScale'
+import { defaultSeriesOptions } from './defaults'
 
-export const createLineSeries = (params: {
-  chart: LightweightCharts.IChartApi
-  color: string
-  autoscale?: boolean
-  multiplier?: number
-  options?: LineOptions
-  title?: string
-}) => {
-  const { chart, color, multiplier, autoscale, options, title } = params
+type LineOptions = DeepPartial<LineStyleOptions & SeriesOptionsCommon>
 
-  const isDefault = !multiplier || multiplier === 1
-
+export const createLineSeries = (chart: IChartApi, options?: LineOptions) => {
   const seriesOptions: LineOptions = {
-    ...defaultLineOptions,
-    color: isDefault ? color : `${color}88`,
-    title,
+    ...defaultSeriesOptions,
+    lineType: LineType.Curved,
+    autoscaleInfoProvider: createAutoscaleInfoProvider(),
     ...options,
-    ...(options?.priceScaleId || autoscale === false
-      ? { autoscaleInfoProvider: undefined }
-      : {}),
   }
 
   const series = chart.addLineSeries(seriesOptions)

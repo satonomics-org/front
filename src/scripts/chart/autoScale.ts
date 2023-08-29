@@ -1,7 +1,7 @@
-let autoScaleInfo: LightweightCharts.AutoscaleInfo | null = null
+let autoScaleInfo: AutoscaleInfo | null = null
 
 export const createAutoscaleInfoProvider =
-  (override: boolean = false): LightweightCharts.AutoscaleInfoProvider =>
+  (override: boolean = false): AutoscaleInfoProvider =>
   (getInfo) => {
     if (override) {
       autoScaleInfo = getInfo()

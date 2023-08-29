@@ -1,9 +1,4 @@
-import {
-  assignedColors,
-  colors,
-  createLineSeries,
-  resetLeftPriceScale,
-} from '/src/scripts'
+import { colors, createLineSeries, resetLeftPriceScale } from '/src/scripts'
 
 export const applyPreset: ApplyPreset = ({ chart, datasets }) => {
   resetLeftPriceScale(chart, {
@@ -14,30 +9,21 @@ export const applyPreset: ApplyPreset = ({ chart, datasets }) => {
     },
   })
 
-  const all = createLineSeries({
-    chart,
+  const all = createLineSeries(chart, {
     color: colors.white,
-    options: {
-      priceScaleId: 'left',
-    },
+    priceScaleId: 'left',
     title: 'All',
   })
 
-  const sth = createLineSeries({
-    chart,
-    color: assignedColors.sth,
-    options: {
-      priceScaleId: 'left',
-    },
+  const sth = createLineSeries(chart, {
+    color: colors.sth,
+    priceScaleId: 'left',
     title: 'STH',
   })
 
-  const lth = createLineSeries({
-    chart,
-    color: assignedColors.lth,
-    options: {
-      priceScaleId: 'left',
-    },
+  const lth = createLineSeries(chart, {
+    color: colors.lth,
+    priceScaleId: 'left',
     title: 'LTH',
   })
 

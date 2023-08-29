@@ -2,17 +2,16 @@ import { createEventListener } from '@solid-primitives/event-listener'
 
 import { backEndAPI, krakenAPI } from '/src/scripts'
 
+import { createASS } from '/src/solid'
+
 const TEN_MINUTES_IN_MS = 600_000
 
-const createResource = <Value extends LightweightCharts.WhitespaceData>(
+const createResource = <Value extends WhitespaceData>(
   fetch: () => Promise<Value[]>,
-  valuesOptions?: Solid.SignalOptions<Value[] | null>,
+  valuesOptions?: SignalOptions<Value[] | null>,
 ): Resource<Value> => {
-  const [values, setValues] = createSignal(
-    null as Value[] | null,
-    valuesOptions,
-  )
-  const [live, setLive] = createSignal(false)
+  const values = createASS(null as Value[] | null, valuesOptions)
+  const live = createASS(false)
 
   let lastSuccessfulFetch: Date | null
 
@@ -22,9 +21,9 @@ const createResource = <Value extends LightweightCharts.WhitespaceData>(
         !lastSuccessfulFetch ||
         new Date().valueOf() - lastSuccessfulFetch.valueOf() > TEN_MINUTES_IN_MS
       ) {
-        const values = await fetch()
+        const fetchedValues = await fetch()
 
-        if (Array.isArray(values)) {
+        if (Array.isArray(fetchedValues)) {
           lastSuccessfulFetch = new Date()
 
           // const previousValues = this.values()
@@ -33,17 +32,15 @@ const createResource = <Value extends LightweightCharts.WhitespaceData>(
           // Useful for candlesticks
 
           // if (!previousValues) {
-          setValues(values)
+          values.set(fetchedValues)
           // } else {
-          //   previousValues.indexOf((data) => (data as LightweightCharts.WhitespaceData).time === )
+          //   previousValues.indexOf((data) => (data as WhitespaceData).time === )
           // }
         }
       }
     },
     values,
-    setValues,
     live,
-    setLive,
   }
 }
 
@@ -137,7 +134,7 @@ const initCandlesticksWebsocket = (resources: Resources) => {
 
       console.log('ws:', newCandle.close)
 
-      candlesticksResource.setValues((candlesticks) => {
+      candlesticksResource.values.set((candlesticks) => {
         if (lastCandle.time === newCandle.time) {
           candlesticks?.splice(-1, 1, newCandle)
         } else {
@@ -150,12 +147,12 @@ const initCandlesticksWebsocket = (resources: Resources) => {
 
     ws.addEventListener('open', () => {
       console.log('ws: open')
-      candlesticksResource.setLive(true)
+      candlesticksResource.live.set(true)
     })
 
     ws.addEventListener('close', () => {
       console.log('ws: close')
-      candlesticksResource.setLive(false)
+      candlesticksResource.live.set(false)
     })
   }
 

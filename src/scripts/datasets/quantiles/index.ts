@@ -1,11 +1,9 @@
 export const USABLE_CANDLESTICKS_START_DATE = '2012-01-01'
 const MEDIAN = 0.5
 
-type SingleValueData = LightweightCharts.SingleValueData
-
 export const addQuantiles = (
   _dataset: Dataset,
-  _candlesticks: Solid.Accessor<SingleValueData[]>,
+  _candlesticks: Accessor<SingleValueData[]>,
 ) => {
   const createQuantileSignal = () =>
     createSignal<SingleValueData[] | null>(null)
@@ -70,7 +68,7 @@ export const addQuantiles = (
 
 export const computeQuantiles = (
   quantiles: QuantileSignals,
-  dataset: LightweightCharts.SingleValueData[],
+  dataset: SingleValueData[],
   candlesticksCloses: SingleValueData[],
 ) => {
   console.log('quantiles: computing...')
@@ -140,8 +138,8 @@ export const computeQuantiles = (
 }
 
 const computeMVRV = (
-  candlesticks: LightweightCharts.SingleValueData[],
-  dataset: LightweightCharts.SingleValueData[],
+  candlesticks: SingleValueData[],
+  dataset: SingleValueData[],
   offset: number,
 ) => {
   const mvrv = candlesticks.map(({ time, value: close }, index) => {

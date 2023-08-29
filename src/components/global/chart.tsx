@@ -1,9 +1,13 @@
 import { createResizeObserver } from '@solid-primitives/resize-observer'
-import { CrosshairMode, PriceScaleMode, createChart } from 'lightweight-charts'
+import {
+  CrosshairMode,
+  PriceScaleMode,
+  createChart as _createChart,
+} from 'lightweight-charts'
 
 import { getCurrentWhiteColor, priceToUSLocale } from '/src/scripts'
 
-import { classPropToString } from '..'
+import { classPropToString } from '/src/components'
 
 interface Props {
   onResetChartCreated: (reset: ChartResetter) => void
@@ -11,34 +15,25 @@ interface Props {
 }
 
 export const Chart = (props: Props) => {
-  let chart: LightweightCharts.IChartApi | undefined
-  let div: HTMLDivElement | undefined
+  const [div, setDiv] = createSignal(undefined as HTMLDivElement | undefined)
 
-  const computeChartDimensions = () => ({
-    width: div?.clientWidth || 0,
-    height: div?.clientHeight || 0,
-  })
+  let chart: IChartApi | undefined
 
-  const buildChart = () => {
-    if (!div) return null
-
+  const createChart = () => {
     try {
       chart?.remove()
     } catch {}
 
     console.log('chart: create')
 
-    const dimensions = computeChartDimensions()
-
     const white = getCurrentWhiteColor()
 
-    chart = createChart(div, {
-      ...dimensions,
+    chart = _createChart('chart', {
       layout: {
         fontFamily: window
           .getComputedStyle(document.body)
           .getPropertyValue('font-family'),
-        background: { color: '#00000000' },
+        background: { color: 'transparent' },
         textColor: white,
       },
       grid: {
@@ -76,16 +71,9 @@ export const Chart = (props: Props) => {
     return chart
   }
 
-  onMount(() => props.onResetChartCreated(buildChart))
+  onMount(() => props.onResetChartCreated(createChart))
 
-  createResizeObserver(
-    () => div as HTMLDivElement,
-    () => {
-      const chartDimensions = computeChartDimensions()
-
-      chart?.resize(chartDimensions.width, chartDimensions.height)
-    },
-  )
+  createResizeObserver(div, (div) => chart?.resize(div.width, div.height))
 
   onCleanup(() => {
     chart?.remove()
@@ -95,7 +83,8 @@ export const Chart = (props: Props) => {
 
   return (
     <div
-      ref={div}
+      id="chart"
+      ref={setDiv}
       class={classPropToString([
         'h-full w-full cursor-crosshair transition-opacity duration-300 ease-out',
         props.class,

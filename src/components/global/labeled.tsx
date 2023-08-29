@@ -2,7 +2,7 @@ import { run } from '/src/scripts'
 
 import { classPropToString } from '/src/components'
 
-export interface Props extends Solid.ParentProps, BaseProps {
+export interface Props extends ParentProps, BaseProps {
   label: string
   divClass?: ClassProp
   labelClass?: ClassProp

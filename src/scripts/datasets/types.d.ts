@@ -1,8 +1,5 @@
-interface Dataset<
-  Value extends
-    LightweightCharts.WhitespaceData = LightweightCharts.SingleValueData,
-> {
-  values: Solid.Accessor<Value[] | null>
+interface Dataset<Value extends WhitespaceData = SingleValueData> {
+  values: Accessor<Value[] | null>
   fetch: () => void
 }
 
@@ -11,7 +8,7 @@ type DatasetKey = keyof Datasets
 interface Datasets
   extends Record<
     Exclude<ResourceKey, 'candlesticks' | 'minersRevenue'>,
-    Dataset<LightweightCharts.SingleValueData>
+    Dataset<SingleValueData>
   > {
   candlesticks: Dataset<CandlestickDataWithVolume>
   weeklyMA: DatasetWithQuantiles

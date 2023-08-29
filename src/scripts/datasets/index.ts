@@ -10,7 +10,7 @@ import { addQuantiles as _addQuantiles } from './quantiles'
 
 export { USABLE_CANDLESTICKS_START_DATE } from './quantiles'
 
-const createDataset = <Value extends LightweightCharts.WhitespaceData>(
+const createDataset = <Value extends WhitespaceData>(
   resource: Resource<Value>,
 ): Dataset<Value> => ({
   values: resource.values,
@@ -22,10 +22,8 @@ export const createDatasets = (resources: Resources) => {
     () =>
       convertCandlesticksToSingleValueDataset(resources.candlesticks.values()),
     {
-      equals: (
-        prev: LightweightCharts.SingleValueData[],
-        next: LightweightCharts.SingleValueData[],
-      ) => prev.length === next.length,
+      equals: (prev: SingleValueData[], next: SingleValueData[]) =>
+        prev.length === next.length,
     },
   )
 
@@ -39,7 +37,7 @@ export const createDatasets = (resources: Resources) => {
     ),
   )
 
-  const addQuantiles = (dataset: Dataset<LightweightCharts.SingleValueData>) =>
+  const addQuantiles = (dataset: Dataset<SingleValueData>) =>
     _addQuantiles(dataset, candlesticksCloses)
 
   const datasets: Datasets = {

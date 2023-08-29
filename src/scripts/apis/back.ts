@@ -9,7 +9,7 @@ const api = createBaseAPI({
 
 const convertRecordToLineData = (record: Record<string, number>) =>
   Object.entries(record).map(
-    ([time, value]): LightweightCharts.SingleValueData => ({
+    ([time, value]): SingleValueData => ({
       time,
       value: value ?? NaN,
     }),

@@ -1,4 +1,4 @@
-interface CandlestickDataWithVolume extends LightweightCharts.CandlestickData {
+interface CandlestickDataWithVolume extends CandlestickData {
   time: string
   volume: number
 }

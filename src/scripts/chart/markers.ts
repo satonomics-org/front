@@ -6,9 +6,9 @@ import {
 } from '/src/scripts'
 
 export const setMinMaxMarkers = (
-  chart: LightweightCharts.IChartApi,
-  series: LightweightCharts.ISeriesApi<any>,
-  candlesticks: LightweightCharts.CandlestickData[]
+  chart: IChartApi,
+  series: ISeriesApi<any>,
+  candlesticks: CandlestickData[],
 ) => {
   const isLeftPriceScaleVisible = chart.priceScale('left').options().visible
 
@@ -16,13 +16,12 @@ export const setMinMaxMarkers = (
     const slicedDataList = range
       ? candlesticks.slice(
           Math.ceil(range.from < 0 ? 0 : range.from),
-          Math.floor(range.to) + 1
+          Math.floor(range.to) + 1,
         )
       : []
 
     if (slicedDataList.length) {
-      const markers: LightweightCharts.SeriesMarker<LightweightCharts.Time>[] =
-        []
+      const markers: SeriesMarker<Time>[] = []
 
       ;[
         {
@@ -43,11 +42,11 @@ export const setMinMaxMarkers = (
         },
       ].map((params) => {
         const value = Math[params.mathFunction](
-          ...slicedDataList.map((data) => data[params.valueAttribute] || 0)
+          ...slicedDataList.map((data) => data[params.valueAttribute] || 0),
         )
 
         const candle = slicedDataList.find(
-          (data) => data[params.valueAttribute] === value
+          (data) => data[params.valueAttribute] === value,
         )
 
         return (

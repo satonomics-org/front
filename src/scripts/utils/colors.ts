@@ -1,63 +1,45 @@
-// Colors from UnoCSS: c-COLOR-500
+import * as twc from 'tailwindcss/colors'
+
+const deprecColorNames = [
+  'lightBlue',
+  'warmGray',
+  'trueGray',
+  'coolGray',
+  'blueGray',
+]
+
+deprecColorNames.forEach(
+  // @ts-ignore
+  (color) => delete twc[color],
+)
+
+export const convertCandleToColor = (candle: CandlestickData) =>
+  (candle.close || 1) > (candle.open || 0) ? colors.up : colors.down
+
 export const colors = {
+  ...twc,
   black: '#000000',
-  gray: '#737373',
   white: '#ffffff',
-  rose: '#f43f5e',
-  pink: '#ec4899',
-  fuchsia: '#d946ef',
-  purple: '#a855f7',
-  violet: '#8b5cf6',
-  indigo: '#6366f1',
-  blue: '#3b82f6',
-  sky: '#0ea5e9',
-  cyan: '#06b6d4',
-  teal: '#14b8a6',
-  emerald: '#10b981',
-  green: '#22c55e',
-  lime: '#84cc16',
-  yellow: '#eab308',
-  amber: '#f59e0b',
-  orange: '#f97316',
-  red: '#ef4444',
-  blue200: '#bfdbfe',
-  blue300: '#93c5fd',
-  blue400: '#60a5fa',
-  blue500: '#3b82f6',
-  blue600: '#2563eb',
-  blue700: '#1d4ed8',
-  blue800: '#1e40af',
-  blue900: '#1e3a8a',
-  red200: '#fecaca',
-  red300: '#fca5a5',
-  red400: '#f87171',
-  red500: '#ef4444',
-  red600: '#dc2626',
-  red700: '#b91c1c',
-  red800: '#991b1b',
-  red900: '#7f1d1d',
-}
-
-export const getCandleToColor = (candle: LightweightCharts.CandlestickData) =>
-  (candle.close || 1) > (candle.open || 0) ? colors.green : colors.red
-
-export const assignedColors = {
-  crabs: colors.red,
-  fish: colors.lime,
-  humpbacks: colors.violet,
-  plankton: colors.emerald,
-  sharks: colors.teal,
-  shrimps: colors.pink,
-  whales: colors.blue,
-  realized: colors.orange,
-  oneMonth: colors.cyan,
-  threeMonths: colors.lime,
-  sth: colors.yellow,
-  sixMonths: colors.red,
-  oneYear: colors.pink,
-  twoYears: colors.purple,
-  lth: colors.fuchsia,
-  balanced: colors.yellow,
-  cvdd: colors.lime,
-  terminal: colors.red,
+  crabs: twc.red[500],
+  fish: twc.lime[500],
+  humpbacks: twc.violet[500],
+  plankton: twc.emerald[500],
+  sharks: twc.teal[500],
+  shrimps: twc.pink[500],
+  whales: twc.blue[500],
+  realized: twc.orange[500],
+  oneMonth: twc.cyan[500],
+  threeMonths: twc.lime[500],
+  sth: twc.yellow[500],
+  sixMonths: twc.red[500],
+  oneYear: twc.pink[500],
+  twoYears: twc.purple[500],
+  lth: twc.fuchsia[500],
+  balanced: twc.yellow[500],
+  cvdd: twc.lime[500],
+  terminal: twc.red[500],
+  loss: twc.red[500],
+  profit: twc.green[500],
+  down: twc.red[500],
+  up: twc.green[500],
 }

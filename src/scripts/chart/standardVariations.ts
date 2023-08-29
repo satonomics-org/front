@@ -1,56 +1,32 @@
 import { computeAverage, createLineSeries } from '/src/scripts'
 
 export const createStandardVariationsLineSeries = (
-  chart: LightweightCharts.IChartApi,
-  color: string
+  chart: IChartApi,
+  color: string,
 ) => {
   return [
     {
-      series: createLineSeries({
-        chart,
-        color: `${color}88`,
-        title: '0σ',
-      }),
+      series: createLineSeries(chart, { color: `${color}88`, title: '0σ' }),
       multiplier: 0,
     },
     {
-      series: createLineSeries({
-        chart,
-        color: `${color}88`,
-        title: '1σ',
-      }),
+      series: createLineSeries(chart, { color: `${color}88`, title: '1σ' }),
       multiplier: 1,
     },
     {
-      series: createLineSeries({
-        chart,
-        color: `${color}88`,
-        title: '2σ',
-      }),
+      series: createLineSeries(chart, { color: `${color}88`, title: '2σ' }),
       multiplier: 2,
     },
     {
-      series: createLineSeries({
-        chart,
-        color: `${color}88`,
-        title: '3σ',
-      }),
+      series: createLineSeries(chart, { color: `${color}88`, title: '3σ' }),
       multiplier: 3,
     },
     {
-      series: createLineSeries({
-        chart,
-        color: `${color}88`,
-        title: '-1σ',
-      }),
+      series: createLineSeries(chart, { color: `${color}88`, title: '-1σ' }),
       multiplier: -1,
     },
     {
-      series: createLineSeries({
-        chart,
-        color: `${color}88`,
-        title: '-2σ',
-      }),
+      series: createLineSeries(chart, { color: `${color}88`, title: '-2σ' }),
       multiplier: -2,
     },
   ]
@@ -58,12 +34,12 @@ export const createStandardVariationsLineSeries = (
 
 export const setStandardVariationsDatasets = (
   standardVariationsList: ReturnType<typeof createStandardVariationsLineSeries>,
-  dataset: LightweightCharts.SingleValueData[],
-  candlesticks: CandlestickDataWithVolume[] | undefined
+  dataset: SingleValueData[],
+  candlesticks: CandlestickDataWithVolume[] | undefined,
 ) => {
   const start =
     candlesticks?.findIndex(
-      (candlestick) => candlestick.time === dataset.at(0)?.time
+      (candlestick) => candlestick.time === dataset.at(0)?.time,
     ) || 0
 
   const mvrv = (candlesticks || [])
@@ -87,46 +63,42 @@ export const setStandardVariationsDatasets = (
         value:
           value *
           (means[index].value + multiplier * standardVariations[index].value),
-      }))
+      })),
     )
   })
 }
 
-const computeStandardDeviation = (
-  dataset: LightweightCharts.SingleValueData[]
-) => {
-  const means: LightweightCharts.SingleValueData[] = []
+const computeStandardDeviation = (dataset: SingleValueData[]) => {
+  const means: SingleValueData[] = []
 
-  const standardVariations = dataset.map(
-    (data, index): LightweightCharts.SingleValueData => {
-      let mean = 0
+  const standardVariations = dataset.map((data, index): SingleValueData => {
+    let mean = 0
 
-      if (means.length) {
-        mean =
-          ((means.at(-1)?.value || 1) * means.length + data.value) /
-          (means.length + 1)
-      } else {
-        mean = data.value
-      }
-
-      means.push({
-        time: data.time,
-        value: mean,
-      })
-
-      const variance = computeAverage(
-        dataset.slice(0, index + 1).map((data) => {
-          const deviation = data.value - mean
-          return deviation ** 2
-        })
-      )
-
-      return {
-        time: data.time,
-        value: Math.sqrt(variance),
-      }
+    if (means.length) {
+      mean =
+        ((means.at(-1)?.value || 1) * means.length + data.value) /
+        (means.length + 1)
+    } else {
+      mean = data.value
     }
-  )
+
+    means.push({
+      time: data.time,
+      value: mean,
+    })
+
+    const variance = computeAverage(
+      dataset.slice(0, index + 1).map((data) => {
+        const deviation = data.value - mean
+        return deviation ** 2
+      }),
+    )
+
+    return {
+      time: data.time,
+      value: Math.sqrt(variance),
+    }
+  })
 
   return {
     means,

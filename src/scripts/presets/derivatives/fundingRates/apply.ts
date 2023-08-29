@@ -9,9 +9,7 @@ export const applyPreset: ApplyPreset = ({ chart, datasets }) => {
     visible: true,
   })
 
-  const series = createHistogramSeries({
-    chart,
-  })
+  const series = createHistogramSeries(chart)
 
   const { fundingRates } = datasets
 
@@ -22,7 +20,7 @@ export const applyPreset: ApplyPreset = ({ chart, datasets }) => {
       (fundingRates.values() || []).map((data) => ({
         ...data,
         value: data.value * 100,
-        color: `${data.value >= 0 ? colors.green : colors.red}bb`,
+        color: `${data.value >= 0 ? colors.up : colors.down}bb`,
       })),
     )
   })

@@ -1,4 +1,4 @@
-import { applyDifferentLinesPreset, assignedColors } from '/src/scripts'
+import { applyDifferentLinesPreset, colors } from '/src/scripts'
 
 export const applyPreset: ApplyPreset = ({ chart, datasets }) => {
   applyDifferentLinesPreset({
@@ -6,42 +6,42 @@ export const applyPreset: ApplyPreset = ({ chart, datasets }) => {
     list: [
       {
         dataset: datasets.realizedPrice,
-        color: assignedColors.realized,
+        color: colors.realized,
         title: 'All',
       },
       {
         dataset: datasets.lthRealizedPrice,
-        color: assignedColors.lth,
+        color: colors.lth,
         title: 'LTH',
       },
       {
         dataset: datasets.twoYearsRealizedPrice,
-        color: assignedColors.twoYears,
+        color: colors.twoYears,
         title: '<2Y',
       },
       {
         dataset: datasets.oneYearRealizedPrice,
-        color: assignedColors.oneYear,
+        color: colors.oneYear,
         title: '<1Y',
       },
       {
         dataset: datasets.sixMonthsRealizedPrice,
-        color: assignedColors.sixMonths,
+        color: colors.sixMonths,
         title: '<6M',
       },
       {
         dataset: datasets.sthRealizedPrice,
-        color: assignedColors.sth,
+        color: colors.sth,
         title: 'STH',
       },
       {
         dataset: datasets.threeMonthsRealizedPrice,
-        color: assignedColors.threeMonths,
+        color: colors.threeMonths,
         title: '<3M',
       },
       {
         dataset: datasets.oneMonthRealizedPrice,
-        color: assignedColors.oneMonth,
+        color: colors.oneMonth,
         title: '<1M',
       },
     ],

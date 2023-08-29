@@ -1,16 +1,15 @@
 import { defaultSeriesOptions } from './defaults'
 
-type AreaOptions = LightweightCharts.DeepPartial<
-  LightweightCharts.AreaStyleOptions & LightweightCharts.SeriesOptionsCommon
->
+type AreaOptions = DeepPartial<AreaStyleOptions & SeriesOptionsCommon>
 
 export const createAreaSeries = (params: {
-  chart: LightweightCharts.IChartApi
-  color?: string
-  options?: AreaOptions
-  title?: string
+  chart: IChartApi
+  options?: AreaOptions & {
+    color?: string
+  }
 }) => {
-  const { chart, options, title, color } = params
+  const { chart, options } = params
+  const { color } = options || {}
 
   const seriesOptions: AreaOptions = {
     priceScaleId: 'left',
@@ -19,7 +18,6 @@ export const createAreaSeries = (params: {
     topColor: color,
     bottomColor: color,
     ...options,
-    title,
   }
 
   const series = chart.addAreaSeries(seriesOptions)

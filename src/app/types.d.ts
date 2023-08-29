@@ -1,1 +1,1 @@
-type ChartResetter = (() => LightweightCharts.IChartApi | null) | null
+type ChartResetter = (() => IChartApi | null) | null

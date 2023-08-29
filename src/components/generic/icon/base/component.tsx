@@ -24,7 +24,7 @@ export const Icon = (props: Props) => {
     () =>
       !props.icon ||
       typeof props.icon === 'boolean' ||
-      (typeof props.icon === 'string' && props.icon.startsWith('<'))
+      (typeof props.icon === 'string' && props.icon.startsWith('<')),
   )
 
   const isImage = createMemo(() => !isSpan() && typeof props.icon === 'string')
@@ -34,7 +34,7 @@ export const Icon = (props: Props) => {
       {...dynamicProps}
       {...(props.style ? { style: stylePropToCSSProperties(props.style) } : {})}
       component={
-        isSpan() ? 'span' : isImage() ? 'img' : (props.icon as Solid.Component)
+        isSpan() ? 'span' : isImage() ? 'img' : (props.icon as Component)
       }
       {...(isImage()
         ? { src: props.icon, loading: 'lazy' }

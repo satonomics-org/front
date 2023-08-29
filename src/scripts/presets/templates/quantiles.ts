@@ -7,7 +7,7 @@ import {
 } from '/src/scripts'
 
 export const applyQuantilesPreset = (params: {
-  chart: LightweightCharts.IChartApi
+  chart: IChartApi
   dataset: DatasetWithQuantiles
   color?: string
   left?: true
@@ -18,10 +18,9 @@ export const applyQuantilesPreset = (params: {
     visible: left,
   })
 
-  const mainSeries = createLineSeries({
-    chart,
+  const mainSeries = createLineSeries(chart, {
     color: colors.white,
-    autoscale: false,
+    autoscaleInfoProvider: undefined,
     title: 'Price',
   })
 

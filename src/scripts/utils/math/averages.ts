@@ -3,12 +3,11 @@ export const computeAverage = (values: number[]) =>
   values.length
 
 export const computeMovingAverage = <
-  Value extends
-    LightweightCharts.WhitespaceData = LightweightCharts.SingleValueData,
+  Value extends WhitespaceData = SingleValueData,
 >(
   dataset: Value[],
   interval: number,
-): LightweightCharts.SingleValueData[] =>
+): SingleValueData[] =>
   dataset.map((data, index) => ({
     time: data.time,
     value: computeAverage([
@@ -20,22 +19,19 @@ export const computeMovingAverage = <
   }))
 
 export const computeWeeklyMovingAverage = <
-  Value extends
-    LightweightCharts.WhitespaceData = LightweightCharts.SingleValueData,
+  Value extends WhitespaceData = SingleValueData,
 >(
   dataset: Value[],
 ) => computeMovingAverage(dataset, 7)
 
 export const computeMonthlyMovingAverage = <
-  Value extends
-    LightweightCharts.WhitespaceData = LightweightCharts.SingleValueData,
+  Value extends WhitespaceData = SingleValueData,
 >(
   dataset: Value[],
 ) => computeMovingAverage(dataset, 30)
 
 export const computeYearlyMovingAverage = <
-  Value extends
-    LightweightCharts.WhitespaceData = LightweightCharts.SingleValueData,
+  Value extends WhitespaceData = SingleValueData,
 >(
   dataset: Value[],
 ) => computeMovingAverage(dataset, 365)

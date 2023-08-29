@@ -1,10 +1,10 @@
 import { createLineSeries, resetLeftPriceScale } from '/src/scripts'
 
 export const applyDifferentLinesPreset = (params: {
-  chart: LightweightCharts.IChartApi
+  chart: IChartApi
   list: {
     dataset?: Dataset
-    values?: Solid.Accessor<LightweightCharts.SingleValueData[] | null>
+    values?: Accessor<SingleValueData[] | null>
     color: string
     title: string
   }[]
@@ -14,11 +14,7 @@ export const applyDifferentLinesPreset = (params: {
   resetLeftPriceScale(chart)
 
   list.forEach(({ dataset, values, color, title }) => {
-    const series = createLineSeries({
-      chart,
-      color: `${color}bb`,
-      title,
-    })
+    const series = createLineSeries(chart, { color: `${color}bb`, title })
 
     dataset?.fetch()
 
