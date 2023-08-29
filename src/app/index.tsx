@@ -2,7 +2,6 @@ import { Meta, Title } from '@solidjs/meta'
 
 import {
   cleanChart,
-  createASS,
   createDatasets,
   createResources,
   presetsGroups,
@@ -21,6 +20,7 @@ import { Chart, DialogCore, Labeled, classPropToString } from '/src/components'
 
 import { env } from '../env'
 import packageJSONRaw from '/src/../package.json?raw'
+import { createASS } from '/src/solid'
 
 const packageJSON = JSON.parse(packageJSONRaw)
 
@@ -118,12 +118,9 @@ export const App = () => {
           </div>
           <div class="relative h-full w-full flex-1 overflow-x-hidden">
             <Chart
-              onResetChartCreated={(resetChart) => {
-                const [r, setR] = createSignal<ChartResetter>(null)
-                setR(resetChart)
-
+              onResetChartCreated={(resetChart) =>
                 state.resetChart.set(resetChart)
-              }}
+              }
               class={[lastCandle() ? 'opacity-100' : 'opacity-0']}
             />
             <Live live={resources.candlesticks.live()} />
