@@ -1,6 +1,9 @@
 import * as twc from 'tailwindcss/colors'
 
-const deprecColorNames = [
+export const convertCandleToColor = (candle: CandlestickData) =>
+  (candle.close || 1) > (candle.open || 0) ? colors.up : colors.down
+
+const depreciatedColorNames = [
   'lightBlue',
   'warmGray',
   'trueGray',
@@ -8,13 +11,10 @@ const deprecColorNames = [
   'blueGray',
 ]
 
-deprecColorNames.forEach(
+depreciatedColorNames.forEach(
   // @ts-ignore
   (color) => delete twc[color],
 )
-
-export const convertCandleToColor = (candle: CandlestickData) =>
-  (candle.close || 1) > (candle.open || 0) ? colors.up : colors.down
 
 export const colors = {
   ...twc,

@@ -62,14 +62,15 @@ export const App = () => {
   createEffect(() => updatePriceLine(lastCandle()))
 
   createEffect(() => {
-    const { resetChart, selectedPreset } = state
+    const resetChart = state.resetChart()
+    const id = state.selectedPreset()
 
     if (candlesticksFetched()) {
       untrack(() => {
         selectPreset({
           candlesticks: datasets.candlesticks.values() || [],
-          resetChart: resetChart(),
-          id: selectedPreset(),
+          resetChart,
+          id,
           datasets,
         })
       })
@@ -119,7 +120,7 @@ export const App = () => {
           <div class="relative h-full w-full flex-1 overflow-x-hidden">
             <Chart
               onResetChartCreated={(resetChart) =>
-                state.resetChart.set(resetChart)
+                state.resetChart.set(() => resetChart)
               }
               class={[lastCandle() ? 'opacity-100' : 'opacity-0']}
             />

@@ -25,35 +25,35 @@ export default defineConfig({
 
     solidSvg(),
 
-    VitePWA({
-      registerType: 'autoUpdate',
-      manifest: false,
-      workbox: {
-        skipWaiting: true,
-        globPatterns: ['**/*.{js,css,html,ico,png,svg,json,woff2,ttf}'],
-        runtimeCaching: [
-          {
-            urlPattern: ({ url }) => {
-              const networkFirst =
-                url.origin === 'https://sholong.shuttleapp.rs' ||
-                url.origin === 'https://api.kraken.com'
+    // VitePWA({
+    //   registerType: 'autoUpdate',
+    //   manifest: false,
+    //   workbox: {
+    //     skipWaiting: true,
+    //     globPatterns: ['**/*.{js,css,html,ico,png,svg,json,woff2,ttf}'],
+    //     runtimeCaching: [
+    //       {
+    //         urlPattern: ({ url }) => {
+    //           const networkFirst =
+    //             url.origin === 'https://sholong.shuttleapp.rs' ||
+    //             url.origin === 'https://api.kraken.com'
 
-              if (networkFirst) {
-                console.log('network first', url)
-              } else {
-                console.log('not network first', url)
-              }
+    //           if (networkFirst) {
+    //             console.log('network first', url)
+    //           } else {
+    //             console.log('not network first', url)
+    //           }
 
-              return networkFirst
-            },
-            handler: 'NetworkFirst',
-            options: {
-              cacheName: 'api-cache',
-            },
-          },
-        ],
-      },
-    }),
+    //           return networkFirst
+    //         },
+    //         handler: 'NetworkFirst',
+    //         options: {
+    //           cacheName: 'api-cache',
+    //         },
+    //       },
+    //     ],
+    //   },
+    // }),
 
     unpluginAutoImport({
       imports: ['solid-js', '@solidjs/router'],

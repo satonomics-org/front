@@ -3,7 +3,7 @@ import { createBaseAPI } from '/src/scripts'
 const api = createBaseAPI({
   baseUrl:
     location.protocol === 'https:'
-      ? 'https://sholong.shuttleapp.rs'
+      ? 'https://satonomics.shuttleapp.rs'
       : 'http://localhost:8000',
 })
 

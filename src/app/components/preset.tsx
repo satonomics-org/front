@@ -2,7 +2,7 @@ import { marked } from 'marked'
 
 import { presetsGroups, scrollIntoView } from '/src/scripts'
 
-import { Button, Dialog, classPropToString } from '/src/components'
+import { Button, classPropToString } from '/src/components'
 
 interface Props {
   id: string
@@ -30,10 +30,7 @@ export const Preset = (props: Props) => {
   const title = createMemo(() => preset()?.title || '')
 
   const description = createMemo(() =>
-    marked.parse(preset()?.description || '', {
-      mangle: false,
-      headerIds: false,
-    }),
+    marked.parse(preset()?.description || ''),
   )
 
   const _scrollIntoView = () => scrollIntoView(ref, 'smooth')
