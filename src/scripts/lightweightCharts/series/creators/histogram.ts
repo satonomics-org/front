@@ -1,4 +1,4 @@
-import { defaultSeriesOptions } from './defaults'
+import { defaultSeriesOptions } from '/src/scripts'
 
 type HistogramOptions = DeepPartial<HistogramStyleOptions & SeriesOptionsCommon>
 

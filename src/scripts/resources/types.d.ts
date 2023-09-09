@@ -1,12 +1,3 @@
-interface Resource<
-  Value extends WhitespaceData = SingleValueData,
-  Values = Value[] | null,
-> {
-  fetch: () => void
-  values: ASS<Values>
-  live: ASS<boolean>
-}
-
 type ResourceKey =
   | 'candlesticks'
   | 'transactedVolume'
@@ -44,6 +35,9 @@ type ResourceKey =
   | 'realizedPrice'
   | 'balancedPrice'
   | 'cvdd'
+  | 'cointimePrice'
+  | 'trueMeanPrice'
+  | 'vaultedPrice'
   | 'fundingRates'
   | 'vddMultiple'
   | 'minersRevenue'
@@ -56,6 +50,15 @@ type ResourceKey =
   | 'lthInProfit'
   | 'sthInProfit'
   | 'hashrate'
+
+interface Resource<
+  Value extends WhitespaceData = SingleValueData,
+  Values = Value[] | null,
+> {
+  fetch: () => void
+  values: ASS<Values>
+  live: ASS<boolean>
+}
 
 interface Resources
   extends Record<

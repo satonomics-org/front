@@ -1,14 +1,13 @@
-import { defaultSeriesOptions } from './defaults'
+import { defaultSeriesOptions } from '/src/scripts'
 
 type AreaOptions = DeepPartial<AreaStyleOptions & SeriesOptionsCommon>
 
-export const createAreaSeries = (params: {
-  chart: IChartApi
+export const createAreaSeries = (
+  chart: IChartApi,
   options?: AreaOptions & {
     color?: string
-  }
-}) => {
-  const { chart, options } = params
+  },
+) => {
   const { color } = options || {}
 
   const seriesOptions: AreaOptions = {

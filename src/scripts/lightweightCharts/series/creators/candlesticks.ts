@@ -2,12 +2,11 @@ import { colors, createAutoscaleInfoProvider } from '/src/scripts'
 
 export const createCandlesticksSeries = (
   chart: IChartApi,
-  inverseColors: boolean = false,
+  options: PriceSeriesOptions,
 ) => {
-  const leftPriceScaleVisible = chart.priceScale('left').options().visible
+  const { inverseColors, lowerOpacity } = options
 
-  const setOpacity = (color: string) =>
-    leftPriceScaleVisible ? `${color}88` : color
+  const setOpacity = (color: string) => (lowerOpacity ? `${color}88` : color)
 
   const upColor = setOpacity(inverseColors ? colors.down : colors.up)
   const downColor = setOpacity(inverseColors ? colors.up : colors.down)

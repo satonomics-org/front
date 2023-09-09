@@ -6,17 +6,17 @@ export const applyPreset: ApplyPreset = ({ chart, datasets }) => {
     list: [
       {
         dataset: datasets.yearlyMA,
-        color: colors.white,
+        color: colors.yearlyMA,
         title: 'Yearly',
       },
       {
         dataset: datasets.monthlyMA,
-        color: colors.yellow[500],
+        color: colors.monthlyMA,
         title: 'Monthly',
       },
       {
         dataset: datasets.weeklyMA,
-        color: colors.orange[500],
+        color: colors.weeklyMA,
         title: 'Weekly',
       },
     ],

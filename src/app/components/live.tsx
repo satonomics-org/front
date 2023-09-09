@@ -6,7 +6,7 @@ interface Props {
 
 export const Live = (props: Props) => {
   return (
-    <span class="absolute bottom-0 right-0 mb-1.5 mr-4 flex items-center space-x-1.5">
+    <span class="absolute bottom-0 right-0 mb-1.5 mr-3 flex items-center space-x-1.5">
       <span
         class={classPropToString([
           props.live ? 'text-green-500' : 'text-red-500/50',

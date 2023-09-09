@@ -6,10 +6,10 @@ import {
   createResources,
   presetsGroups,
   priceToUSLocale,
+  renderChart,
   run,
   scrollIntoView,
-  selectPreset,
-  updatePriceLine,
+  updateLastCandlestick,
 } from '/src/scripts'
 
 import { createDarkModeTimer } from './scripts'
@@ -30,11 +30,16 @@ export const App = () => {
   const urlParams = new URLSearchParams(window.location.search)
 
   const state = {
-    resetChart: createASS(null as ChartResetter),
     selectedPreset: createASS(
       urlParams.get(LOCAL_STORAGE_KEY) ||
         localStorage.getItem(LOCAL_STORAGE_KEY) ||
         'minimal',
+    ),
+    favorites: createASS(
+      JSON.parse(localStorage.getItem('favorites') || '[]') as string[],
+      {
+        equals: false,
+      },
     ),
   }
 
@@ -59,17 +64,15 @@ export const App = () => {
 
   const candlesticksFetched = createMemo(() => !!lastCandle())
 
-  createEffect(() => updatePriceLine(lastCandle()))
+  createEffect(() => updateLastCandlestick(lastCandle()))
 
   createEffect(() => {
-    const resetChart = state.resetChart()
     const id = state.selectedPreset()
 
     if (candlesticksFetched()) {
       untrack(() => {
-        selectPreset({
+        renderChart({
           candlesticks: datasets.candlesticks.values() || [],
-          resetChart,
           id,
           datasets,
         })
@@ -86,12 +89,24 @@ export const App = () => {
       )?.name || '',
   )
 
+  const favorite = (id: string) => {
+    state.favorites().includes(id)
+      ? state.favorites().splice(state.favorites().indexOf(id), 1)
+      : state.favorites().push(id)
+
+    state.favorites.set((l) => l)
+
+    localStorage.setItem('favorites', JSON.stringify(state.favorites()))
+  }
+
   return (
     <>
       <Title>
         {run(() => {
           const last = lastCandle()
-          return `${last ? `${priceToUSLocale(last.close)} | ` : ''}sholong`
+          return `${
+            last ? `${priceToUSLocale(last.close, false)} | ` : ''
+          }Satonomics`
         })}
       </Title>
       <Meta name="description" content={packageJSON.description} />
@@ -103,13 +118,15 @@ export const App = () => {
         ])}
       >
         <div class="flex h-full w-full flex-col dark:text-opacity-80 md:flex-row">
-          <div class="hidden flex-none flex-col border-r border-white dark:border-opacity-80 md:flex md:w-64 lg:w-80">
+          <div class="hidden flex-none flex-col border-r border-white dark:border-opacity-80 md:flex md:w-64 lg:w-96">
             <Header />
             <hr />
             <Menu
               selectedPreset={state.selectedPreset()}
               setSelectedPreset={(id: string) => state.selectedPreset.set(id)}
               candlesticksFetched={candlesticksFetched()}
+              favorite={favorite}
+              favorites={state.favorites()}
             />
           </div>
 
@@ -118,12 +135,7 @@ export const App = () => {
             <hr />
           </div>
           <div class="relative h-full w-full flex-1 overflow-x-hidden">
-            <Chart
-              onResetChartCreated={(resetChart) =>
-                state.resetChart.set(() => resetChart)
-              }
-              class={[lastCandle() ? 'opacity-100' : 'opacity-0']}
-            />
+            <Chart class={[lastCandle() ? 'opacity-100' : 'opacity-0']} />
             <Live live={resources.candlesticks.live()} />
           </div>
           <div class="md:hidden">
@@ -178,6 +190,8 @@ export const App = () => {
                             ref={(_ref) => (ref = _ref)}
                             onClick={() => openDialog?.(true)}
                             class="w-full flex-shrink-0 snap-center"
+                            onFavorite={() => favorite(id)}
+                            favorites={state.favorites()}
                           />
                         )
                       }}
@@ -208,6 +222,8 @@ export const App = () => {
                     ),
                   )
                 }}
+                favorite={favorite}
+                favorites={state.favorites()}
               />
             </DialogCore>
           </div>

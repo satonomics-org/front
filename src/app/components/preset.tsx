@@ -2,19 +2,23 @@ import { marked } from 'marked'
 
 import { presetsGroups, scrollIntoView } from '/src/scripts'
 
-import { Button, classPropToString } from '/src/components'
+import { Button, Dialog, classPropToString } from '/src/components'
+
+import { createASS } from '/src/solid'
 
 interface Props {
   id: string
   selectedPreset: string
   leftIcon?: IconProp
-  ref: (el: HTMLDivElement) => void
+  ref?: (el: HTMLDivElement) => void
   onClick: () => void
+  favorites: string[]
+  onFavorite: () => void
   class?: ClassProp
 }
 
 export const Preset = (props: Props) => {
-  let ref: HTMLDivElement | undefined
+  const ref = createASS(undefined as HTMLDivElement | undefined)
 
   const color = createMemo(() =>
     props.selectedPreset === props.id ? 'primary' : undefined,
@@ -33,14 +37,14 @@ export const Preset = (props: Props) => {
     marked.parse(preset()?.description || ''),
   )
 
-  const _scrollIntoView = () => scrollIntoView(ref, 'smooth')
+  const _scrollIntoView = () => scrollIntoView(ref(), undefined, 'smooth')
 
   return (
     <div
       id={props.id}
       ref={(_ref) => {
-        ref = _ref
-        props.ref(_ref)
+        ref.set(_ref)
+        props.ref?.(_ref)
       }}
       class={classPropToString(['flex space-x-1.5', props.class])}
     >
@@ -55,18 +59,33 @@ export const Preset = (props: Props) => {
       >
         <span class="truncate">{title()}</span>
       </Button>
-      {/* <Dialog
+      <Dialog
         color={undefined}
         closeable
         title={title()}
         button={{
           color: color(),
-          icon: IconTablerInfoCircleFilled,
-          onClick: () => _scrollIntoView(),
+          icon: IconTablerInfoCircle,
         }}
       >
         <div innerHTML={description()} />
-      </Dialog> */}
+      </Dialog>
+      <Button
+        icon={
+          props.favorites.includes(props.id)
+            ? IconTablerStarFilled
+            : IconTablerStar
+        }
+        color={color()}
+        iconClass={
+          props.favorites.includes(props.id)
+            ? color()
+              ? '!text-yellow-700'
+              : '!text-yellow-500'
+            : undefined
+        }
+        onClick={props.onFavorite}
+      />
     </div>
   )
 }

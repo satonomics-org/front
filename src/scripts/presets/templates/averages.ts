@@ -7,12 +7,13 @@ export const applyAveragesPreset = (params: {
   dataset: DatasetWithAverages
   gradient: 'red' | 'green' | 'violet'
   log?: boolean
-}) => {
+}): ReturnType<ApplyPreset> => {
   const { chart, dataset, gradient, log } = params
 
   resetLeftPriceScale(chart, {
     visible: true,
     mode: log ? PriceScaleMode.Logarithmic : undefined,
+    halved: true,
   })
 
   const options = {
@@ -40,7 +41,7 @@ export const applyAveragesPreset = (params: {
 
   const daily = createLineSeries(chart, {
     ...options,
-    color: `${palette.daily}aa`,
+    color: `${palette.daily}66`,
     title: 'Raw',
   })
 
@@ -58,7 +59,7 @@ export const applyAveragesPreset = (params: {
 
   const yearly = createLineSeries(chart, {
     ...options,
-    color: `${colors.white}bb`,
+    color: colors.white(),
     title: '1Y MA',
   })
 
@@ -70,4 +71,8 @@ export const applyAveragesPreset = (params: {
     monthly.setData(dataset.averages.monthly() || [])
     yearly.setData(dataset.averages.yearly() || [])
   })
+
+  return {
+    halved: true,
+  }
 }

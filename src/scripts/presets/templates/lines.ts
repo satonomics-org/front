@@ -14,7 +14,7 @@ export const applyDifferentLinesPreset = (params: {
   resetLeftPriceScale(chart)
 
   list.forEach(({ dataset, values, color, title }) => {
-    const series = createLineSeries(chart, { color: `${color}bb`, title })
+    const series = createLineSeries(chart, { color, title })
 
     dataset?.fetch()
 

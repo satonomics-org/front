@@ -1,7 +1,35 @@
+import {
+  ColorSpace,
+  Lab,
+  OKLCH,
+  mix,
+  parse,
+  sRGB,
+  serialize,
+  steps,
+  to,
+} from 'colorjs.io/fn'
+import { type ColorTypes } from 'colorjs.io/types/src/color'
 import * as twc from 'tailwindcss/colors'
+
+ColorSpace.register(sRGB)
+ColorSpace.register(Lab)
+ColorSpace.register(OKLCH)
 
 export const convertCandleToColor = (candle: CandlestickData) =>
   (candle.close || 1) > (candle.open || 0) ? colors.up : colors.down
+
+export const mixColors = (
+  color1: string,
+  color2: string,
+  percentage?: number,
+) => colorToHex(mix(parse(color1), parse(color2), percentage as any))
+
+export const stepColors = (color1: string, color2: string, _steps = 10) =>
+  steps(parse(color1), parse(color2), {
+    space: 'oklch',
+    steps: _steps,
+  }).map((color) => colorToHex(color))
 
 // const depreciatedColorNames = [
 //   'lightBlue',
@@ -19,27 +47,41 @@ export const convertCandleToColor = (candle: CandlestickData) =>
 export const colors = {
   ...twc,
   black: '#000000',
-  white: '#ffffff',
+  white: () =>
+    document.body.classList.contains('dark') ? '#ffffffcd' : '#ffffff',
+  offWhite: () =>
+    document.body.classList.contains('dark') ? '#ffffff66' : '#ffffff88',
+  weeklyMA: twc.yellow[500],
+  monthlyMA: twc.orange[500],
+  yearlyMA: twc.red[500],
   crabs: twc.red[500],
   fish: twc.lime[500],
   humpbacks: twc.violet[500],
   plankton: twc.emerald[500],
-  sharks: twc.teal[500],
+  sharks: twc.cyan[500],
   shrimps: twc.pink[500],
   whales: twc.blue[500],
-  realized: twc.orange[500],
-  oneMonth: twc.cyan[500],
-  threeMonths: twc.lime[500],
+  realizedPrice: twc.orange[500],
+  oneMonthHolders: twc.cyan[500],
+  threeMonthsHolders: twc.lime[500],
   sth: twc.yellow[500],
-  sixMonths: twc.red[500],
-  oneYear: twc.pink[500],
-  twoYears: twc.purple[500],
+  sixMonthsHolder: twc.red[500],
+  oneYearHolders: twc.pink[500],
+  twoYearsHolders: twc.purple[500],
   lth: twc.fuchsia[500],
-  balanced: twc.yellow[500],
+  balancedPrice: twc.yellow[500],
+  cointimePrice: twc.yellow[500],
+  trueMeanPrice: twc.blue[500],
+  vaultedPrice: twc.green[500],
   cvdd: twc.lime[500],
-  terminal: twc.red[500],
+  terminalPrice: twc.red[500],
   loss: twc.red[500],
   profit: twc.green[500],
   down: twc.red[500],
   up: twc.green[500],
 }
+
+const colorToHex = (color: ColorTypes | number) =>
+  serialize(to(typeof color === 'number' ? String(color) : color, 'srgb'), {
+    format: 'hex',
+  })

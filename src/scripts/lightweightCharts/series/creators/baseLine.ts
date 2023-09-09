@@ -1,24 +1,22 @@
-import { colors } from '/src/scripts'
-
-import { defaultSeriesOptions } from './defaults'
+import { colors, defaultSeriesOptions } from '/src/scripts'
 
 type BaseLineOptions = DeepPartial<BaselineStyleOptions & SeriesOptionsCommon>
 
-export const createBaseLineSeries = (params: {
-  chart: IChartApi
-  color?: string
-  topColor?: string
-  topLineColor?: string
-  bottomColor?: string
-  bottomLineColor?: string
-  lineColor?: string
-  base?: number
-  options?: BaseLineOptions
-  title?: string
-}) => {
+export const createBaseLineSeries = (
+  chart: IChartApi,
+  options: {
+    color?: string
+    topColor?: string
+    topLineColor?: string
+    bottomColor?: string
+    bottomLineColor?: string
+    lineColor?: string
+    base?: number
+    options?: BaseLineOptions
+    title?: string
+  },
+) => {
   const {
-    chart,
-    options,
     title,
     color,
     topColor,
@@ -27,7 +25,7 @@ export const createBaseLineSeries = (params: {
     bottomLineColor,
     base,
     lineColor,
-  } = params
+  } = options
 
   const allTopColor = topColor || color
   const allBottomColor = bottomColor || color
@@ -38,11 +36,11 @@ export const createBaseLineSeries = (params: {
     ...options,
     ...(base ? { baseValue: { type: 'price', price: 1 } } : {}),
     topLineColor: topLineColor || lineColor || allTopColor,
-    topFillColor1: colors.black,
+    topFillColor1: allTopColor,
     topFillColor2: allTopColor,
     bottomLineColor: bottomLineColor || lineColor || allBottomColor,
     bottomFillColor1: allBottomColor,
-    bottomFillColor2: colors.black,
+    bottomFillColor2: allBottomColor,
     title,
   }
 

@@ -74,6 +74,10 @@ export const Icon = (props: Props) => {
                 return 'text-orange-500'
               case 'violet':
                 return 'text-violet-500'
+              case 'white':
+                return 'text-white'
+              case 'black':
+                return 'text-black'
               default:
                 return 'text-white/60'
             }

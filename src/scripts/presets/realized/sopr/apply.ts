@@ -1,12 +1,14 @@
 import { colors, createBaseLineSeries, resetLeftPriceScale } from '/src/scripts'
 
 export const applyPreset: ApplyPreset = ({ chart, datasets }) => {
-  resetLeftPriceScale(chart, { visible: true })
+  resetLeftPriceScale(chart, {
+    visible: true,
+    halved: true,
+  })
 
-  const series = createBaseLineSeries({
-    chart,
-    topColor: `${colors.up}88`,
-    bottomColor: `${colors.down}88`,
+  const series = createBaseLineSeries(chart, {
+    topColor: colors.up,
+    bottomColor: colors.down,
     base: 1,
     options: {
       priceScaleId: 'left',
@@ -20,4 +22,8 @@ export const applyPreset: ApplyPreset = ({ chart, datasets }) => {
   createEffect(() => {
     series.setData(sopr.values() || [])
   })
+
+  return {
+    halved: true,
+  }
 }

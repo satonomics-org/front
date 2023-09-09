@@ -9,29 +9,28 @@ import {
 export const applyQuantilesPreset = (params: {
   chart: IChartApi
   dataset: DatasetWithQuantiles
-  color?: string
+  color: string
   left?: true
 }) => {
-  const { chart, dataset, left } = params
+  const { chart, dataset, left, color } = params
 
   resetLeftPriceScale(chart, {
     visible: left,
   })
 
   const mainSeries = createLineSeries(chart, {
-    color: colors.white,
+    color,
     autoscaleInfoProvider: undefined,
-    title: 'Price',
   })
 
-  const quantilesSeriesList = createQuantilesLineSeries(chart, left)
+  const quantilesSeriesList = createQuantilesLineSeries(chart, { left })
 
   dataset?.fetch()
 
   createEffect(() => {
     const values = dataset?.values()
 
-    if (!values || !dataset.quantiles[50]()?.at(0)) return
+    if (!values || !dataset.quantiles[99.9]()?.at(0)) return
 
     mainSeries.setData(
       values.map((data) => ({

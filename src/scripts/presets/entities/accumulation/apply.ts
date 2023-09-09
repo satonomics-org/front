@@ -4,6 +4,7 @@ import {
   colors,
   createHistogramSeries,
   resetLeftPriceScale,
+  stepColors,
 } from '/src/scripts'
 
 export const percentageAutoscaleInfoProvider: AutoscaleInfoProvider = () => ({
@@ -17,9 +18,9 @@ export const generateApplyPreset =
   (offset: number): ApplyPreset =>
   ({ chart, datasets }) => {
     resetLeftPriceScale(chart, {
+      halved: true,
       mode: PriceScaleMode.Logarithmic,
       scaleMargins: {
-        top: 0.5,
         bottom: 0,
       },
     })
@@ -71,30 +72,34 @@ export const generateApplyPreset =
       createEffect(() => {
         const values = dataset.values() || []
 
+        const ups = stepColors(colors.black, colors.up, 12)
+        const downs = stepColors(colors.black, colors.down, 12)
+
         const getColor = (value: number) =>
           [
-            { color: colors.red[950], range: [-Infinity, -5] },
-            { color: colors.red[900], range: [-5, -4.5] },
-            { color: colors.red[800], range: [-4.5, -4] },
-            { color: colors.red[700], range: [-4, -3.5] },
-            { color: colors.red[600], range: [-3.5, -3] },
-            { color: colors.red[500], range: [-3, -2.5] },
-            { color: colors.red[400], range: [-2.5, -2] },
-            { color: colors.red[300], range: [-2, -1.5] },
-            { color: colors.red[200], range: [-1.5, -1] },
-            { color: colors.red[100], range: [-1, -0.5] },
-            { color: colors.red[50], range: [-0.5, 0] },
-            { color: colors.green[50], range: [0, 0.5] },
-            { color: colors.green[100], range: [0.5, 1] },
-            { color: colors.green[200], range: [1, 1.5] },
-            { color: colors.green[300], range: [1.5, 2] },
-            { color: colors.green[400], range: [2, 2.5] },
-            { color: colors.green[500], range: [2.5, 3] },
-            { color: colors.green[600], range: [3, 3.5] },
-            { color: colors.green[700], range: [3.5, 4] },
-            { color: colors.green[800], range: [4, 4.5] },
-            { color: colors.green[900], range: [4.5, 5] },
-            { color: colors.green[950], range: [5, Infinity] },
+            { color: downs[11], range: [-Infinity, -5] },
+            { color: downs[10], range: [-5, -4.5] },
+            { color: downs[9], range: [-4.5, -4] },
+            { color: downs[8], range: [-4, -3.5] },
+            { color: downs[7], range: [-3.5, -3] },
+            { color: downs[6], range: [-3, -2.5] },
+            { color: downs[5], range: [-2.5, -2] },
+            { color: downs[4], range: [-2, -1.5] },
+            { color: downs[3], range: [-1.5, -1] },
+            { color: downs[2], range: [-1, -0.5] },
+            { color: downs[1], range: [-0.5, -0.125] },
+            { color: colors.black, range: [-0.125, 0.125] },
+            { color: ups[1], range: [0.125, 0.5] },
+            { color: ups[2], range: [0.5, 1] },
+            { color: ups[3], range: [1, 1.5] },
+            { color: ups[4], range: [1.5, 2] },
+            { color: ups[5], range: [2, 2.5] },
+            { color: ups[6], range: [2.5, 3] },
+            { color: ups[7], range: [3, 3.5] },
+            { color: ups[8], range: [3.5, 4] },
+            { color: ups[9], range: [4, 4.5] },
+            { color: ups[10], range: [4.5, 5] },
+            { color: ups[11], range: [5, Infinity] },
           ].find(
             (config) => value >= config.range[0] && value < config.range[1],
           )?.color
@@ -108,4 +113,8 @@ export const generateApplyPreset =
         )
       })
     })
+
+    return {
+      halved: true,
+    }
   }

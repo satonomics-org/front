@@ -1,16 +1,17 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-export const debounce = (callback: (...args: any[]) => void, wait = 250) => {
+export const debounce = <F extends (...args: any[]) => any>(
+  callback: F,
+  wait = 250,
+) => {
   let timeoutId: number | undefined
-  let latestArgs: any[] | undefined
+  let latestArgs: Parameters<F>
 
-  return (...args: any[]) => {
+  return (...args: Parameters<F>) => {
     latestArgs = args
 
     if (!timeoutId) {
       timeoutId = window.setTimeout(async () => {
-        // Needed because the function passed to the debounced can either be sync or async
-        // eslint-disable-next-line @typescript-eslint/await-thenable
-        await callback(...(latestArgs || []))
+        await callback(...latestArgs)
 
         timeoutId = undefined
       }, wait)

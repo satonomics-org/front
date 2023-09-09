@@ -3,14 +3,11 @@ import { colors, createLineSeries, resetLeftPriceScale } from '/src/scripts'
 export const applyPreset: ApplyPreset = ({ chart, datasets }) => {
   resetLeftPriceScale(chart, {
     visible: true,
-    scaleMargins: {
-      bottom: 0,
-      top: 0.75,
-    },
+    halved: true,
   })
 
   const all = createLineSeries(chart, {
-    color: colors.white,
+    color: colors.white(),
     priceScaleId: 'left',
     title: 'All',
   })
@@ -38,4 +35,8 @@ export const applyPreset: ApplyPreset = ({ chart, datasets }) => {
     lth.setData(lthInLoss.values() || [])
     sth.setData(sthInLoss.values() || [])
   })
+
+  return {
+    halved: true,
+  }
 }

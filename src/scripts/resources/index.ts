@@ -26,16 +26,7 @@ const createResource = <Value extends WhitespaceData>(
         if (Array.isArray(fetchedValues)) {
           lastSuccessfulFetch = new Date()
 
-          // const previousValues = this.values()
-
-          // TODO: If values findFirst with first date and last with last date and splice
-          // Useful for candlesticks
-
-          // if (!previousValues) {
           values.set(fetchedValues)
-          // } else {
-          //   previousValues.indexOf((data) => (data as WhitespaceData).time === )
-          // }
         }
       }
     },
@@ -91,6 +82,9 @@ export const createResources = () => {
     terminalPrice: createResource(backEndAPI.fetchTerminalPrice),
     realizedPrice: createResource(backEndAPI.fetchRealizedPrice),
     balancedPrice: createResource(backEndAPI.fetchBalancedPrice),
+    cointimePrice: createResource(backEndAPI.fetchCointimePrice),
+    trueMeanPrice: createResource(backEndAPI.fetchTrueMeanPrice),
+    vaultedPrice: createResource(backEndAPI.fetchVaultedPrice),
     cvdd: createResource(backEndAPI.fetchCVDD),
     fundingRates: createResource(backEndAPI.fetchFundingRates),
     vddMultiple: createResource(backEndAPI.fetchVDDMultiple),
@@ -107,17 +101,15 @@ export const createResources = () => {
   }
 
   onMount(() => {
-    console.log('fetch')
-
     resources.candlesticks.fetch()
 
-    initCandlesticksWebsocket(resources)
+    createLiveCandleWebsocket(resources)
   })
 
   return resources
 }
 
-const initCandlesticksWebsocket = (resources: Resources) => {
+const createLiveCandleWebsocket = (resources: Resources) => {
   let ws: WebSocket | null = null
 
   const initWebSocket = () => {

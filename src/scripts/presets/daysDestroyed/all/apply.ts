@@ -5,7 +5,7 @@ export const applyPreset: ApplyPreset = ({ chart, datasets }) => {
   ;[
     {
       dataset: datasets.terminalPrice,
-      color: colors.terminal,
+      color: colors.terminalPrice,
       title: 'Terminal',
       autoscale: undefined,
     },
@@ -17,13 +17,13 @@ export const applyPreset: ApplyPreset = ({ chart, datasets }) => {
     },
     {
       dataset: datasets.balancedPrice,
-      color: colors.balanced,
+      color: colors.balancedPrice,
       title: 'Balanced',
       autoscale: undefined,
     },
     {
       dataset: datasets.realizedPrice,
-      color: colors.realized,
+      color: colors.realizedPrice,
       title: 'Realized',
       autoscale: undefined,
     },

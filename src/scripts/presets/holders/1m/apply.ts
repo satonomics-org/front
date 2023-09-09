@@ -4,6 +4,6 @@ export const applyPreset: ApplyPreset = ({ chart, datasets }) => {
   applyQuantilesPreset({
     chart,
     dataset: datasets.oneMonthRealizedPrice,
-    color: colors.twoYears,
+    color: colors.oneMonthHolders,
   })
 }

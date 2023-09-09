@@ -1,8 +1,11 @@
+import { PriceScaleMode } from 'lightweight-charts'
+
 import { colors, createLineSeries, resetLeftPriceScale } from '/src/scripts'
 
 export const applyPreset: ApplyPreset = ({ chart, datasets }) => {
   resetLeftPriceScale(chart, {
     visible: true,
+    halved: true,
   })
   ;[
     {
@@ -53,4 +56,8 @@ export const applyPreset: ApplyPreset = ({ chart, datasets }) => {
       series.setData(dataset.values() || [])
     })
   })
+
+  return {
+    halved: true,
+  }
 }

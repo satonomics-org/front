@@ -7,8 +7,8 @@ import {
 export const applyPreset: ApplyPreset = ({ chart, datasets }) => {
   resetLeftPriceScale(chart, {
     visible: true,
+    halved: true,
     scaleMargins: {
-      top: 0.2,
       bottom: 0,
     },
   })
@@ -22,13 +22,12 @@ export const applyPreset: ApplyPreset = ({ chart, datasets }) => {
   createEffect(() => {
     series.setData(
       (vddMultiple.values() || []).map((data) => {
-        const color = `${
+        const color =
           data.value >= 3
             ? colors.red[500]
             : data.value >= 1
             ? colors.orange[500]
             : colors.green[500]
-        }88`
 
         return {
           ...data,
@@ -38,4 +37,7 @@ export const applyPreset: ApplyPreset = ({ chart, datasets }) => {
       }),
     )
   })
+  return {
+    halved: true,
+  }
 }

@@ -6,7 +6,7 @@ export const applyPreset: ApplyPreset = ({ chart, datasets }) => {
     list: [
       {
         dataset: datasets.realizedPrice,
-        color: colors.realized,
+        color: colors.realizedPrice,
         title: 'All',
       },
       {
@@ -16,17 +16,17 @@ export const applyPreset: ApplyPreset = ({ chart, datasets }) => {
       },
       {
         dataset: datasets.twoYearsRealizedPrice,
-        color: colors.twoYears,
+        color: colors.twoYearsHolders,
         title: '<2Y',
       },
       {
         dataset: datasets.oneYearRealizedPrice,
-        color: colors.oneYear,
+        color: colors.oneYearHolders,
         title: '<1Y',
       },
       {
         dataset: datasets.sixMonthsRealizedPrice,
-        color: colors.sixMonths,
+        color: colors.sixMonthsHolder,
         title: '<6M',
       },
       {
@@ -36,12 +36,12 @@ export const applyPreset: ApplyPreset = ({ chart, datasets }) => {
       },
       {
         dataset: datasets.threeMonthsRealizedPrice,
-        color: colors.threeMonths,
+        color: colors.threeMonthsHolders,
         title: '<3M',
       },
       {
         dataset: datasets.oneMonthRealizedPrice,
-        color: colors.oneMonth,
+        color: colors.oneMonthHolders,
         title: '<1M',
       },
     ],

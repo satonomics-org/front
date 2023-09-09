@@ -1,8 +1,9 @@
 export const scrollIntoView = (
-  element?: Element,
-  behavior: ScrollBehavior = 'instant'
+  element?: HTMLElement | Element | null,
+  block: ScrollLogicalPosition = 'nearest',
+  behavior: ScrollBehavior = 'instant',
 ) =>
   element?.scrollIntoView({
-    block: 'nearest',
+    block,
     behavior,
   })

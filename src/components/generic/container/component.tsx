@@ -29,7 +29,7 @@ export const Container = (props: Props) => {
             case 'primary':
               return 'text-black'
             case 'yellow':
-              return 'text-yellow-100 selection:bg-yellow-800'
+              return 'text-yellow-950 selection:bg-yellow-800'
             case 'orange':
               return 'text-orange-100 selection:bg-orange-800'
             case 'violet':
@@ -42,6 +42,8 @@ export const Container = (props: Props) => {
           switch (props.color) {
             case 'red':
               return 'bg-red-950'
+            case 'yellow':
+              return 'bg-yellow-500'
             case 'primary':
               return 'bg-white dark:bg-opacity-80'
           }

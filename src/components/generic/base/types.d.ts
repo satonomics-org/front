@@ -12,6 +12,8 @@ type ColorProp =
   | 'orange'
   | 'yellow'
   | 'violet'
+  | 'white'
+  | 'black'
   | 'transparent'
 
 interface BasePropsOnly {

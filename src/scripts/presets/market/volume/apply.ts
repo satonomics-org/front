@@ -1,4 +1,5 @@
 import {
+  chartState,
   colors,
   computeMonthlyMovingAverage,
   convertCandleToColor,
@@ -7,42 +8,54 @@ import {
   resetLeftPriceScale,
 } from '/src/scripts'
 
-export const applyPreset: ApplyPreset = ({ chart, datasets }) => {
-  resetLeftPriceScale(chart, {
-    visible: true,
-    scaleMargins: {
-      top: 0.8,
-      bottom: 0,
-    },
-  })
-
-  const volume = createHistogramSeries(chart)
-
-  const ma = createLineSeries(chart, {
-    color: `${colors.white}88`,
-    priceScaleId: 'left',
-  })
-
-  const candlesticks = datasets.candlesticks.values()
-
-  createEffect(() => {
-    const dataset = (candlesticks || []).map((candle) => {
-      const color = `${convertCandleToColor(candle)}88`
-
-      return {
-        time: candle.time,
-        value: candle.volume,
-        color,
-      }
+export const generateApplyPreset =
+  (volumeInDollars = false): ApplyPreset =>
+  ({ chart, datasets }) => {
+    resetLeftPriceScale(chart, {
+      visible: true,
+      scaleMargins: {
+        top: 0.75,
+        bottom: 0,
+      },
     })
 
-    volume.setData(dataset)
+    const volume = createHistogramSeries(chart)
 
-    ma.setData(
-      computeMonthlyMovingAverage(dataset).map((data) => ({
-        time: data.time,
-        value: data.value,
-      })),
-    )
-  })
-}
+    const isMainSeriesCandlesticks = chartState.seriesType !== 'Line'
+
+    const ma = createLineSeries(chart, {
+      color: isMainSeriesCandlesticks
+        ? colors.yellow[500]
+        : colors.neutral[200],
+      priceScaleId: 'left',
+    })
+
+    const candlesticks = datasets.candlesticks.values()
+
+    createEffect(() => {
+      const dataset = (candlesticks || []).map((candle) => {
+        const color = isMainSeriesCandlesticks
+          ? `${convertCandleToColor(candle)}88`
+          : colors.neutral[600]
+
+        return {
+          time: candle.time,
+          value: (volumeInDollars ? candle.close : 1) * candle.volume,
+          color,
+        }
+      })
+
+      volume.setData(dataset)
+
+      ma.setData(
+        computeMonthlyMovingAverage(dataset).map((data) => ({
+          time: data.time,
+          value: data.value,
+        })),
+      )
+    })
+
+    return {
+      lowerOpacity: false,
+    }
+  }

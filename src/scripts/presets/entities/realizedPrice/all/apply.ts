@@ -6,7 +6,7 @@ export const applyPreset: ApplyPreset = ({ chart, datasets }) => {
     list: [
       {
         dataset: datasets.realizedPrice,
-        color: colors.realized,
+        color: colors.realizedPrice,
         title: 'Combined',
       },
       {

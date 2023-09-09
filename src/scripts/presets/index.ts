@@ -1,5 +1,6 @@
 import { averagesPresetsGroup } from './averages'
 import { basicPresetsGroup } from './basic'
+import { cointimePresetsGroup } from './cointime'
 import { daysDestroyedPresetsGroup } from './daysDestroyed'
 import { derivativesPresetsGroup } from './derivatives'
 import { entitiesPresetsGroup } from './entities'
@@ -12,15 +13,7 @@ import { supplyPresetsGroup } from './supply'
 
 export * from './templates'
 
-// Add:
-// - Sats per dollar
-//  - Priced in ounces of gold (https://data.nasdaq.com/data/LBMA/GOLD-gold-price-london-fixing)
-// https://www.longtermtrends.net/
-// Miners
-// - Dollars per hash
-// Vs Global monetary liquidity
-
-export const presetsGroups = [
+export const presetsGroups: PresetsGroup[] = [
   basicPresetsGroup,
   marketPresetsGroup,
   extremesGroup,
@@ -28,6 +21,7 @@ export const presetsGroups = [
   realizedPresetsGroup,
   holdersPresetsGroup,
   entitiesPresetsGroup,
+  cointimePresetsGroup,
   daysDestroyedPresetsGroup,
   minersPresetsGroup,
   supplyPresetsGroup,

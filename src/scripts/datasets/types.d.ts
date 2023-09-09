@@ -32,7 +32,9 @@ interface Datasets
   realizedPrice: DatasetWithQuantiles
   balancedPrice: DatasetWithQuantiles
   cvdd: DatasetWithQuantiles
-
+  cointimePrice: DatasetWithQuantiles
+  trueMeanPrice: DatasetWithQuantiles
+  vaultedPrice: DatasetWithQuantiles
   minersRevenueInBitcoin: DatasetWithAverages
   minersRevenueInDollars: DatasetWithAverages
   puellMultiple: DatasetWithAverages

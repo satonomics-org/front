@@ -1,6 +1,8 @@
 export const resetLeftPriceScale = (
   chart: IChartApi,
-  options?: DeepPartial<PriceScaleOptions>,
+  options?: {
+    halved?: boolean
+  } & DeepPartial<PriceScaleOptions>,
 ) =>
   chart.priceScale('left').applyOptions({
     visible: false,
@@ -8,6 +10,12 @@ export const resetLeftPriceScale = (
     scaleMargins: {
       top: 0.2,
       bottom: 0.1,
+      ...(options?.halved
+        ? {
+            top: 0.55,
+            bottom: 0.05,
+          }
+        : {}),
       ...options?.scaleMargins,
     },
   })

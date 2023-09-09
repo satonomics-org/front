@@ -7,6 +7,7 @@ import {
 export const applyPreset: ApplyPreset = ({ chart, datasets }) => {
   resetLeftPriceScale(chart, {
     visible: true,
+    halved: true,
   })
 
   const series = createHistogramSeries(chart)
@@ -20,8 +21,12 @@ export const applyPreset: ApplyPreset = ({ chart, datasets }) => {
       (fundingRates.values() || []).map((data) => ({
         ...data,
         value: data.value * 100,
-        color: `${data.value >= 0 ? colors.up : colors.down}bb`,
+        color: data.value >= 0 ? colors.up : colors.down,
       })),
     )
   })
+
+  return {
+    halved: true,
+  }
 }

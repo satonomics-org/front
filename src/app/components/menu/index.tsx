@@ -1,10 +1,12 @@
-import { Button, Input } from '/src/components'
+import { Footer, List } from './components'
 
-import { List } from './components/list'
+import { Button, Input } from '/src/components'
 
 interface Props {
   selectedPreset: string
   setSelectedPreset: (id: string) => void
+  favorites: string[]
+  favorite: (id: string) => void
   candlesticksFetched: boolean
 }
 
@@ -29,7 +31,11 @@ export const Menu = (props: Props) => {
         />
       </div>
       <hr />
-      <List {...props} filter={state.filter} />
+      <div class="overflow-y-auto">
+        <List {...props} filter={state.filter} />
+        <hr />
+        <Footer />
+      </div>
     </>
   )
 }
