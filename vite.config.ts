@@ -13,9 +13,6 @@ import solidSvg from 'vite-plugin-solid-svg'
 
 import packageJSON from './package.json'
 
-// import devtools from 'solid-devtools/vite';
-
-const logoBlack = './src/assets/svgs/logo/black.svg'
 const logoWhite = './src/assets/svgs/logo/white.svg'
 const black = '#000000'
 
@@ -25,35 +22,36 @@ export default defineConfig({
 
     solidSvg(),
 
-    // VitePWA({
-    //   registerType: 'autoUpdate',
-    //   manifest: false,
-    //   workbox: {
-    //     skipWaiting: true,
-    //     globPatterns: ['**/*.{js,css,html,ico,png,svg,json,woff2,ttf}'],
-    //     runtimeCaching: [
-    //       {
-    //         urlPattern: ({ url }) => {
-    //           const networkFirst =
-    //             url.origin === 'https://sholong.shuttleapp.rs' ||
-    //             url.origin === 'https://api.kraken.com'
-
-    //           if (networkFirst) {
-    //             console.log('network first', url)
-    //           } else {
-    //             console.log('not network first', url)
-    //           }
-
-    //           return networkFirst
-    //         },
-    //         handler: 'NetworkFirst',
-    //         options: {
-    //           cacheName: 'api-cache',
-    //         },
-    //       },
-    //     ],
-    //   },
-    // }),
+    VitePWA({
+      registerType: 'autoUpdate',
+      manifest: false,
+      devOptions: {
+        enabled: true,
+      },
+      mode: 'development',
+      workbox: {
+        skipWaiting: true,
+        globPatterns: ['**/*.{js,css,html,ico,png,svg,json,woff2,ttf}'],
+        runtimeCaching: [
+          {
+            urlPattern: ({ url: { origin } }) => {
+              switch (origin) {
+                case 'http://localhost:8000':
+                case 'https://satonomics.shuttleapp.rs':
+                case 'https://api.kraken.com':
+                  return true
+                default:
+                  return false
+              }
+            },
+            handler: 'NetworkFirst',
+            options: {
+              cacheName: 'api-cache',
+            },
+          },
+        ],
+      },
+    }),
 
     unpluginAutoImport({
       imports: ['solid-js', '@solidjs/router'],
