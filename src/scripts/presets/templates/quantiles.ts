@@ -1,6 +1,7 @@
+import { getOwner } from 'solid-js'
+
 import {
   USABLE_CANDLESTICKS_START_DATE,
-  colors,
   createLineSeries,
   createQuantilesLineSeries,
   resetLeftPriceScale,

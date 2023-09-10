@@ -50,22 +50,19 @@ type ResourceKey =
   | 'lthInProfit'
   | 'sthInProfit'
   | 'hashrate'
+  | 'stablecoinsMarketCaps'
 
-interface Resource<
-  Value extends WhitespaceData = SingleValueData,
-  Values = Value[] | null,
-> {
-  fetch: () => void
+interface Resource<Value = SingleValueData, Values = Value[] | null> {
+  fetch: (owner: Owner | null) => Promise<void>
   values: ASS<Values>
   live: ASS<boolean>
 }
 
 interface Resources
   extends Record<
-    Exclude<ResourceKey, 'candlesticks'>,
+    Exclude<ResourceKey, 'candlesticks' | 'stablecoinsMarketCaps'>,
     Resource<SingleValueData>
   > {
-  candlesticks: CandlesticksResource
+  candlesticks: Resource<CandlestickDataWithVolume>
+  stablecoinsMarketCaps: Resource<GroupedSingleValues>
 }
-
-type CandlesticksResource = Resource<CandlestickDataWithVolume>

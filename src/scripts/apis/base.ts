@@ -12,7 +12,7 @@ export const createBaseAPI = (parameters: {
     async fetch(
       path: string,
       init?: RequestInit,
-      tries = 3,
+      tries = 6,
     ): Promise<Response> {
       const url = `${parameters.baseUrl}${path}`
 
@@ -30,7 +30,7 @@ export const createBaseAPI = (parameters: {
         }
       } catch {}
 
-      await sleep(1000)
+      await sleep(5000)
 
       return this.fetch(path, init, tries - 1)
     },

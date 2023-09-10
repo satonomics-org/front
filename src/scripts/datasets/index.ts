@@ -1,3 +1,5 @@
+import { getOwner } from 'solid-js'
+
 import {
   computeMonthlyMovingAverage,
   computeWeeklyMovingAverage,
@@ -9,13 +11,6 @@ import { addAverages } from './averages'
 import { addQuantiles as _addQuantiles } from './quantiles'
 
 export { USABLE_CANDLESTICKS_START_DATE } from './quantiles'
-
-const createDataset = <Value extends WhitespaceData>(
-  resource: Resource<Value>,
-): Dataset<Value> => ({
-  values: resource.values,
-  fetch: resource.fetch,
-})
 
 export const createDatasets = (resources: Resources) => {
   const candlesticksCloses = createMemo(
@@ -42,24 +37,30 @@ export const createDatasets = (resources: Resources) => {
 
   const datasets: Datasets = {
     candlesticks: createDataset(resources.candlesticks),
-    weeklyMA: addQuantiles({
-      fetch: resources.candlesticks.fetch,
-      values: createMemo(() =>
-        computeWeeklyMovingAverage(candlesticksCloses()),
-      ),
-    }),
-    monthlyMA: addQuantiles({
-      fetch: resources.candlesticks.fetch,
-      values: createMemo(() =>
-        computeMonthlyMovingAverage(candlesticksCloses()),
-      ),
-    }),
-    yearlyMA: addQuantiles({
-      fetch: resources.candlesticks.fetch,
-      values: createMemo(() =>
-        computeYearlyMovingAverage(candlesticksCloses()),
-      ),
-    }),
+    weeklyMA: addQuantiles(
+      createMemoDataset({
+        fetch: resources.candlesticks.fetch,
+        values: createMemo(() =>
+          computeWeeklyMovingAverage(candlesticksCloses()),
+        ),
+      }),
+    ),
+    monthlyMA: addQuantiles(
+      createMemoDataset({
+        fetch: resources.candlesticks.fetch,
+        values: createMemo(() =>
+          computeMonthlyMovingAverage(candlesticksCloses()),
+        ),
+      }),
+    ),
+    yearlyMA: addQuantiles(
+      createMemoDataset({
+        fetch: resources.candlesticks.fetch,
+        values: createMemo(() =>
+          computeYearlyMovingAverage(candlesticksCloses()),
+        ),
+      }),
+    ),
     transactedVolume: createDataset(resources.transactedVolume),
     sthRealizedPrice: addQuantiles(createDataset(resources.sthRealizedPrice)),
     lthRealizedPrice: addQuantiles(createDataset(resources.lthRealizedPrice)),
@@ -132,38 +133,67 @@ export const createDatasets = (resources: Resources) => {
     lthInLoss: createDataset(resources.lthInLoss),
     sthInLoss: createDataset(resources.sthInLoss),
     hashrate: addAverages(createDataset(resources.hashrate)),
-    minersRevenueInDollars: addAverages({
-      fetch: resources.minersRevenue.fetch,
-      values: createMemo(() =>
-        (resources.minersRevenue.values() || []).map((data) => ({
-          time: data.time,
-          value: data.value * candlestickClosesRecord()[data.time as string],
-        })),
-      ),
-    }),
-    puellMultiple: addAverages({
-      fetch: resources.minersRevenue.fetch,
-      values: createMemo(() => {
-        const dailyDataset = (resources.minersRevenue.values() || []).map(
-          (data) => ({
+    minersRevenueInDollars: addAverages(
+      createMemoDataset({
+        fetch: resources.minersRevenue.fetch,
+        values: createMemo(() =>
+          (resources.minersRevenue.values() || []).map((data) => ({
             time: data.time,
             value: data.value * candlestickClosesRecord()[data.time as string],
-          }),
-        )
-
-        const yearlyDataset = computeYearlyMovingAverage(dailyDataset)
-
-        return dailyDataset.map(({ time, value }, index) => {
-          const yearlyValue = yearlyDataset[index].value
-
-          return {
-            time,
-            value: value / yearlyValue,
-          }
-        })
+          })),
+        ),
       }),
-    }),
+    ),
+    puellMultiple: addAverages(
+      createMemoDataset({
+        fetch: resources.minersRevenue.fetch,
+        values: createMemo(() => {
+          const dailyDataset = (resources.minersRevenue.values() || []).map(
+            (data) => ({
+              time: data.time,
+              value:
+                data.value * candlestickClosesRecord()[data.time as string],
+            }),
+          )
+
+          const yearlyDataset = computeYearlyMovingAverage(dailyDataset)
+
+          return dailyDataset.map(({ time, value }, index) => {
+            const yearlyValue = yearlyDataset[index].value
+
+            return {
+              time,
+              value: value / yearlyValue,
+            }
+          })
+        }),
+      }),
+    ),
+    stablecoinsMarketCaps: createDataset(resources.stablecoinsMarketCaps),
   }
 
   return datasets
 }
+
+const createDataset = <Value>({
+  values,
+  fetch,
+}: Resource<Value>): Dataset<Value> => ({
+  values,
+  fetch() {
+    fetch(getOwner())
+  },
+})
+
+const createMemoDataset = <Value>({
+  fetch,
+  values,
+}: {
+  fetch: Resource<Value>['fetch']
+  values: Accessor<Value[]>
+}): Dataset<Value> => ({
+  values,
+  fetch() {
+    fetch(getOwner())
+  },
+})

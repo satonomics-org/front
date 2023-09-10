@@ -8,7 +8,7 @@ export const createQuantilesLineSeries = (
 
   const createQuantileSeries = (color: string) =>
     createLineSeries(chart, {
-      color: darken ? _darken(color, 0.6) : color,
+      color: darken ? _darken(color, 0.6) : _darken(color, 0.4),
       priceScaleId: left ? 'left' : undefined,
     })
 

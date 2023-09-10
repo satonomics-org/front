@@ -16,6 +16,8 @@ type EffectFunction<
 
 type JSXElement = import('solid-js').JSXElement
 
+type Owner = import('solid-js').Owner
+
 type EventHandlerUnion<
   T,
   E extends Event,

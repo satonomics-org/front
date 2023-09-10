@@ -1,4 +1,4 @@
-interface Dataset<Value extends WhitespaceData = SingleValueData> {
+interface Dataset<Value = SingleValueData> {
   values: Accessor<Value[] | null>
   fetch: () => void
 }
@@ -7,7 +7,10 @@ type DatasetKey = keyof Datasets
 
 interface Datasets
   extends Record<
-    Exclude<ResourceKey, 'candlesticks' | 'minersRevenue'>,
+    Exclude<
+      ResourceKey,
+      'candlesticks' | 'minersRevenue' | 'stablecoinsMarketCaps'
+    >,
     Dataset<SingleValueData>
   > {
   candlesticks: Dataset<CandlestickDataWithVolume>
@@ -39,4 +42,5 @@ interface Datasets
   minersRevenueInDollars: DatasetWithAverages
   puellMultiple: DatasetWithAverages
   hashrate: DatasetWithAverages
+  stablecoinsMarketCaps: Dataset<GroupedSingleValues>
 }

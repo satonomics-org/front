@@ -1,4 +1,6 @@
 import { createEventListener } from '@solid-primitives/event-listener'
+import { makeTimer } from '@solid-primitives/timer'
+import { getOwner, runWithOwner } from 'solid-js'
 
 import { backEndAPI, krakenAPI } from '/src/scripts'
 
@@ -6,17 +8,17 @@ import { createASS } from '/src/solid'
 
 const TEN_MINUTES_IN_MS = 600_000
 
-const createResource = <Value extends WhitespaceData>(
+const createResource = <Value>(
   fetch: () => Promise<Value[]>,
   valuesOptions?: SignalOptions<Value[] | null>,
-): Resource<Value> => {
+) => {
   const values = createASS(null as Value[] | null, valuesOptions)
   const live = createASS(false)
 
   let lastSuccessfulFetch: Date | null
 
-  return {
-    async fetch() {
+  const resource: Resource<Value> = {
+    async fetch(owner) {
       if (
         !lastSuccessfulFetch ||
         new Date().valueOf() - lastSuccessfulFetch.valueOf() > TEN_MINUTES_IN_MS
@@ -29,10 +31,24 @@ const createResource = <Value extends WhitespaceData>(
           values.set(fetchedValues)
         }
       }
+
+      runWithOwner(owner, () => {
+        const dispose = makeTimer(
+          () => {
+            resource.fetch(owner)
+          },
+          TEN_MINUTES_IN_MS,
+          setTimeout,
+        )
+
+        onCleanup(dispose)
+      })
     },
     values,
     live,
   }
+
+  return resource
 }
 
 export const createResources = () => {
@@ -98,10 +114,13 @@ export const createResources = () => {
     lthInLoss: createResource(backEndAPI.fetchLTHInLoss),
     sthInLoss: createResource(backEndAPI.fetchSTHInLoss),
     hashrate: createResource(backEndAPI.fetchHashrate),
+    stablecoinsMarketCaps: createResource(
+      backEndAPI.fetchStablecoinsMarketCaps,
+    ),
   }
 
   onMount(() => {
-    resources.candlesticks.fetch()
+    resources.candlesticks.fetch(getOwner())
 
     createLiveCandleWebsocket(resources)
   })

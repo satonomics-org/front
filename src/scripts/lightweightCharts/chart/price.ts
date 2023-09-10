@@ -32,7 +32,9 @@ export const applyPriceSeries = (
   chartState.seriesType = seriesType
 
   const lowerOpacity =
-    options?.lowerOpacity ?? chart.priceScale('left').options().visible
+    options?.lowerOpacity ??
+    options?.halved ??
+    chart.priceScale('left').options().visible
 
   if (seriesType === 'Candlestick') {
     chartState.priceSeries = createCandlesticksSeries(chart, {
