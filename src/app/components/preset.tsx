@@ -65,7 +65,7 @@ export const Preset = (props: Props) => {
         title={title()}
         button={{
           color: color(),
-          icon: IconTablerInfoCircle,
+          icon: IconTablerInfoCircleFilled,
         }}
       >
         <div innerHTML={description()} />

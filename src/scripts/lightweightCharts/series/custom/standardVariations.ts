@@ -4,45 +4,47 @@ export const createStandardVariationsLineSeries = (
   chart: IChartApi,
   color: string,
 ) => {
+  color = darken(color)
+
   return [
     {
       series: createLineSeries(chart, {
-        color: darken(color),
+        color,
         title: '0σ',
       }),
       multiplier: 0,
     },
     {
       series: createLineSeries(chart, {
-        color: darken(color),
+        color,
         title: '1σ',
       }),
       multiplier: 1,
     },
     {
       series: createLineSeries(chart, {
-        color: darken(color),
+        color,
         title: '2σ',
       }),
       multiplier: 2,
     },
     {
       series: createLineSeries(chart, {
-        color: darken(color),
+        color,
         title: '3σ',
       }),
       multiplier: 3,
     },
     {
       series: createLineSeries(chart, {
-        color: darken(color),
+        color,
         title: '-1σ',
       }),
       multiplier: -1,
     },
     {
       series: createLineSeries(chart, {
-        color: darken(color),
+        color,
         title: '-2σ',
       }),
       multiplier: -2,

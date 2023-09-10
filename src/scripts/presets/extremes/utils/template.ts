@@ -4,9 +4,7 @@ export const applyExtremesPreset = (
   chart: IChartApi,
   datasets: DatasetWithQuantiles[],
 ) => {
-  const quantilesSeriesList = createQuantilesLineSeries(chart, {
-    darkenPercentage: 0,
-  })
+  const quantilesSeriesList = createQuantilesLineSeries(chart)
 
   datasets.forEach((dataset) => dataset.fetch())
 

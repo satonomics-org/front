@@ -198,7 +198,7 @@ export const App = () => {
               </div>
             </Labeled>
             <DialogCore
-              title="Select Preset"
+              title="Presets"
               onOpenCreated={(_openDialog) => (openDialog = _openDialog)}
               onCloseCreated={(_closeDialog) => (closeDialog = _closeDialog)}
               closeable

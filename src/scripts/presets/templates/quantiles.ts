@@ -23,7 +23,10 @@ export const applyQuantilesPreset = (params: {
     autoscaleInfoProvider: undefined,
   })
 
-  const quantilesSeriesList = createQuantilesLineSeries(chart, { left })
+  const quantilesSeriesList = createQuantilesLineSeries(chart, {
+    left,
+    darken: true,
+  })
 
   dataset?.fetch()
 

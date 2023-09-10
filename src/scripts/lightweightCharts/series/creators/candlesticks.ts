@@ -6,7 +6,8 @@ export const createCandlesticksSeries = (
 ) => {
   const { inverseColors, lowerOpacity } = options
 
-  const setOpacity = (color: string) => (lowerOpacity ? darken(color) : color)
+  const setOpacity = (color: string) =>
+    lowerOpacity ? darken(color, 0.4) : color
 
   const upColor = setOpacity(inverseColors ? colors.down : colors.up)
   const downColor = setOpacity(inverseColors ? colors.up : colors.down)

@@ -90,6 +90,8 @@ const finalizePriceSeries = (
     range = range || chartState.range
     chartState.range = range
 
+    localStorage.setItem('range', JSON.stringify(range))
+
     try {
       const seriesType = checkIfUpClose(chart, range)
       chartState.seriesType = seriesType

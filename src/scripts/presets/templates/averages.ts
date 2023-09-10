@@ -46,7 +46,7 @@ export const applyAveragesPreset = (params: {
 
   const daily = createLineSeries(chart, {
     ...options,
-    color: darken(palette.daily, 0.5),
+    color: darken(palette.daily),
     title: 'Raw',
   })
 

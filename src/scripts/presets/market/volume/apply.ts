@@ -15,7 +15,7 @@ export const generateApplyPreset =
     resetLeftPriceScale(chart, {
       visible: true,
       scaleMargins: {
-        top: 0.75,
+        top: 0.8,
         bottom: 0,
       },
     })
@@ -36,7 +36,7 @@ export const generateApplyPreset =
     createEffect(() => {
       const dataset = (candlesticks || []).map((candle) => {
         const color = isMainSeriesCandlesticks
-          ? darken(convertCandleToColor(candle))
+          ? darken(convertCandleToColor(candle), 0.33)
           : colors.neutral[600]
 
         return {
