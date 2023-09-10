@@ -1,8 +1,8 @@
-import { allExtremesPreset } from './all'
 import { cycleExtremesPreset } from './cycle'
 import { localExtremesPreset } from './local'
+import { mergedExtremesPreset } from './merged'
 
 export const extremesGroup = {
   name: 'Extremes',
-  list: [allExtremesPreset, localExtremesPreset, cycleExtremesPreset],
+  list: [cycleExtremesPreset, localExtremesPreset, mergedExtremesPreset],
 }
