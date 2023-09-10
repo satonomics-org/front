@@ -172,14 +172,11 @@ export const App = () => {
                         let ref: HTMLElement | undefined
 
                         createEffect(
-                          on(
-                            () => candlesticksFetched(),
-                            (fetched) => {
-                              if (fetched && state.selectedPreset() === id) {
-                                scrollIntoView(ref)
-                              }
-                            },
-                          ),
+                          on(candlesticksFetched, (fetched) => {
+                            if (fetched && state.selectedPreset() === id) {
+                              scrollIntoView(ref)
+                            }
+                          }),
                         )
 
                         return (

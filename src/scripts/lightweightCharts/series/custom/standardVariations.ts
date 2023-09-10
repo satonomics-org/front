@@ -1,4 +1,4 @@
-import { computeAverage, createLineSeries } from '/src/scripts'
+import { computeAverage, createLineSeries, darken } from '/src/scripts'
 
 export const createStandardVariationsLineSeries = (
   chart: IChartApi,
@@ -6,27 +6,45 @@ export const createStandardVariationsLineSeries = (
 ) => {
   return [
     {
-      series: createLineSeries(chart, { color: `${color}88`, title: '0σ' }),
+      series: createLineSeries(chart, {
+        color: darken(color),
+        title: '0σ',
+      }),
       multiplier: 0,
     },
     {
-      series: createLineSeries(chart, { color: `${color}88`, title: '1σ' }),
+      series: createLineSeries(chart, {
+        color: darken(color),
+        title: '1σ',
+      }),
       multiplier: 1,
     },
     {
-      series: createLineSeries(chart, { color: `${color}88`, title: '2σ' }),
+      series: createLineSeries(chart, {
+        color: darken(color),
+        title: '2σ',
+      }),
       multiplier: 2,
     },
     {
-      series: createLineSeries(chart, { color: `${color}88`, title: '3σ' }),
+      series: createLineSeries(chart, {
+        color: darken(color),
+        title: '3σ',
+      }),
       multiplier: 3,
     },
     {
-      series: createLineSeries(chart, { color: `${color}88`, title: '-1σ' }),
+      series: createLineSeries(chart, {
+        color: darken(color),
+        title: '-1σ',
+      }),
       multiplier: -1,
     },
     {
-      series: createLineSeries(chart, { color: `${color}88`, title: '-2σ' }),
+      series: createLineSeries(chart, {
+        color: darken(color),
+        title: '-2σ',
+      }),
       multiplier: -2,
     },
   ]

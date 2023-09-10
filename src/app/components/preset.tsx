@@ -46,7 +46,7 @@ export const Preset = (props: Props) => {
         ref.set(_ref)
         props.ref?.(_ref)
       }}
-      class={classPropToString(['flex space-x-1.5', props.class])}
+      class={classPropToString(['flex space-x-1', props.class])}
     >
       <Button
         full

@@ -1,14 +1,14 @@
-import { colors, createLineSeries } from '/src/scripts'
+import { colors, createLineSeries, darken } from '/src/scripts'
 
 export const createQuantilesLineSeries = (
   chart: IChartApi,
-  params: { left?: true; transparency?: string },
+  params: { left?: true; darkenPercentage?: number },
 ) => {
-  const { left, transparency } = params
+  const { left, darkenPercentage } = params
 
   const createQuantileSeries = (color: string) =>
     createLineSeries(chart, {
-      color: `${color}${transparency || 66}`,
+      color: darken(color, darkenPercentage),
       priceScaleId: left ? 'left' : undefined,
     })
 

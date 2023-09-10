@@ -17,7 +17,7 @@ export const Menu = (props: Props) => {
 
   return (
     <>
-      <div class="flex space-x-1.5 p-2">
+      <div class="flex space-x-1 p-2">
         <Input
           onInput={(value) => setState('filter', value || '')}
           full

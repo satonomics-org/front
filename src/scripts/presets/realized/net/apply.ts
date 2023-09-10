@@ -4,6 +4,7 @@ import {
   computeWeeklyMovingAverage,
   createHistogramSeries,
   createLineSeries,
+  darken,
   resetLeftPriceScale,
 } from '/src/scripts'
 
@@ -40,7 +41,7 @@ export const applyPreset: ApplyPreset = ({ chart, datasets }) => {
     daily.setData(
       dataset.map((data) => ({
         ...data,
-        color: `${data.value < 0 ? colors.down : colors.up}88`,
+        color: darken(data.value < 0 ? colors.down : colors.up),
       })),
     )
 

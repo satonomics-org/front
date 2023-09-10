@@ -5,6 +5,7 @@ import {
   convertCandleToColor,
   createHistogramSeries,
   createLineSeries,
+  darken,
   resetLeftPriceScale,
 } from '/src/scripts'
 
@@ -35,7 +36,7 @@ export const generateApplyPreset =
     createEffect(() => {
       const dataset = (candlesticks || []).map((candle) => {
         const color = isMainSeriesCandlesticks
-          ? `${convertCandleToColor(candle)}88`
+          ? darken(convertCandleToColor(candle))
           : colors.neutral[600]
 
         return {

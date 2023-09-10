@@ -1,3 +1,5 @@
+import { sleep } from '../utils/sleep'
+
 export const createBaseAPI = (parameters: {
   baseUrl: string
   rate?: {
@@ -25,12 +27,12 @@ export const createBaseAPI = (parameters: {
 
         if (result.ok) {
           return result
-        } else {
-          return this.fetch(path, init, tries - 1)
         }
-      } catch {
-        return this.fetch(path, init, tries - 1)
-      }
+      } catch {}
+
+      await sleep(1000)
+
+      return this.fetch(path, init, tries - 1)
     },
     async fetchText(path: string, init?: RequestInit) {
       return (await this.fetch(path, init)).text()

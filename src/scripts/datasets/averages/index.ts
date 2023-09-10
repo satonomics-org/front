@@ -5,7 +5,7 @@ import {
 } from '/src/scripts'
 
 export const addAverages = <Value extends WhitespaceData = SingleValueData>(
-  _dataset: Dataset<Value>,
+  dataset: Dataset<Value>,
 ): Dataset<Value> & AveragesAddOn => {
   const averagesSignals: AveragesSignals = {
     weekly: createSignal<SingleValueData[] | null>(null),
@@ -15,21 +15,21 @@ export const addAverages = <Value extends WhitespaceData = SingleValueData>(
 
   createEffect(
     on(
-      () => _dataset.values()?.length,
+      () => dataset.values()?.length,
       (current, previous) => {
         if (current === previous) return
 
-        const dataset = _dataset.values()
+        const _dataset = dataset.values()
 
-        if (!dataset) return
+        if (!_dataset) return
 
-        computeAverages(averagesSignals, dataset)
+        computeAverages(averagesSignals, _dataset)
       },
     ),
   )
 
   return {
-    ..._dataset,
+    ...dataset,
     averages: {
       weekly: averagesSignals.weekly[0],
       monthly: averagesSignals.monthly[0],

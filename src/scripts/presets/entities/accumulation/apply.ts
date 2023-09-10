@@ -7,7 +7,7 @@ import {
   stepColors,
 } from '/src/scripts'
 
-export const percentageAutoscaleInfoProvider: AutoscaleInfoProvider = () => ({
+const percentageAutoscaleInfoProvider: AutoscaleInfoProvider = () => ({
   priceRange: {
     minValue: 0.01,
     maxValue: 1_000_000,

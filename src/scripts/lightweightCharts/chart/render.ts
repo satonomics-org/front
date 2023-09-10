@@ -13,42 +13,48 @@ const whitespaceDataset: WhitespaceData[] = []
 
 updateWhitespaceDataset(whitespaceDataset)
 
+let dispose: (() => void) | undefined = undefined
+
 export const renderChart = async (params: {
   candlesticks: CandlestickDataWithVolume[]
   id: string
   datasets: Datasets
 }) => {
-  const owner = getOwner()
+  dispose?.()
 
-  chartState.reset = () => runWithOwner(owner, () => renderChart(params))
+  createRoot((_dispose) => {
+    dispose = _dispose
 
-  const { candlesticks, id, datasets } = params
+    chartState.reset = () => renderChart(params)
 
-  console.log(`preset: ${id}`)
+    const { candlesticks, id, datasets } = params
 
-  createChart()
+    console.log(`preset: ${id}`)
 
-  const { chart } = chartState
+    createChart()
 
-  if (!chart || !candlesticks.length) return
+    const { chart } = chartState
 
-  try {
-    const whitespaceSeries = createLineSeries(chart)
+    if (!chart || !candlesticks.length) return
 
-    updateWhitespaceDataset(whitespaceDataset)
+    try {
+      const whitespaceSeries = createLineSeries(chart)
 
-    whitespaceSeries.setData(whitespaceDataset.map((data) => ({ ...data })))
+      updateWhitespaceDataset(whitespaceDataset)
 
-    const options =
-      presetsGroups
-        .map((group) => group.list)
-        .flat()
-        .find((preset) => preset.id === id)
-        ?.applyPreset?.({
-          chart,
-          datasets,
-        }) || undefined
+      whitespaceSeries.setData(whitespaceDataset.map((data) => ({ ...data })))
 
-    applyPriceSeries(chart, candlesticks, options)
-  } catch {}
+      const options =
+        presetsGroups
+          .map((group) => group.list)
+          .flat()
+          .find((preset) => preset.id === id)
+          ?.applyPreset?.({
+            chart,
+            datasets,
+          }) || undefined
+
+      applyPriceSeries(chart, candlesticks, options)
+    } catch {}
+  })
 }

@@ -19,11 +19,15 @@ ColorSpace.register(OKLCH)
 export const convertCandleToColor = (candle: CandlestickData) =>
   (candle.close || 1) > (candle.open || 0) ? colors.up : colors.down
 
-export const mixColors = (
-  color1: string,
-  color2: string,
-  percentage?: number,
-) => colorToHex(mix(parse(color1), parse(color2), percentage as any))
+export const mixColors = (color1: string, color2: string, percentage = 0.5) =>
+  colorToHex(
+    mix(parse(color1), parse(color2), percentage, {
+      space: 'oklch',
+    }),
+  )
+
+export const darken = (color: string, percentage = 0.4) =>
+  mixColors(color, colors.black, percentage)
 
 export const stepColors = (color1: string, color2: string, _steps = 10) =>
   steps(parse(color1), parse(color2), {

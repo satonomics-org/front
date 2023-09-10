@@ -31,9 +31,23 @@ export const applyPreset: ApplyPreset = ({ chart, datasets }) => {
   lthInProfit.fetch()
 
   createEffect(() => {
-    all.setData(supplyInProfit.values() || [])
-    lth.setData(lthInProfit.values() || [])
-    sth.setData(sthInProfit.values() || [])
+    all.setData(
+      (supplyInProfit.values() || []).map((data) => ({
+        ...data,
+      })),
+    )
+
+    lth.setData(
+      (lthInProfit.values() || []).map((data) => ({
+        ...data,
+      })),
+    )
+
+    sth.setData(
+      (sthInProfit.values() || []).map((data) => ({
+        ...data,
+      })),
+    )
   })
 
   return {

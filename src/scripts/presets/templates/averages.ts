@@ -1,6 +1,11 @@
 import { PriceScaleMode } from 'lightweight-charts'
 
-import { colors, createLineSeries, resetLeftPriceScale } from '/src/scripts'
+import {
+  colors,
+  createLineSeries,
+  darken,
+  resetLeftPriceScale,
+} from '/src/scripts'
 
 export const applyAveragesPreset = (params: {
   chart: IChartApi
@@ -41,7 +46,7 @@ export const applyAveragesPreset = (params: {
 
   const daily = createLineSeries(chart, {
     ...options,
-    color: `${palette.daily}66`,
+    color: darken(palette.daily, 0.5),
     title: 'Raw',
   })
 
@@ -66,10 +71,29 @@ export const applyAveragesPreset = (params: {
   dataset.fetch()
 
   createEffect(() => {
-    daily.setData(dataset.values() || [])
-    weekly.setData(dataset.averages.weekly() || [])
-    monthly.setData(dataset.averages.monthly() || [])
-    yearly.setData(dataset.averages.yearly() || [])
+    daily.setData(
+      (dataset.values() || []).map((data) => ({
+        ...data,
+      })),
+    )
+
+    weekly.setData(
+      (dataset.averages.weekly() || []).map((data) => ({
+        ...data,
+      })),
+    )
+
+    monthly.setData(
+      (dataset.averages.monthly() || []).map((data) => ({
+        ...data,
+      })),
+    )
+
+    yearly.setData(
+      (dataset.averages.yearly() || []).map((data) => ({
+        ...data,
+      })),
+    )
   })
 
   return {

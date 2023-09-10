@@ -5,7 +5,7 @@ export const applyExtremesPreset = (
   datasets: DatasetWithQuantiles[],
 ) => {
   const quantilesSeriesList = createQuantilesLineSeries(chart, {
-    transparency: 'cc',
+    darkenPercentage: 0,
   })
 
   datasets.forEach((dataset) => dataset.fetch())

@@ -51,7 +51,11 @@ export const applyPreset: ApplyPreset = ({ chart, datasets }) => {
     dataset.fetch()
 
     createEffect(() => {
-      series.setData(dataset.values() || [])
+      series.setData(
+        (dataset.values() || []).map((data) => ({
+          ...data,
+        })),
+      )
     })
 
     return series

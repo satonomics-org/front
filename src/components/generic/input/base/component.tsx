@@ -85,7 +85,7 @@ export const Input = (props: Props) => {
     <div
       class={classPropToString([
         props.full && 'w-full',
-        'inline-flex flex-1 space-x-1.5',
+        'inline-flex flex-1 space-x-1',
       ])}
       ref={props.wrapperRef}
       // @ts-ignore

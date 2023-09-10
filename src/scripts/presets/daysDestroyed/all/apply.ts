@@ -7,30 +7,26 @@ export const applyPreset: ApplyPreset = ({ chart, datasets }) => {
       dataset: datasets.terminalPrice,
       color: colors.terminalPrice,
       title: 'Terminal',
-      autoscale: undefined,
     },
     {
       dataset: datasets.cvdd,
       color: colors.cvdd,
       title: 'CVDD',
-      autoscale: undefined,
     },
     {
       dataset: datasets.balancedPrice,
       color: colors.balancedPrice,
       title: 'Balanced',
-      autoscale: undefined,
     },
     {
       dataset: datasets.realizedPrice,
       color: colors.realizedPrice,
       title: 'Realized',
-      autoscale: undefined,
     },
-  ].map(({ dataset, color, autoscale, title }) => {
+  ].map(({ dataset, color, title }) => {
     const series = createLineSeries(chart, {
       color,
-      autoscaleInfoProvider: autoscale,
+      autoscaleInfoProvider: undefined,
       title,
     })
 
