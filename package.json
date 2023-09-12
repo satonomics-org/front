@@ -9,7 +9,8 @@
     "format": "prettier --write './src'",
     "prod": "$npm_execpath run build && vite preview --host",
     "serve": "vite preview",
-    "test": "vitest"
+    "test": "vitest",
+    "test-prod": "VITE_TEST_PROD=true $npm_execpath run test"
   },
   "license": "MIT",
   "dependencies": {
