@@ -6,14 +6,13 @@ import {
 } from '@solid-primitives/resize-observer'
 import defaultTailwindCSSTheme from 'tailwindcss/defaultTheme'
 
-import { run } from '/src/scripts'
-
 import {
-  createRelativePositionEffect,
-  forceCloseChildDialogs,
-  makeClickOutsideEventListener,
-  openForcedClosedChildDialogs,
-} from './scripts'
+  classPropToString,
+  Container,
+  dialogBooleanPropsKeysObject,
+  removeProps,
+} from '/src/components'
+import { run } from '/src/scripts'
 
 import {
   DialogBackdrop,
@@ -24,13 +23,12 @@ import {
   DialogLinesDefaultPosition,
   DialogResizers,
 } from './components'
-
 import {
-  Container,
-  classPropToString,
-  dialogBooleanPropsKeysObject,
-  removeProps,
-} from '/src/components'
+  createRelativePositionEffect,
+  forceCloseChildDialogs,
+  makeClickOutsideEventListener,
+  openForcedClosedChildDialogs,
+} from './scripts'
 
 type Props = DialogPropsWithHTMLAttributes
 
@@ -59,7 +57,7 @@ export const DialogCore = (props: Props) => {
   const forcedClosedChildDialogsOpenButtons: HTMLButtonElement[] = []
 
   const isWindowLarge = createMediaQuery(
-    `(min-width: ${defaultTailwindCSSTheme.screens.md})`
+    `(min-width: ${defaultTailwindCSSTheme.screens.md})`,
   )
   const isAble = createMemo(() => props.moveable || props.resizable)
   const isAttached = createMemo(() => !!props.attach)
@@ -69,23 +67,23 @@ export const DialogCore = (props: Props) => {
     () =>
       `dialog-${(props.title || props.button?.text?.toString())
         ?.toLowerCase()
-        .replaceAll(' ', '-')}-${Math.floor(Math.random() * 100000000)}`
+        .replaceAll(' ', '-')}-${Math.floor(Math.random() * 100000000)}`,
   )
   const defaultLeft = createMemo(() =>
-    state.show ? (useWindowSize().width - dialogWidth()) / 2 : 0
+    state.show ? (useWindowSize().width - dialogWidth()) / 2 : 0,
   )
   const defaultTop = createMemo(() => Math.round(useWindowSize().height / 10))
 
   const [dialog, setDialog] = createSignal<HTMLDialogElement | undefined>(
-    undefined
+    undefined,
   )
   const [dialogsDiv, setDialogsDiv] = createSignal<HTMLElement | undefined>(
-    undefined
+    undefined,
   )
 
   const dialogDimensions = createElementSize(dialog)
   const dialogWidth = createMemo(
-    () => (dialogDimensions.width && dialog()?.offsetWidth) || 0
+    () => (dialogDimensions.width && dialog()?.offsetWidth) || 0,
   )
 
   const moveToFront = () => {
@@ -128,7 +126,7 @@ export const DialogCore = (props: Props) => {
     forceCloseChildDialogs(dialog(), forcedClosedChildDialogsOpenButtons)
 
     const value = String(
-      element && 'value' in element ? element.value ?? '' : ''
+      element && 'value' in element ? element.value ?? '' : '',
     )
 
     setState({
@@ -159,8 +157,8 @@ export const DialogCore = (props: Props) => {
           if (!current && previous) {
             props.onClose?.(state.value || undefined)
           }
-        }
-      )
+        },
+      ),
     )
 
     createEffect(() => {
@@ -176,7 +174,7 @@ export const DialogCore = (props: Props) => {
         clearClickEvent = makeClickOutsideEventListener(
           dialog(),
           props.attach,
-          close
+          close,
         )
       }
     })
@@ -198,7 +196,7 @@ export const DialogCore = (props: Props) => {
         },
         {
           threshold: 0,
-        }
+        },
       )
     }
   })
@@ -255,7 +253,7 @@ export const DialogCore = (props: Props) => {
 
                 left: `${Math.min(
                   state.position.left ?? defaultLeft(),
-                  useWindowSize().width - dialogWidth()
+                  useWindowSize().width - dialogWidth(),
                 )}px`,
 
                 top: `${state.position.top ?? defaultTop()}px`,

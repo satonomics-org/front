@@ -3,7 +3,6 @@ import { makeTimer } from '@solid-primitives/timer'
 import { getOwner, runWithOwner } from 'solid-js'
 
 import { backEndAPI, krakenAPI } from '/src/scripts'
-
 import { createASS } from '/src/solid'
 
 const TEN_MINUTES_IN_MS = 600_000
@@ -56,7 +55,6 @@ export const createResources = () => {
     candlesticks: createResource(backEndAPI.fetchCandlesticks, {
       equals: false,
     }),
-    transactedVolume: createResource(backEndAPI.fetchTransactedVolume),
     sthRealizedPrice: createResource(backEndAPI.fetchSTHRealizedPrice),
     lthRealizedPrice: createResource(backEndAPI.fetchLTHRealizedPrice),
     oneMonthRealizedPrice: createResource(backEndAPI.fetch1MRealizedPrice),

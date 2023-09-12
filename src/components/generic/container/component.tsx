@@ -1,5 +1,3 @@
-import { run } from '/src/scripts'
-
 import {
   baseBooleanPropsKeysObject,
   classPropToString,
@@ -7,6 +5,7 @@ import {
   removeProps,
   stylePropToCSSProperties,
 } from '/src/components'
+import { run } from '/src/scripts'
 
 interface Props extends ContainerPropsWithHTMLAttributes {
   ref?: (ref: HTMLElement) => void

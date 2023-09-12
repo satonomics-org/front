@@ -1,7 +1,7 @@
 import {
-  DialogCore,
   classPropToString,
   dialogClassicBooleanPropsKeysObject,
+  DialogCore,
   removeProps,
 } from '/src/components'
 

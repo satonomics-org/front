@@ -1,5 +1,4 @@
 import { generateApplyPreset } from './apply'
-
 import description from './description.md?raw'
 
 export const krakenBitcoinVolumePreset = {

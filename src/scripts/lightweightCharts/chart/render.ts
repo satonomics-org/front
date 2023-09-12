@@ -1,5 +1,3 @@
-import { getOwner, runWithOwner } from 'solid-js'
-
 import {
   applyPriceSeries,
   chartState,
@@ -10,8 +8,6 @@ import {
 } from '/src/scripts'
 
 const whitespaceDataset: WhitespaceData[] = []
-
-updateWhitespaceDataset(whitespaceDataset)
 
 let dispose: (() => void) | undefined = undefined
 

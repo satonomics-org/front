@@ -1,8 +1,7 @@
 import { createResizeObserver } from '@solid-primitives/resize-observer'
 
-import { chartState, cleanChart, createChart } from '/src/scripts'
-
 import { classPropToString } from '/src/components'
+import { chartState, cleanChart, createChart } from '/src/scripts'
 
 interface Props {
   class?: ClassProp

@@ -1,6 +1,6 @@
-import { Footer, List } from './components'
-
 import { Button, Input } from '/src/components'
+
+import { Footer, List } from './components'
 
 interface Props {
   selectedPreset: string

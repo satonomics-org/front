@@ -1,16 +1,15 @@
-import { addLocationToID, debounce, localStorageSetItem } from '/src/scripts'
-
 import {
-  Button,
-  Interactive,
   baseBooleanPropsKeysObject,
   booleanPropsKeysToArray,
+  Button,
   classPropToString,
   containerBooleanPropsKeysObject,
   inputBooleanPropsKeysObject,
+  Interactive,
   interactiveBooleanPropsKeysObject,
   removeProps,
 } from '/src/components'
+import { addLocationToID, debounce, localStorageSetItem } from '/src/scripts'
 
 type Props = InputPropsWithHTMLAttributes
 

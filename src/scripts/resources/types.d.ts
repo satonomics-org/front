@@ -1,6 +1,5 @@
 type ResourceKey =
   | 'candlesticks'
-  | 'transactedVolume'
   | 'sthRealizedPrice'
   | 'lthRealizedPrice'
   | 'oneMonthRealizedPrice'

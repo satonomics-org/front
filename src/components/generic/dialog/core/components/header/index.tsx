@@ -1,14 +1,12 @@
 import { makeEventListener } from '@solid-primitives/event-listener'
 import { useMousePosition } from '@solid-primitives/mouse'
 
-import { moveDialog } from './scripts'
-
 import { classPropToString } from '/src/components'
 
+import { activateSelectNone, deactivateSelectNone } from '../scripts'
 import { DialogButtonClose } from './components/buttonClose'
 import { DialogButtonMaximize } from './components/buttonMaximize'
-
-import { activateSelectNone, deactivateSelectNone } from '../scripts'
+import { moveDialog } from './scripts'
 
 interface Props {
   dialog?: HTMLDialogElement
@@ -50,13 +48,13 @@ export const DialogHeader = (props: Props) => {
             props.defaultLeft,
             props.defaultTop,
             mousePosition,
-            props.setPosition
+            props.setPosition,
           )
         } else {
           deactivateSelectNone()
         }
-      }
-    )
+      },
+    ),
   )
 
   return (

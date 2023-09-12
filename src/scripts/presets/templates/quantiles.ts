@@ -1,10 +1,10 @@
 import { getOwner } from 'solid-js'
 
 import {
-  USABLE_CANDLESTICKS_START_DATE,
   createLineSeries,
   createQuantilesLineSeries,
   resetLeftPriceScale,
+  USABLE_CANDLESTICKS_START_DATE,
 } from '/src/scripts'
 
 export const applyQuantilesPreset = (params: {

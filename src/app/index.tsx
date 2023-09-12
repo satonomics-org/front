@@ -1,5 +1,7 @@
 import { Meta, Title } from '@solidjs/meta'
 
+import packageJSONRaw from '/src/../package.json?raw'
+import { Chart, classPropToString, DialogCore, Labeled } from '/src/components'
 import {
   cleanChart,
   createDatasets,
@@ -11,16 +13,11 @@ import {
   scrollIntoView,
   updateLastCandlestick,
 } from '/src/scripts'
-
-import { createDarkModeTimer } from './scripts'
-
-import { Header, Live, Menu, Preset } from './components'
-
-import { Chart, DialogCore, Labeled, classPropToString } from '/src/components'
+import { createASS } from '/src/solid'
 
 import { env } from '../env'
-import packageJSONRaw from '/src/../package.json?raw'
-import { createASS } from '/src/solid'
+import { Header, Live, Menu, Preset } from './components'
+import { createDarkModeTimer } from './scripts'
 
 const packageJSON = JSON.parse(packageJSONRaw)
 

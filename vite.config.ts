@@ -67,11 +67,11 @@ export default defineConfig({
     unpluginIcons({ autoInstall: true, compiler: 'solid' }),
 
     faviconsPlugin({
+      cache: true,
       appName: packageJSON.name[0].toUpperCase() + packageJSON.name.slice(1),
       appDescription: packageJSON.description,
-      start_url: '',
+      start_url: '/',
       theme_color: black,
-      cache: true,
       background: black,
       icons: {
         favicons: {

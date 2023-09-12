@@ -61,7 +61,6 @@ export const createDatasets = (resources: Resources) => {
         ),
       }),
     ),
-    transactedVolume: createDataset(resources.transactedVolume),
     sthRealizedPrice: addQuantiles(createDataset(resources.sthRealizedPrice)),
     lthRealizedPrice: addQuantiles(createDataset(resources.lthRealizedPrice)),
     oneMonthRealizedPrice: addQuantiles(

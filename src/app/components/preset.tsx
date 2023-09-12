@@ -1,9 +1,7 @@
 import { marked } from 'marked'
 
+import { Button, classPropToString, Dialog } from '/src/components'
 import { presetsGroups, scrollIntoView } from '/src/scripts'
-
-import { Button, Dialog, classPropToString } from '/src/components'
-
 import { createASS } from '/src/solid'
 
 interface Props {
@@ -20,9 +18,9 @@ interface Props {
 export const Preset = (props: Props) => {
   const ref = createASS(undefined as HTMLDivElement | undefined)
 
-  const color = createMemo(() =>
-    props.selectedPreset === props.id ? 'primary' : undefined,
-  )
+  const selected = createMemo(() => props.selectedPreset === props.id)
+
+  const color = createMemo(() => (selected() ? 'primary' : undefined))
 
   const preset = createMemo(() =>
     presetsGroups

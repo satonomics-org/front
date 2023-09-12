@@ -1,6 +1,5 @@
-import { presetsGroups, scrollIntoView } from '/src/scripts'
-
 import { Labeled } from '/src/components'
+import { presetsGroups, scrollIntoView } from '/src/scripts'
 
 import { Preset } from '../../preset'
 

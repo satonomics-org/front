@@ -1,7 +1,7 @@
 import {
+  createChart as _createChart,
   CrosshairMode,
   PriceScaleMode,
-  createChart as _createChart,
 } from 'lightweight-charts'
 
 import { chartState, cleanChart, colors, priceToUSLocale } from '/src/scripts'

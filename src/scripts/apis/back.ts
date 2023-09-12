@@ -1,11 +1,40 @@
-import { createBaseAPI } from '/src/scripts'
+import { sleep } from '/src/scripts'
 
-const api = createBaseAPI({
+const api = {
   baseUrl:
     location.protocol === 'https:'
       ? 'https://satonomics.shuttleapp.rs'
       : 'http://localhost:8000',
-})
+  async fetch(path: string, init?: RequestInit, tries = 12): Promise<Response> {
+    const url = `${this.baseUrl}${path}`
+
+    console.log(`fetch: ${url}`)
+
+    if (!tries) {
+      throw new Error('Fetch failed')
+    }
+
+    try {
+      const result = await fetch(url, init)
+
+      if (result.ok) {
+        return result
+      }
+    } catch {}
+
+    await sleep(5000)
+
+    return this.fetch(path, init, tries - 1)
+  },
+  async fetchText(path: string, init?: RequestInit) {
+    return (await this.fetch(path, init)).text()
+  },
+  async fetchJSON<T = any>(path: string, init?: RequestInit) {
+    const response = await this.fetch(path, init)
+
+    return response.json() as Promise<T>
+  },
+}
 
 const convertRecordToLineData = (record: Record<string, number>) =>
   Object.entries(record).map(
@@ -50,7 +79,6 @@ export const backEndAPI = {
 
     return candlesticks
   },
-  fetchTransactedVolume: () => fetchSimpleDataset(`/transacted-volume`),
   fetchSTHRealizedPrice: () => fetchSimpleDataset(`/sth-realized-price`),
   fetchLTHRealizedPrice: () => fetchSimpleDataset(`/lth-realized-price`),
   fetch1MRealizedPrice: () => fetchSimpleDataset(`/1m-realized-price`),

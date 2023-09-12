@@ -1,11 +1,10 @@
 import { makeEventListener } from '@solid-primitives/event-listener'
 import { useMousePosition } from '@solid-primitives/mouse'
 
-import { expand, resizeDialog } from './scripts'
-
 import { classPropToString } from '/src/components'
 
 import { activateSelectNone, deactivateSelectNone } from '../scripts'
+import { expand, resizeDialog } from './scripts'
 
 interface Props {
   dialog?: HTMLDialogElement
@@ -26,7 +25,7 @@ export const DialogResizers = (props: Props) => {
     () => setState('resizeDirection', null),
     {
       passive: true,
-    }
+    },
   )
 
   createEffect(
@@ -41,13 +40,13 @@ export const DialogResizers = (props: Props) => {
             mousePosition,
             resizeDirection,
             props.setDimensions,
-            props.setPosition
+            props.setPosition,
           )
         } else {
           deactivateSelectNone()
         }
-      }
-    )
+      },
+    ),
   )
 
   const runExpand = (resizeDirection: DialogResizeDirection) =>
@@ -55,7 +54,7 @@ export const DialogResizers = (props: Props) => {
       props.dialog,
       resizeDirection,
       props.setDimensions,
-      props.setPosition
+      props.setPosition,
     )
 
   const Resizer = (props: {

@@ -1,6 +1,5 @@
-import { run } from '/src/scripts'
-
 import { classPropToString } from '/src/components'
+import { run } from '/src/scripts'
 
 export interface Props extends ParentProps, BaseProps {
   label: string

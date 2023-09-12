@@ -1,3 +1,4 @@
+import { applyPreset } from '../realized/price/apply'
 import { oneMonthPreset } from './1m'
 import { oneYearPreset } from './1y'
 import { twoYearsPreset } from './2y'
@@ -6,8 +7,6 @@ import { sixMonthsPreset } from './6m'
 import { allHoldersPreset } from './all'
 import { lthPreset } from './lth'
 import { sthPreset } from './sth'
-
-import { applyPreset } from '../realized/price/apply'
 
 export const holdersPresetsGroup = {
   name: 'Holders',
