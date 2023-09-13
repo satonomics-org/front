@@ -7,7 +7,6 @@ import { createASS } from '/src/solid'
 interface Props {
   id: string
   selectedPreset: string
-  leftIcon?: IconProp
   ref?: (el: HTMLDivElement) => void
   onClick: () => void
   favorites: string[]
@@ -49,7 +48,6 @@ export const Preset = (props: Props) => {
       <Button
         full
         color={color()}
-        leftIcon={props.leftIcon}
         onClick={() => {
           props.onClick()
           _scrollIntoView()

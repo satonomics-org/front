@@ -1,7 +1,5 @@
 import { sleep } from '/src/scripts'
 
-console.log(import.meta.env.TEST_PROD)
-
 const useProdURL =
   import.meta.env.VITE_TEST_PROD || location.protocol === 'https:'
 
@@ -12,7 +10,7 @@ const api = {
   async fetch(path: string, init?: RequestInit, tries = 12): Promise<Response> {
     const url = `${this.baseUrl}${path}`
 
-    console.log(`fetch: ${url}`)
+    import.meta.env.MODE !== 'test' && console.log(`fetch: ${url}`)
 
     if (!tries) {
       throw new Error('Fetch failed')

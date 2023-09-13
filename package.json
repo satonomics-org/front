@@ -2,6 +2,7 @@
   "name": "satonomics",
   "description": "Satoshi Economics",
   "version": "0.1.0",
+  "type": "module",
   "scripts": {
     "start": "vite",
     "dev": "($npm_execpath outdated || read -p \"Press enter to ignore...\") && vite --host",

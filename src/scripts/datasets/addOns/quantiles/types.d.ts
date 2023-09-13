@@ -1,4 +1,6 @@
-type DatasetWithQuantiles = Dataset<SingleValueData> & QuantilesAddOn
+type DatasetWithQuantiles = Dataset<SingleValueData> &
+  RatiosAddOn &
+  QuantilesAddOn
 
 type QuantilesAddOn = {
   quantiles: Quantiles<SingleValueData>

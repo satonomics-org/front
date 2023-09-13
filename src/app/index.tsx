@@ -57,25 +57,19 @@ export const App = () => {
     window.history.pushState(null, '', urlParams.toString())
   })
 
-  const lastCandle = createMemo(() => datasets.candlesticks.values()?.at(-1))
+  createEffect(() => updateLastCandlestick(resources.latestCandle.latest()))
 
-  const candlesticksFetched = createMemo(() => !!lastCandle())
+  createEffect(() =>
+    console.log('last', resources.latestCandle.latest()?.close),
+  )
 
-  createEffect(() => updateLastCandlestick(lastCandle()))
-
-  createEffect(() => {
-    const id = state.selectedPreset()
-
-    if (candlesticksFetched()) {
-      untrack(() => {
-        renderChart({
-          candlesticks: datasets.candlesticks.values() || [],
-          id,
-          datasets,
-        })
-      })
-    }
-  })
+  createEffect(() =>
+    renderChart({
+      candlesticks: datasets.candlesticks.values() || [],
+      id: state.selectedPreset(),
+      datasets,
+    }),
+  )
 
   onCleanup(cleanChart)
 
@@ -87,11 +81,13 @@ export const App = () => {
   )
 
   const favorite = (id: string) => {
-    state.favorites().includes(id)
-      ? state.favorites().splice(state.favorites().indexOf(id), 1)
-      : state.favorites().push(id)
+    state.favorites.set((favorites) => {
+      favorites.includes(id)
+        ? favorites.splice(favorites.indexOf(id), 1)
+        : favorites.push(id)
 
-    state.favorites.set((l) => l)
+      return favorites
+    })
 
     localStorage.setItem('favorites', JSON.stringify(state.favorites()))
   }
@@ -100,7 +96,7 @@ export const App = () => {
     <>
       <Title>
         {run(() => {
-          const last = lastCandle()
+          const last = resources.latestCandle.latest()
           return `${
             last ? `${priceToUSLocale(last.close, false)} | ` : ''
           }Satonomics`
@@ -121,7 +117,6 @@ export const App = () => {
             <Menu
               selectedPreset={state.selectedPreset()}
               setSelectedPreset={(id: string) => state.selectedPreset.set(id)}
-              candlesticksFetched={candlesticksFetched()}
               favorite={favorite}
               favorites={state.favorites()}
             />
@@ -132,8 +127,15 @@ export const App = () => {
             <hr />
           </div>
           <div class="relative h-full w-full flex-1 overflow-x-hidden">
-            <Chart class={[lastCandle() ? 'opacity-100' : 'opacity-0']} />
-            <Live live={resources.candlesticks.live()} />
+            <Chart
+              class={[
+                resources.candlesticks.values()?.length &&
+                resources.latestCandle.latest()
+                  ? 'opacity-100'
+                  : 'opacity-0',
+              ]}
+            />
+            <Live live={resources.latestCandle.live()} />
           </div>
           <div class="md:hidden">
             <hr />
@@ -166,22 +168,19 @@ export const App = () => {
                   {({ list }) => (
                     <For each={list}>
                       {({ id }) => {
-                        let ref: HTMLElement | undefined
-
-                        createEffect(
-                          on(candlesticksFetched, (fetched) => {
-                            if (fetched && state.selectedPreset() === id) {
-                              scrollIntoView(ref)
-                            }
-                          }),
+                        let ref = createASS(
+                          undefined as HTMLElement | undefined,
                         )
+
+                        // if (state.selectedPreset() === id) {
+                        //   scrollIntoView(ref())
+                        // }
 
                         return (
                           <Preset
                             id={id}
                             selectedPreset={state.selectedPreset()}
-                            leftIcon={IconTablerList}
-                            ref={(_ref) => (ref = _ref)}
+                            ref={ref.set}
                             onClick={() => openDialog?.(true)}
                             class="w-full flex-shrink-0 snap-center"
                             onFavorite={() => favorite(id)}
@@ -203,7 +202,6 @@ export const App = () => {
               full
             >
               <Menu
-                candlesticksFetched={candlesticksFetched()}
                 selectedPreset={state.selectedPreset()}
                 setSelectedPreset={(id) => {
                   state.selectedPreset.set(id)

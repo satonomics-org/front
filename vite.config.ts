@@ -1,11 +1,11 @@
+// @ts-ignore
+import { fileURLToPath } from 'url'
 import { faviconsPlugin } from '@darkobits/vite-plugin-favicons'
 import autoprefixer from 'autoprefixer'
 import tailwindcss from 'tailwindcss'
 import unpluginAutoImport from 'unplugin-auto-import/vite'
 import unpluginIconsResolver from 'unplugin-icons/resolver'
 import unpluginIcons from 'unplugin-icons/vite'
-// @ts-ignore
-import { fileURLToPath } from 'url'
 import { defineConfig } from 'vite'
 import { VitePWA } from 'vite-plugin-pwa'
 import solidPlugin from 'vite-plugin-solid'
@@ -31,7 +31,7 @@ export default defineConfig({
       mode: 'development',
       workbox: {
         skipWaiting: true,
-        globPatterns: ['**/*.{js,css,html,ico,png,svg,json,woff2,ttf}'],
+        globPatterns: ['**/*.{js,css,html,ico,png,svg,json,woff2,ttf,md}'],
         runtimeCaching: [
           {
             urlPattern: ({ url: { origin } }) => {
@@ -112,5 +112,8 @@ export default defineConfig({
     postcss: {
       plugins: [autoprefixer(), tailwindcss()],
     },
+  },
+  test: {
+    testTimeout: 600_000,
   },
 })

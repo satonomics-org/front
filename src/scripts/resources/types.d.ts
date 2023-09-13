@@ -51,17 +51,24 @@ type ResourceKey =
   | 'hashrate'
   | 'stablecoinsMarketCaps'
 
-interface Resource<Value = SingleValueData, Values = Value[] | null> {
-  fetch: (owner: Owner | null) => Promise<void>
-  values: ASS<Values>
-  live: ASS<boolean>
-}
-
 interface Resources
   extends Record<
     Exclude<ResourceKey, 'candlesticks' | 'stablecoinsMarketCaps'>,
-    Resource<SingleValueData>
+    ResourceHTTP<SingleValueData>
   > {
-  candlesticks: Resource<CandlestickDataWithVolume>
-  stablecoinsMarketCaps: Resource<GroupedSingleValues>
+  candlesticks: ResourceHTTP<CandlestickDataWithVolume>
+  stablecoinsMarketCaps: ResourceHTTP<GroupedSingleValues>
+  latestCandle: ResourceWS<CandlestickDataWithVolume>
+}
+
+interface ResourceHTTP<Value = SingleValueData, Values = Value[] | null> {
+  fetch: (owner: Owner | null) => Promise<void>
+  values: ASS<Values>
+}
+
+interface ResourceWS<Value> {
+  live: Accessor<boolean>
+  latest: Accessor<Value | null>
+  open: () => void
+  close: () => void
 }

@@ -1,7 +1,7 @@
 import { chartState, colors, convertCandleToColor } from '/src/scripts'
 
 export const updateLastCandlestick = (
-  candlestick?: CandlestickDataWithVolume,
+  candlestick?: CandlestickDataWithVolume | null,
 ) => {
   if (!candlestick || !chartState.chart) return
 

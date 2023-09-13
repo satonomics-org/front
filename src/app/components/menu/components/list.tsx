@@ -8,7 +8,6 @@ interface Props {
   setSelectedPreset: (id: string) => void
   favorites: string[]
   favorite: (id: string) => void
-  candlesticksFetched: boolean
   filter: string
 }
 

@@ -1,3 +1,4 @@
+import { createLazyMemo } from '@solid-primitives/memo'
 import { getOwner } from 'solid-js'
 
 import {
@@ -7,23 +8,23 @@ import {
   convertCandlesticksToSingleValueDataset,
 } from '/src/scripts'
 
-import { addAverages } from './averages'
-import { addQuantiles as _addQuantiles } from './quantiles'
+import { addAverages, addQuantiles } from './addOns'
+import { addRatios } from './addOns/ratios'
 
-export { USABLE_CANDLESTICKS_START_DATE } from './quantiles'
+export const USABLE_CANDLESTICKS_START_DATE = '2012-01-01'
 
 export const createDatasets = (resources: Resources) => {
-  const candlesticksCloses = createMemo(
+  const closes = createLazyMemo(
     () =>
       convertCandlesticksToSingleValueDataset(resources.candlesticks.values()),
-    {
-      equals: (prev: SingleValueData[], next: SingleValueData[]) =>
-        prev.length === next.length,
-    },
+    // {
+    //   equals: (prev: SingleValueData[], next: SingleValueData[]) =>
+    //     prev.length === next.length,
+    // },
   )
 
-  const candlestickClosesRecord = createMemo(() =>
-    candlesticksCloses().reduce(
+  const closesRecord = createLazyMemo(() =>
+    closes().reduce(
       (obj, data) => {
         obj[data.time as string] = data.value
         return obj
@@ -32,72 +33,78 @@ export const createDatasets = (resources: Resources) => {
     ),
   )
 
-  const addQuantiles = (dataset: Dataset<SingleValueData>) =>
-    _addQuantiles(dataset, candlesticksCloses)
-
   const datasets: Datasets = {
     candlesticks: createDataset(resources.candlesticks),
     weeklyMA: addQuantiles(
-      createMemoDataset({
-        fetch: resources.candlesticks.fetch,
-        values: createMemo(() =>
-          computeWeeklyMovingAverage(candlesticksCloses()),
-        ),
-      }),
+      addRatios(
+        createLazyMemoDataset({
+          fetch: resources.candlesticks.fetch,
+          values: createLazyMemo(() => computeWeeklyMovingAverage(closes())),
+        }),
+        closes,
+      ),
     ),
     monthlyMA: addQuantiles(
-      createMemoDataset({
-        fetch: resources.candlesticks.fetch,
-        values: createMemo(() =>
-          computeMonthlyMovingAverage(candlesticksCloses()),
-        ),
-      }),
+      addRatios(
+        createLazyMemoDataset({
+          fetch: resources.candlesticks.fetch,
+          values: createLazyMemo(() => computeMonthlyMovingAverage(closes())),
+        }),
+        closes,
+      ),
     ),
     yearlyMA: addQuantiles(
-      createMemoDataset({
-        fetch: resources.candlesticks.fetch,
-        values: createMemo(() =>
-          computeYearlyMovingAverage(candlesticksCloses()),
-        ),
-      }),
+      addRatios(
+        createLazyMemoDataset({
+          fetch: resources.candlesticks.fetch,
+          values: createLazyMemo(() => computeYearlyMovingAverage(closes())),
+        }),
+        closes,
+      ),
     ),
-    sthRealizedPrice: addQuantiles(createDataset(resources.sthRealizedPrice)),
-    lthRealizedPrice: addQuantiles(createDataset(resources.lthRealizedPrice)),
+    sthRealizedPrice: addQuantiles(
+      addRatios(createDataset(resources.sthRealizedPrice), closes),
+    ),
+    lthRealizedPrice: addQuantiles(
+      addRatios(createDataset(resources.lthRealizedPrice), closes),
+    ),
     oneMonthRealizedPrice: addQuantiles(
-      createDataset(resources.oneMonthRealizedPrice),
+      addRatios(createDataset(resources.oneMonthRealizedPrice), closes),
     ),
     threeMonthsRealizedPrice: addQuantiles(
-      createDataset(resources.threeMonthsRealizedPrice),
+      addRatios(createDataset(resources.threeMonthsRealizedPrice), closes),
     ),
     sixMonthsRealizedPrice: addQuantiles(
-      createDataset(resources.sixMonthsRealizedPrice),
+      addRatios(createDataset(resources.sixMonthsRealizedPrice), closes),
     ),
     oneYearRealizedPrice: addQuantiles(
-      createDataset(resources.oneYearRealizedPrice),
+      addRatios(createDataset(resources.oneYearRealizedPrice), closes),
     ),
     twoYearsRealizedPrice: addQuantiles(
-      createDataset(resources.twoYearsRealizedPrice),
+      addRatios(createDataset(resources.twoYearsRealizedPrice), closes),
     ),
     netRealizedProfitAndLoss: createDataset(resources.netRealizedProfitAndLoss),
     sopr: createDataset(resources.sopr),
     planktonRealizedPrice: addQuantiles(
-      createDataset(resources.planktonRealizedPrice),
+      addRatios(createDataset(resources.planktonRealizedPrice), closes),
     ),
     shrimpsRealizedPrice: addQuantiles(
-      createDataset(resources.shrimpsRealizedPrice),
+      addRatios(createDataset(resources.shrimpsRealizedPrice), closes),
     ),
     crabsRealizedPrice: addQuantiles(
-      createDataset(resources.crabsRealizedPrice),
+      addRatios(createDataset(resources.crabsRealizedPrice), closes),
     ),
-    fishRealizedPrice: addQuantiles(createDataset(resources.fishRealizedPrice)),
+    fishRealizedPrice: addQuantiles(
+      addRatios(createDataset(resources.fishRealizedPrice), closes),
+    ),
     sharksRealizedPrice: addQuantiles(
-      createDataset(resources.sharksRealizedPrice),
+      addRatios(createDataset(resources.sharksRealizedPrice), closes),
     ),
     whalesRealizedPrice: addQuantiles(
-      createDataset(resources.whalesRealizedPrice),
+      addRatios(createDataset(resources.whalesRealizedPrice), closes),
     ),
     humpbacksRealizedPrice: addQuantiles(
-      createDataset(resources.humpbacksRealizedPrice),
+      addRatios(createDataset(resources.humpbacksRealizedPrice), closes),
     ),
     planktonBalances: createDataset(resources.planktonBalances),
     shrimpsBalances: createDataset(resources.shrimpsBalances),
@@ -113,13 +120,25 @@ export const createDatasets = (resources: Resources) => {
     sharksDistribution: createDataset(resources.sharksDistribution),
     whalesDistribution: createDataset(resources.whalesDistribution),
     humpbacksDistribution: createDataset(resources.humpbacksDistribution),
-    terminalPrice: addQuantiles(createDataset(resources.terminalPrice)),
-    realizedPrice: addQuantiles(createDataset(resources.realizedPrice)),
-    balancedPrice: addQuantiles(createDataset(resources.balancedPrice)),
-    cointimePrice: addQuantiles(createDataset(resources.cointimePrice)),
-    trueMeanPrice: addQuantiles(createDataset(resources.trueMeanPrice)),
-    vaultedPrice: addQuantiles(createDataset(resources.vaultedPrice)),
-    cvdd: addQuantiles(createDataset(resources.cvdd)),
+    terminalPrice: addQuantiles(
+      addRatios(createDataset(resources.terminalPrice), closes),
+    ),
+    realizedPrice: addQuantiles(
+      addRatios(createDataset(resources.realizedPrice), closes),
+    ),
+    balancedPrice: addQuantiles(
+      addRatios(createDataset(resources.balancedPrice), closes),
+    ),
+    cointimePrice: addQuantiles(
+      addRatios(createDataset(resources.cointimePrice), closes),
+    ),
+    trueMeanPrice: addQuantiles(
+      addRatios(createDataset(resources.trueMeanPrice), closes),
+    ),
+    vaultedPrice: addQuantiles(
+      addRatios(createDataset(resources.vaultedPrice), closes),
+    ),
+    cvdd: addQuantiles(addRatios(createDataset(resources.cvdd), closes)),
     fundingRates: createDataset(resources.fundingRates),
     vddMultiple: createDataset(resources.vddMultiple),
     minersRevenueInBitcoin: addAverages(createDataset(resources.minersRevenue)),
@@ -133,25 +152,24 @@ export const createDatasets = (resources: Resources) => {
     sthInLoss: createDataset(resources.sthInLoss),
     hashrate: addAverages(createDataset(resources.hashrate)),
     minersRevenueInDollars: addAverages(
-      createMemoDataset({
+      createLazyMemoDataset({
         fetch: resources.minersRevenue.fetch,
-        values: createMemo(() =>
+        values: createLazyMemo(() =>
           (resources.minersRevenue.values() || []).map((data) => ({
             time: data.time,
-            value: data.value * candlestickClosesRecord()[data.time as string],
+            value: data.value * closesRecord()[data.time as string],
           })),
         ),
       }),
     ),
     puellMultiple: addAverages(
-      createMemoDataset({
+      createLazyMemoDataset({
         fetch: resources.minersRevenue.fetch,
-        values: createMemo(() => {
+        values: createLazyMemo(() => {
           const dailyDataset = (resources.minersRevenue.values() || []).map(
             (data) => ({
               time: data.time,
-              value:
-                data.value * candlestickClosesRecord()[data.time as string],
+              value: data.value * closesRecord()[data.time as string],
             }),
           )
 
@@ -177,18 +195,18 @@ export const createDatasets = (resources: Resources) => {
 const createDataset = <Value>({
   values,
   fetch,
-}: Resource<Value>): Dataset<Value> => ({
+}: ResourceHTTP<Value>): Dataset<Value> => ({
   values,
   fetch() {
     fetch(getOwner())
   },
 })
 
-const createMemoDataset = <Value>({
+const createLazyMemoDataset = <Value>({
   fetch,
   values,
 }: {
-  fetch: Resource<Value>['fetch']
+  fetch: ResourceHTTP<Value>['fetch']
   values: Accessor<Value[]>
 }): Dataset<Value> => ({
   values,

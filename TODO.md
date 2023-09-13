@@ -1,8 +1,16 @@
+Tests:
+
+- Check periodic fetch (it seems that it runs multiple times instead of ounce ?)
+
 QOL:
 
 - PWA pre cache all API calls
+- Fetch all on mount
 - Mobile view favorites in horizontal bar
 - Button to go back to today
+- Use Deno KV for quicker and saved responses
+- Fetch: Cache while revalidate ?
+- Update values in fetch only if more or new last is different
 
 Presets:
 
@@ -29,7 +37,5 @@ Presets:
 - On chain transactions
 - On chain volume
 - View per date of all datasets and/or momentums
-
-Tests:
-
-- Periodically test all backend APIs
+- Check IDEAS folder
+- Show range min from the last 5/6 months and top

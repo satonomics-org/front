@@ -1,181 +1,89 @@
-import { createEventListener } from '@solid-primitives/event-listener'
-import { makeTimer } from '@solid-primitives/timer'
-import { getOwner, runWithOwner } from 'solid-js'
+import { getOwner } from 'solid-js'
 
 import { backEndAPI, krakenAPI } from '/src/scripts'
-import { createASS } from '/src/solid'
 
-const TEN_MINUTES_IN_MS = 600_000
-
-const createResource = <Value>(
-  fetch: () => Promise<Value[]>,
-  valuesOptions?: SignalOptions<Value[] | null>,
-) => {
-  const values = createASS(null as Value[] | null, valuesOptions)
-  const live = createASS(false)
-
-  let lastSuccessfulFetch: Date | null
-
-  const resource: Resource<Value> = {
-    async fetch(owner) {
-      if (
-        !lastSuccessfulFetch ||
-        new Date().valueOf() - lastSuccessfulFetch.valueOf() > TEN_MINUTES_IN_MS
-      ) {
-        const fetchedValues = await fetch()
-
-        if (Array.isArray(fetchedValues)) {
-          lastSuccessfulFetch = new Date()
-
-          values.set(fetchedValues)
-        }
-      }
-
-      runWithOwner(owner, () => {
-        const dispose = makeTimer(
-          () => {
-            resource.fetch(owner)
-          },
-          TEN_MINUTES_IN_MS,
-          setTimeout,
-        )
-
-        onCleanup(dispose)
-      })
-    },
-    values,
-    live,
-  }
-
-  return resource
-}
+import { createResourceHTTP, createResourceWS } from './creators'
 
 export const createResources = () => {
   const resources: Resources = {
-    candlesticks: createResource(backEndAPI.fetchCandlesticks, {
-      equals: false,
-    }),
-    sthRealizedPrice: createResource(backEndAPI.fetchSTHRealizedPrice),
-    lthRealizedPrice: createResource(backEndAPI.fetchLTHRealizedPrice),
-    oneMonthRealizedPrice: createResource(backEndAPI.fetch1MRealizedPrice),
-    threeMonthsRealizedPrice: createResource(backEndAPI.fetch3MRealizedPrice),
-    sixMonthsRealizedPrice: createResource(backEndAPI.fetch6MRealizedPrice),
-    oneYearRealizedPrice: createResource(backEndAPI.fetch1YRealizedPrice),
-    twoYearsRealizedPrice: createResource(backEndAPI.fetch2YRealizedPrice),
-    netRealizedProfitAndLoss: createResource(
+    candlesticks: createResourceHTTP(backEndAPI.fetchCandlesticks),
+    latestCandle: createResourceWS(krakenAPI.createLiveCandleWebsocket),
+    sthRealizedPrice: createResourceHTTP(backEndAPI.fetchSTHRealizedPrice),
+    lthRealizedPrice: createResourceHTTP(backEndAPI.fetchLTHRealizedPrice),
+    oneMonthRealizedPrice: createResourceHTTP(backEndAPI.fetch1MRealizedPrice),
+    threeMonthsRealizedPrice: createResourceHTTP(
+      backEndAPI.fetch3MRealizedPrice,
+    ),
+    sixMonthsRealizedPrice: createResourceHTTP(backEndAPI.fetch6MRealizedPrice),
+    oneYearRealizedPrice: createResourceHTTP(backEndAPI.fetch1YRealizedPrice),
+    twoYearsRealizedPrice: createResourceHTTP(backEndAPI.fetch2YRealizedPrice),
+    netRealizedProfitAndLoss: createResourceHTTP(
       backEndAPI.fetchNetRealizedProfitAndLoss,
     ),
-    sopr: createResource(backEndAPI.fetchSOPR),
-    planktonRealizedPrice: createResource(
+    sopr: createResourceHTTP(backEndAPI.fetchSOPR),
+    planktonRealizedPrice: createResourceHTTP(
       backEndAPI.fetchPlanktonRealizedPrice,
     ),
-    shrimpsRealizedPrice: createResource(backEndAPI.fetchShrimpsRealizedPrice),
-    crabsRealizedPrice: createResource(backEndAPI.fetchCrabsRealizedPrice),
-    fishRealizedPrice: createResource(backEndAPI.fetchFishRealizedPrice),
-    sharksRealizedPrice: createResource(backEndAPI.fetchSharksRealizedPrice),
-    whalesRealizedPrice: createResource(backEndAPI.fetchWhalesRealizedPrice),
-    humpbacksRealizedPrice: createResource(
+    shrimpsRealizedPrice: createResourceHTTP(
+      backEndAPI.fetchShrimpsRealizedPrice,
+    ),
+    crabsRealizedPrice: createResourceHTTP(backEndAPI.fetchCrabsRealizedPrice),
+    fishRealizedPrice: createResourceHTTP(backEndAPI.fetchFishRealizedPrice),
+    sharksRealizedPrice: createResourceHTTP(
+      backEndAPI.fetchSharksRealizedPrice,
+    ),
+    whalesRealizedPrice: createResourceHTTP(
+      backEndAPI.fetchWhalesRealizedPrice,
+    ),
+    humpbacksRealizedPrice: createResourceHTTP(
       backEndAPI.fetchHumpbacksRealizedPrice,
     ),
-    planktonBalances: createResource(backEndAPI.fetchPlanktonBalances),
-    shrimpsBalances: createResource(backEndAPI.fetchShrimpsBalances),
-    crabsBalances: createResource(backEndAPI.fetchCrabsBalances),
-    fishBalances: createResource(backEndAPI.fetchFishBalances),
-    sharksBalances: createResource(backEndAPI.fetchSharksBalances),
-    whalesBalances: createResource(backEndAPI.fetchWhalesBalances),
-    humpbacksBalances: createResource(backEndAPI.fetchHumpbacksBalances),
-    planktonDistribution: createResource(backEndAPI.fetchPlanktonDistribution),
-    shrimpsDistribution: createResource(backEndAPI.fetchShrimpsDistribution),
-    crabsDistribution: createResource(backEndAPI.fetchCrabsDistribution),
-    fishDistribution: createResource(backEndAPI.fetchFishDistribution),
-    sharksDistribution: createResource(backEndAPI.fetchSharksDistribution),
-    whalesDistribution: createResource(backEndAPI.fetchWhalesDistribution),
-    humpbacksDistribution: createResource(
+    planktonBalances: createResourceHTTP(backEndAPI.fetchPlanktonBalances),
+    shrimpsBalances: createResourceHTTP(backEndAPI.fetchShrimpsBalances),
+    crabsBalances: createResourceHTTP(backEndAPI.fetchCrabsBalances),
+    fishBalances: createResourceHTTP(backEndAPI.fetchFishBalances),
+    sharksBalances: createResourceHTTP(backEndAPI.fetchSharksBalances),
+    whalesBalances: createResourceHTTP(backEndAPI.fetchWhalesBalances),
+    humpbacksBalances: createResourceHTTP(backEndAPI.fetchHumpbacksBalances),
+    planktonDistribution: createResourceHTTP(
+      backEndAPI.fetchPlanktonDistribution,
+    ),
+    shrimpsDistribution: createResourceHTTP(
+      backEndAPI.fetchShrimpsDistribution,
+    ),
+    crabsDistribution: createResourceHTTP(backEndAPI.fetchCrabsDistribution),
+    fishDistribution: createResourceHTTP(backEndAPI.fetchFishDistribution),
+    sharksDistribution: createResourceHTTP(backEndAPI.fetchSharksDistribution),
+    whalesDistribution: createResourceHTTP(backEndAPI.fetchWhalesDistribution),
+    humpbacksDistribution: createResourceHTTP(
       backEndAPI.fetchHumpbacksDistribution,
     ),
-    terminalPrice: createResource(backEndAPI.fetchTerminalPrice),
-    realizedPrice: createResource(backEndAPI.fetchRealizedPrice),
-    balancedPrice: createResource(backEndAPI.fetchBalancedPrice),
-    cointimePrice: createResource(backEndAPI.fetchCointimePrice),
-    trueMeanPrice: createResource(backEndAPI.fetchTrueMeanPrice),
-    vaultedPrice: createResource(backEndAPI.fetchVaultedPrice),
-    cvdd: createResource(backEndAPI.fetchCVDD),
-    fundingRates: createResource(backEndAPI.fetchFundingRates),
-    vddMultiple: createResource(backEndAPI.fetchVDDMultiple),
-    minersRevenue: createResource(backEndAPI.fetchMinersRevenue),
-    supplyInProfit: createResource(backEndAPI.fetchSupplyInProfit),
-    supplyInLoss: createResource(backEndAPI.fetchSupplyInLoss),
-    lthSupply: createResource(backEndAPI.fetchLTHSupply),
-    sthSupply: createResource(backEndAPI.fetchSTHSupply),
-    lthInProfit: createResource(backEndAPI.fetchLTHInProfit),
-    sthInProfit: createResource(backEndAPI.fetchSTHInProfit),
-    lthInLoss: createResource(backEndAPI.fetchLTHInLoss),
-    sthInLoss: createResource(backEndAPI.fetchSTHInLoss),
-    hashrate: createResource(backEndAPI.fetchHashrate),
-    stablecoinsMarketCaps: createResource(
+    terminalPrice: createResourceHTTP(backEndAPI.fetchTerminalPrice),
+    realizedPrice: createResourceHTTP(backEndAPI.fetchRealizedPrice),
+    balancedPrice: createResourceHTTP(backEndAPI.fetchBalancedPrice),
+    cointimePrice: createResourceHTTP(backEndAPI.fetchCointimePrice),
+    trueMeanPrice: createResourceHTTP(backEndAPI.fetchTrueMeanPrice),
+    vaultedPrice: createResourceHTTP(backEndAPI.fetchVaultedPrice),
+    cvdd: createResourceHTTP(backEndAPI.fetchCVDD),
+    fundingRates: createResourceHTTP(backEndAPI.fetchFundingRates),
+    vddMultiple: createResourceHTTP(backEndAPI.fetchVDDMultiple),
+    minersRevenue: createResourceHTTP(backEndAPI.fetchMinersRevenue),
+    supplyInProfit: createResourceHTTP(backEndAPI.fetchSupplyInProfit),
+    supplyInLoss: createResourceHTTP(backEndAPI.fetchSupplyInLoss),
+    lthSupply: createResourceHTTP(backEndAPI.fetchLTHSupply),
+    sthSupply: createResourceHTTP(backEndAPI.fetchSTHSupply),
+    lthInProfit: createResourceHTTP(backEndAPI.fetchLTHInProfit),
+    sthInProfit: createResourceHTTP(backEndAPI.fetchSTHInProfit),
+    lthInLoss: createResourceHTTP(backEndAPI.fetchLTHInLoss),
+    sthInLoss: createResourceHTTP(backEndAPI.fetchSTHInLoss),
+    hashrate: createResourceHTTP(backEndAPI.fetchHashrate),
+    stablecoinsMarketCaps: createResourceHTTP(
       backEndAPI.fetchStablecoinsMarketCaps,
     ),
   }
 
-  onMount(() => {
-    resources.candlesticks.fetch(getOwner())
-
-    createLiveCandleWebsocket(resources)
-  })
+  resources.candlesticks.fetch(getOwner())
+  resources.latestCandle.open()
 
   return resources
-}
-
-const createLiveCandleWebsocket = (resources: Resources) => {
-  let ws: WebSocket | null = null
-
-  const initWebSocket = () => {
-    const candlesticksResource = resources.candlesticks
-
-    ws = krakenAPI.createLiveCandleWebsocket((newCandle) => {
-      const candlesticks = candlesticksResource.values()
-
-      if (!candlesticks) return
-
-      const lastCandle = candlesticks.at(-1)
-
-      if (!lastCandle) return
-
-      console.log('ws:', newCandle.close)
-
-      candlesticksResource.values.set((candlesticks) => {
-        if (lastCandle.time === newCandle.time) {
-          candlesticks?.splice(-1, 1, newCandle)
-        } else {
-          candlesticks?.push(newCandle)
-        }
-
-        return candlesticks
-      })
-    })
-
-    ws.addEventListener('open', () => {
-      console.log('ws: open')
-      candlesticksResource.live.set(true)
-    })
-
-    ws.addEventListener('close', () => {
-      console.log('ws: close')
-      candlesticksResource.live.set(false)
-    })
-  }
-
-  initWebSocket()
-
-  const reinitWebSocket = () => {
-    if (!ws || ws.readyState === ws.CLOSED) {
-      console.log('ws: reinit')
-      initWebSocket()
-    }
-  }
-
-  createEventListener(window, 'focus', reinitWebSocket)
-  createEventListener(window, 'online', reinitWebSocket)
-
-  onCleanup(() => ws?.close())
 }

@@ -1,5 +1,7 @@
 import { createTimer } from '@solid-primitives/timer'
 
+import { TEN_MINUTES_IN_MS } from '/src/scripts'
+
 export const createDarkModeTimer = () => {
   const setDarkMode = () => {
     const hours = new Date().getHours()
@@ -11,5 +13,5 @@ export const createDarkModeTimer = () => {
 
   setDarkMode()
 
-  createTimer(setDarkMode, 600_000, setInterval)
+  createTimer(setDarkMode, TEN_MINUTES_IN_MS, setInterval)
 }
