@@ -9,6 +9,7 @@ declare global {
   const ErrorBoundary: typeof import('solid-js')['ErrorBoundary']
   const For: typeof import('solid-js')['For']
   const IconTabler123: (typeof import('~icons/tabler/123.jsx'))['default']
+  const IconTablerAnalyze: typeof import('~icons/tabler/analyze.jsx')['default']
   const IconTablerArrowBackUp: typeof import('~icons/tabler/arrow-back-up.jsx')['default']
   const IconTablerArrowRight: (typeof import('~icons/tabler/arrow-right.jsx'))['default']
   const IconTablerArrowsMaximize: typeof import('~icons/tabler/arrows-maximize.jsx')['default']

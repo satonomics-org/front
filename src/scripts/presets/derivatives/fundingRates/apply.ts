@@ -1,8 +1,4 @@
-import {
-  colors,
-  createHistogramSeries,
-  resetLeftPriceScale,
-} from '/src/scripts'
+import { createHistogramSeries, resetLeftPriceScale } from '/src/scripts'
 
 export const applyPreset: ApplyPreset = ({ chart, datasets }) => {
   resetLeftPriceScale(chart, {
@@ -16,15 +12,7 @@ export const applyPreset: ApplyPreset = ({ chart, datasets }) => {
 
   fundingRates.fetch()
 
-  createEffect(() => {
-    series.setData(
-      (fundingRates.values() || []).map((data) => ({
-        ...data,
-        value: data.value * 100,
-        color: data.value >= 0 ? colors.up : colors.down,
-      })),
-    )
-  })
+  createEffect(() => series.setData(fundingRates.values() || []))
 
   return {
     halved: true,

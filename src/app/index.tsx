@@ -54,22 +54,30 @@ export const App = () => {
     localStorage.setItem(LOCAL_STORAGE_KEY, state.selectedPreset())
 
     urlParams.set(LOCAL_STORAGE_KEY, state.selectedPreset())
-    window.history.pushState(null, '', urlParams.toString())
+
+    window.history.replaceState(null, '', urlParams.toString())
   })
 
   createEffect(() => updateLastCandlestick(resources.latestCandle.latest()))
 
-  createEffect(() =>
-    console.log('last', resources.latestCandle.latest()?.close),
-  )
+  createEffect(() => {
+    const latestClose = resources.latestCandle.latest()?.close
 
-  createEffect(() =>
-    renderChart({
-      candlesticks: datasets.candlesticks.values() || [],
-      id: state.selectedPreset(),
-      datasets,
-    }),
-  )
+    latestClose && console.log('close:', latestClose)
+  })
+
+  createEffect(() => {
+    const candlesticks = datasets.candlesticks.values() || []
+
+    if (candlesticks.length) {
+      renderChart({
+        candlesticks,
+        id: state.selectedPreset(),
+        datasets,
+        latestCandle: resources.latestCandle.latest,
+      })
+    }
+  })
 
   onCleanup(cleanChart)
 
@@ -111,7 +119,7 @@ export const App = () => {
         ])}
       >
         <div class="flex h-full w-full flex-col dark:text-opacity-80 md:flex-row">
-          <div class="hidden flex-none flex-col border-r border-white dark:border-opacity-80 md:flex md:w-64 lg:w-96">
+          <div class="hidden flex-none flex-col border-r border-white dark:border-opacity-80 md:flex md:w-80 lg:w-96">
             <Header />
             <hr />
             <Menu

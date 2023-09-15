@@ -1,10 +1,7 @@
-import { getOwner } from 'solid-js'
-
 import {
   createLineSeries,
   createQuantilesLineSeries,
   resetLeftPriceScale,
-  USABLE_CANDLESTICKS_START_DATE,
 } from '/src/scripts'
 
 export const applyQuantilesPreset = (params: {
@@ -29,42 +26,15 @@ export const applyQuantilesPreset = (params: {
     darken: true,
   })
 
-  dataset?.fetch()
+  dataset.fetch()
 
-  createEffect(() => {
-    const values = dataset?.values()
+  createEffect(() => mainSeries.setData(dataset.values() || []))
 
-    if (!values || !dataset.quantiles[99.9]()?.at(0)) return
-
-    mainSeries.setData(
-      values.map((data) => ({
-        ...data,
-      })),
-    )
-
-    Object.entries(quantilesSeriesList).forEach(
-      ([quantileKey, quantileSeries]) => {
-        const offset = values.findIndex(
-          (value) => value.time === USABLE_CANDLESTICKS_START_DATE,
-        )
-
-        quantileSeries.setData(
-          values.slice(offset).map(({ time }, dataIndex) => {
-            const quantileData =
-              dataset.quantiles[quantileKey as unknown as QuantileKey]()?.[
-                dataIndex
-              ]
-
-            if (time !== quantileData?.time)
-              throw Error(`Unsynced data (${time} vs ${quantileData?.time})`)
-
-            return {
-              time,
-              value: quantileData.value,
-            }
-          }),
-        )
-      },
-    )
-  })
+  Object.entries(quantilesSeriesList).forEach(([quantileKey, quantileSeries]) =>
+    createEffect(() =>
+      quantileSeries.setData(
+        dataset.quantiles[quantileKey as unknown as QuantileKey]() || [],
+      ),
+    ),
+  )
 }

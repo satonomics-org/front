@@ -4,7 +4,9 @@ export const applyExtremesPreset = (
   chart: IChartApi,
   datasets: DatasetWithQuantiles[],
 ) => {
-  const quantilesSeriesList = createQuantilesLineSeries(chart)
+  const quantilesSeriesList = createQuantilesLineSeries(chart, {
+    autoscaleInfoProvider: undefined,
+  })
 
   datasets.forEach((dataset) => dataset.fetch())
 
@@ -21,8 +23,9 @@ export const applyExtremesPreset = (
 
         const comparator = quantileValue < 50 ? Math.max : Math.min
 
-        const dataset = referenceQuantile.map(({ time }, index) => ({
+        const dataset = referenceQuantile.map(({ time, date }, index) => ({
           time,
+          date,
           value: comparator(
             ...datasets.map(
               (dataset) =>

@@ -1,6 +1,7 @@
 import {
   chartState,
   colors,
+  createAutoscaleInfoProvider,
   createCandlesticksSeries,
   createLineSeries,
   createPriceLine,
@@ -45,8 +46,7 @@ export const applyPriceSeries = (
   } else {
     chartState.priceSeries = createLineSeries(chart, {
       color: lowerOpacity ? colors.offWhite() : colors.white(),
-      autoscaleInfoProvider: undefined,
-      priceLineStyle: undefined,
+      autoscaleInfoProvider: createAutoscaleInfoProvider(true),
       ...options?.seriesOptions,
     })
   }

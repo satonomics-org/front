@@ -2,12 +2,13 @@ import { darken as _darken, colors, createLineSeries } from '/src/scripts'
 
 export const createQuantilesLineSeries = (
   chart: IChartApi,
-  params: { color?: string; left?: true; darken?: boolean } = {},
+  options: { left?: true; darken?: boolean } & DeepPartialLineOptions = {},
 ) => {
-  const { left, darken } = params
+  const { left, darken } = options
 
   const createQuantileSeries = (color: string) =>
     createLineSeries(chart, {
+      ...options,
       color: darken ? _darken(color, 0.6) : _darken(color, 0.4),
       priceScaleId: left ? 'left' : undefined,
     })

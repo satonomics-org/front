@@ -41,7 +41,7 @@ export const applyPreset: ApplyPreset = ({ chart, datasets }) => {
       color: colors.plankton,
       title: 'Plankton',
     },
-  ].map(({ dataset, color, title }) => {
+  ].forEach(({ dataset, color, title }) => {
     const series = createLineSeries(chart, {
       color,
       title,
@@ -50,15 +50,7 @@ export const applyPreset: ApplyPreset = ({ chart, datasets }) => {
 
     dataset.fetch()
 
-    createEffect(() => {
-      series.setData(
-        (dataset.values() || []).map((data) => ({
-          ...data,
-        })),
-      )
-    })
-
-    return series
+    createEffect(() => series.setData(dataset.values() || []))
   })
 
   return {

@@ -10,7 +10,7 @@ interface Props {
 export const Chart = (props: Props) => {
   const [div, setDiv] = createSignal(undefined as HTMLDivElement | undefined)
 
-  onMount(createChart)
+  onMount(chartState.reset || (() => {}))
 
   createResizeObserver(
     div,

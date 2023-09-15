@@ -8,9 +8,9 @@ interface Props {
   id: string
   selectedPreset: string
   ref?: (el: HTMLDivElement) => void
-  onClick: () => void
+  onClick: VoidFunction
   favorites: string[]
-  onFavorite: () => void
+  onFavorite: VoidFunction
   class?: ClassProp
 }
 

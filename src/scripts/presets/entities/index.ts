@@ -1,6 +1,6 @@
 import {
-  entities30DAccumulationPreset,
-  entities90DAccumulationPreset,
+  entities30DBalanceChangePreset,
+  entities90BalanceChangePreset,
 } from './accumulation'
 import { entitiesBalancesPreset } from './balances'
 import { entitiesDistributionPreset } from './distribution'
@@ -11,8 +11,8 @@ export const entitiesPresetsGroup = {
   list: [
     entitiesDistributionPreset,
     entitiesBalancesPreset,
-    entities30DAccumulationPreset,
-    entities90DAccumulationPreset,
+    entities30DBalanceChangePreset,
+    entities90BalanceChangePreset,
     ...realizedPricePresets,
   ],
 }

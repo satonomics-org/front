@@ -6,7 +6,9 @@ import {
   computeYearlyMovingAverage,
 } from '/src/scripts'
 
-export const addAverages = <Value extends WhitespaceData = SingleValueData>(
+export const addAverages = <
+  Value extends DatedWhitespaceData = DatedSingleValueData,
+>(
   dataset: Dataset<Value>,
 ): Dataset<Value> & AveragesAddOn => ({
   ...dataset,

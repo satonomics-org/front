@@ -39,11 +39,11 @@ interface DialogPropsOnly {
   onToggleCreated?: (callback: DialogToggleFunction) => void
   onCloseCreated?: (callback: DialogCloseFunction) => void
 
-  onOpen?: () => void
+  onOpen?: VoidFunction
 
   onClose?: (value?: string) => void
 
-  onCloseEnd?: () => void
+  onCloseEnd?: VoidFunction
 }
 
 type DialogOpenFunction = (isUserEvent: boolean) => void

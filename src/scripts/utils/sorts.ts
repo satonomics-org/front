@@ -1,5 +1,7 @@
-export const sortWhitespaceDataArray = <T extends WhitespaceData>(array: T[]) =>
+export const sortWhitespaceDataArray = <T extends DatedWhitespaceData>(
+  array: T[],
+) =>
   array.sort(
     (a, b) =>
-      new Date(String(a.time)).getTime() - new Date(String(b.time)).getTime(),
+      new Date(String(a.date)).getTime() - new Date(String(b.date)).getTime(),
   )

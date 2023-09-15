@@ -4,19 +4,19 @@ import { USABLE_CANDLESTICKS_START_DATE } from '/src/scripts'
 
 export const addRatios = (
   dataset: Dataset,
-  closes: Accessor<SingleValueData[]>,
+  closes: Accessor<DatedSingleValueData[] | null>,
 ): Dataset & RatiosAddOn => {
   const firstIndexWithData = createLazyMemo(
     () =>
-      closes().findIndex(
-        (close) => close.time === dataset.values()?.at(0)?.time,
+      closes()?.findIndex(
+        (close) => close.date === dataset.values()?.at(0)?.date,
       ) || 0,
   )
 
   const firstUsableCloseIndex = createLazyMemo(
     () =>
-      closes().findIndex(
-        (close) => close.time === USABLE_CANDLESTICKS_START_DATE,
+      closes()?.findIndex(
+        (close) => close.date === USABLE_CANDLESTICKS_START_DATE,
       ) || 0,
   )
 
@@ -45,18 +45,22 @@ export const addRatios = (
 }
 
 const computeRatios = (
-  dataset: SingleValueData[],
-  closes: SingleValueData[],
+  dataset: DatedSingleValueData[],
+  closes: DatedSingleValueData[],
   offset: number,
-) =>
-  closes.map(({ time, value: close }, index) => {
+) => {
+  if (!dataset.length || !closes.length) return []
+
+  return closes.map(({ time, date, value: close }, index) => {
     const data = dataset[index + offset]
 
-    if (time !== data.time)
-      throw Error(`Unsynced data (${time} vs ${data.time})`)
+    if (date !== data.date)
+      throw Error(`Unsynced data (${date} vs ${data.date})`)
 
     return {
-      time: data.time,
+      time,
+      date,
       value: close / data.value,
     }
   })
+}

@@ -1,6 +1,6 @@
-interface Dataset<Value = SingleValueData> {
+interface Dataset<Value = DatedSingleValueData> {
   values: Accessor<Value[] | null>
-  fetch: () => void
+  fetch: VoidFunction
 }
 
 type DatasetKey = keyof Datasets
@@ -9,11 +9,22 @@ interface Datasets
   extends Record<
     Exclude<
       ResourceKey,
-      'candlesticks' | 'minersRevenue' | 'stablecoinsMarketCaps'
+      | 'candlesticks'
+      | 'minersRevenue'
+      | 'stablecoinsMarketCaps'
+      | 'vddMultiple'
+      | 'fundingRates'
     >,
-    Dataset<SingleValueData>
+    Dataset<DatedSingleValueData>
   > {
   candlesticks: Dataset<CandlestickDataWithVolume>
+  closes: DatasetWithAverages
+  closesRecord: {
+    values: Accessor<Record<string, number>>
+    fetch: VoidFunction
+  }
+  vddMultiple: Dataset<DatedHistogramData>
+  fundingRates: Dataset<DatedHistogramData>
   weeklyMA: DatasetWithQuantiles
   monthlyMA: DatasetWithQuantiles
   yearlyMA: DatasetWithQuantiles
@@ -43,4 +54,21 @@ interface Datasets
   puellMultiple: DatasetWithAverages
   hashrate: DatasetWithAverages
   stablecoinsMarketCaps: Dataset<GroupedSingleValues>
+  '30DBalanceChanges': GroupedDatasetsByEntityName
+  '90DBalanceChanges': GroupedDatasetsByEntityName
 }
+
+type GroupedDatasetsByEntityName = GroupedByEntity<
+  Dataset<DatedSingleValueData>
+>
+
+type GroupedByEntity<T> = Record<EntityName, T>
+
+type EntityName =
+  | 'humpbacks'
+  | 'whales'
+  | 'sharks'
+  | 'fish'
+  | 'crabs'
+  | 'shrimps'
+  | 'plankton'

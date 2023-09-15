@@ -1,29 +1,28 @@
 import { createLineSeries, resetLeftPriceScale } from '/src/scripts'
 
-export const applyDifferentLinesPreset = (params: {
+export const applyDifferentLinesPreset = ({
+  chart,
+  list,
+}: {
   chart: IChartApi
   list: {
     dataset?: Dataset
-    values?: Accessor<SingleValueData[] | null>
+    values?: Accessor<DatedSingleValueData[] | null>
     color: string
     title: string
   }[]
 }) => {
-  const { chart, list } = params
-
   resetLeftPriceScale(chart)
 
   list.forEach(({ dataset, values, color, title }) => {
-    const series = createLineSeries(chart, { color, title })
+    const series = createLineSeries(chart, {
+      color,
+      title,
+      autoscaleInfoProvider: undefined,
+    })
 
     dataset?.fetch()
 
-    createEffect(() => {
-      series.setData(
-        (dataset?.values() || values?.() || []).map((data) => ({
-          ...data,
-        })),
-      )
-    })
+    createEffect(() => series.setData(dataset?.values() || values?.() || []))
   })
 }

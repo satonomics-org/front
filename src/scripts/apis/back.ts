@@ -40,8 +40,9 @@ const api = {
 
 const convertRecordToLineData = (record: Record<string, number>) =>
   Object.entries(record).map(
-    ([time, value]): SingleValueData => ({
-      time,
+    ([date, value]): DatedSingleValueData => ({
+      date,
+      time: date,
       value: value ?? NaN,
     }),
   )
@@ -66,20 +67,20 @@ export const backEndAPI = {
   async fetchCandlesticks() {
     const cachedCandlesticks = await import(
       '/src/assets/data/btcusd.json'
-    ).then((i) => i.default as CandlestickDataWithVolume[])
+    ).then((i) => i.default as CandlestickDataWithVolumeWithoutTime[])
 
     const since =
-      new Date(cachedCandlesticks.at(-1)?.time || 0).valueOf() / 1000
+      new Date(cachedCandlesticks.at(-1)?.date || 0).valueOf() / 1000
 
-    const candlesticks = Array.from(cachedCandlesticks)
-
-    candlesticks.push(
+    return [
+      ...cachedCandlesticks,
       ...((await api.fetchJSON(
         `/candlesticks?since=${since}`,
-      )) as CandlestickDataWithVolume[]),
-    )
-
-    return candlesticks
+      )) as CandlestickDataWithVolumeWithoutTime[]),
+    ].map((candle) => ({
+      ...candle,
+      time: candle.date,
+    }))
   },
   fetchSTHRealizedPrice: () => fetchSimpleDataset(`/sth-realized-price`),
   fetchLTHRealizedPrice: () => fetchSimpleDataset(`/lth-realized-price`),

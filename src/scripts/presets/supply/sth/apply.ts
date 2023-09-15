@@ -30,25 +30,9 @@ export const applyPreset: ApplyPreset = ({ chart, datasets }) => {
   sthInProfit.fetch()
   sthInLoss.fetch()
 
-  createEffect(() => {
-    all.setData(
-      (sthSupply.values() || []).map((data) => ({
-        ...data,
-      })),
-    )
-
-    profit.setData(
-      (sthInProfit.values() || []).map((data) => ({
-        ...data,
-      })),
-    )
-
-    loss.setData(
-      (sthInLoss.values() || []).map((data) => ({
-        ...data,
-      })),
-    )
-  })
+  createEffect(() => all.setData(sthSupply.values() || []))
+  createEffect(() => profit.setData(sthInProfit.values() || []))
+  createEffect(() => loss.setData(sthInLoss.values() || []))
 
   return {
     halved: true,

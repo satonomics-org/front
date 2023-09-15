@@ -26,18 +26,16 @@ type SeriesStylesOptions = DeepPartial<
   ) &
     SeriesOptionsCommon
 >
-type SingleValueData = import('lightweight-charts').SingleValueData
 type WhitespaceData = import('lightweight-charts').WhitespaceData
-type LineData = import('lightweight-charts').LineData
-type HistogramData = import('lightweight-charts').HistogramData
-type AreaData = import('lightweight-charts').AreaData
+type SingleValueData = import('lightweight-charts').SingleValueData
+type CandlestickData = import('lightweight-charts').CandlestickData
+
 type Time = import('lightweight-charts').Time
 type BusinessDay = import('lightweight-charts').BusinessDay
 type SeriesMarker<T> = import('lightweight-charts').SeriesMarker<T>
 type TimeRange = import('lightweight-charts').TimeRange
 type LogicalRange = import('lightweight-charts').LogicalRange
 type AutoscaleInfo = import('lightweight-charts').AutoscaleInfo
-type CandlestickData = import('lightweight-charts').CandlestickData
 type BarPrice = import('lightweight-charts').BarPrice
 type MouseEventHandler = import('lightweight-charts').MouseEventHandler
 type MouseEventParams = import('lightweight-charts').MouseEventParams

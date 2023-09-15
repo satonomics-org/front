@@ -28,8 +28,9 @@ export const createCandlesticksSeries = (
 
 export const convertCandlesticksToSingleValueDataset = (
   candlesticks?: CandlestickDataWithVolume[] | null,
-): SingleValueData[] =>
-  (candlesticks || []).map(({ time, close }) => ({
+): DatedSingleValueData[] =>
+  (candlesticks || []).map(({ date, time, close }) => ({
+    date,
     time,
     value: close,
   }))

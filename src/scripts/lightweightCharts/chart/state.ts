@@ -6,5 +6,5 @@ export const chartState = {
   range: JSON.parse(
     localStorage.getItem('range') || 'null',
   ) as LogicalRange | null,
-  reset: null as (() => void) | null,
+  reset: null as VoidFunction | null,
 }

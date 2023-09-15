@@ -1,6 +1,7 @@
 import { makeEventListener } from '@solid-primitives/event-listener'
 import { makeTimer } from '@solid-primitives/timer'
 import { runWithOwner } from 'solid-js'
+import { unwrap } from 'solid-js/store'
 
 import { createASS } from '/src/solid'
 
@@ -19,8 +20,12 @@ export const createResourceHTTP = <Value>(
 
   let lastSuccessfulFetch: Date | null
 
+  let dispose: VoidFunction
+
   const resource: ResourceHTTP<Value> = {
     async fetch(owner) {
+      dispose?.()
+
       if (
         !lastSuccessfulFetch ||
         new Date().valueOf() - lastSuccessfulFetch.valueOf() > TEN_MINUTES_IN_MS
@@ -30,12 +35,13 @@ export const createResourceHTTP = <Value>(
         if (Array.isArray(fetchedValues)) {
           lastSuccessfulFetch = new Date()
 
+          console.log('values: setting...')
           values.set(fetchedValues)
         }
       }
 
-      runWithOwner(owner, () => {
-        const dispose = makeTimer(
+      runWithOwner(owner, async () => {
+        dispose = makeTimer(
           () => {
             resource.fetch(owner)
           },
@@ -60,9 +66,9 @@ export const createResourceWS = <Value>(
   const live = createASS(false)
   const latest = createASS<Value | null>(null)
 
-  let clearFocusListener: (() => void) | undefined
+  let clearFocusListener: VoidFunction | undefined
 
-  let clearOnlineListener: (() => void) | undefined
+  let clearOnlineListener: VoidFunction | undefined
 
   const resource: ResourceWS<Value> = {
     live,

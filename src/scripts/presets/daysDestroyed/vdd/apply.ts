@@ -1,8 +1,4 @@
-import {
-  colors,
-  createHistogramSeries,
-  resetLeftPriceScale,
-} from '/src/scripts'
+import { createHistogramSeries, resetLeftPriceScale } from '/src/scripts'
 
 export const applyPreset: ApplyPreset = ({ chart, datasets }) => {
   resetLeftPriceScale(chart, {
@@ -19,24 +15,8 @@ export const applyPreset: ApplyPreset = ({ chart, datasets }) => {
 
   vddMultiple.fetch()
 
-  createEffect(() => {
-    series.setData(
-      (vddMultiple.values() || []).map((data) => {
-        const color =
-          data.value >= 3
-            ? colors.red[500]
-            : data.value >= 1
-            ? colors.orange[500]
-            : colors.green[500]
+  createEffect(() => series.setData(vddMultiple.values() || []))
 
-        return {
-          ...data,
-          value: data.value * 100,
-          color: color,
-        }
-      }),
-    )
-  })
   return {
     halved: true,
   }

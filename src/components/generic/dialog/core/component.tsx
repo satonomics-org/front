@@ -167,7 +167,7 @@ export const DialogCore = (props: Props) => {
       }
     })
 
-    let clearClickEvent: (() => void) | undefined
+    let clearClickEvent: VoidFunction | undefined
     createEffect(() => {
       clearClickEvent?.()
       if (isAttached() && state.open) {

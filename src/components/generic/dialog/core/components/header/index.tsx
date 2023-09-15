@@ -18,7 +18,7 @@ interface Props {
   defaultLeft: number
   defaultTop: number
   close: (element?: HTMLElement) => void
-  toggleMaximized: () => void
+  toggleMaximized: VoidFunction
   setPosition: (position: DialogPosition) => void
   setMoving: (moving: boolean) => void
 }

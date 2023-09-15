@@ -54,21 +54,22 @@ export const createStandardVariationsLineSeries = (
 
 export const setStandardVariationsDatasets = (
   standardVariationsList: ReturnType<typeof createStandardVariationsLineSeries>,
-  dataset: SingleValueData[],
+  dataset: DatedSingleValueData[],
   candlesticks: CandlestickDataWithVolume[] | undefined,
 ) => {
   const start =
     candlesticks?.findIndex(
-      (candlestick) => candlestick.time === dataset.at(0)?.time,
+      (candlestick) => candlestick.date === dataset.at(0)?.date,
     ) || 0
 
   const mvrv = (candlesticks || [])
     .slice(start, dataset.length + start)
-    .map(({ time, close }, index) => {
-      if (time !== dataset[index].time)
-        throw Error(`Unsynced data (${time} vs ${dataset[index].time})`)
+    .map(({ date, time, close }, index) => {
+      if (date !== dataset[index].date)
+        throw Error(`Unsynced data (${date} vs ${dataset[index].date})`)
 
       return {
+        date,
         time,
         value: close / dataset[index].value,
       }
@@ -78,8 +79,9 @@ export const setStandardVariationsDatasets = (
 
   standardVariationsList.forEach(({ series, multiplier }) => {
     series.setData(
-      dataset.map(({ value, time }, index) => ({
+      dataset.map(({ value, time, date }, index) => ({
         time,
+        date,
         value:
           value *
           (means[index].value + multiplier * standardVariations[index].value),
@@ -88,37 +90,41 @@ export const setStandardVariationsDatasets = (
   })
 }
 
-const computeStandardDeviation = (dataset: SingleValueData[]) => {
-  const means: SingleValueData[] = []
+const computeStandardDeviation = (dataset: DatedSingleValueData[]) => {
+  const means: DatedSingleValueData[] = []
 
-  const standardVariations = dataset.map((data, index): SingleValueData => {
-    let mean = 0
+  const standardVariations = dataset.map(
+    (data, index): DatedSingleValueData => {
+      let mean = 0
 
-    if (means.length) {
-      mean =
-        ((means.at(-1)?.value || 1) * means.length + data.value) /
-        (means.length + 1)
-    } else {
-      mean = data.value
-    }
+      if (means.length) {
+        mean =
+          ((means.at(-1)?.value || 1) * means.length + data.value) /
+          (means.length + 1)
+      } else {
+        mean = data.value
+      }
 
-    means.push({
-      time: data.time,
-      value: mean,
-    })
+      means.push({
+        date: data.date,
+        time: data.time,
+        value: mean,
+      })
 
-    const variance = computeAverage(
-      dataset.slice(0, index + 1).map((data) => {
-        const deviation = data.value - mean
-        return deviation ** 2
-      }),
-    )
+      const variance = computeAverage(
+        dataset.slice(0, index + 1).map((data) => {
+          const deviation = data.value - mean
+          return deviation ** 2
+        }),
+      )
 
-    return {
-      time: data.time,
-      value: Math.sqrt(variance),
-    }
-  })
+      return {
+        date: data.date,
+        time: data.time,
+        value: Math.sqrt(variance),
+      }
+    },
+  )
 
   return {
     means,

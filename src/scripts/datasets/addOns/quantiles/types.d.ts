@@ -1,17 +1,20 @@
-type DatasetWithQuantiles = Dataset<SingleValueData> &
+type DatasetWithQuantiles = Dataset<DatedSingleValueData> &
   RatiosAddOn &
   QuantilesAddOn
 
 type QuantilesAddOn = {
-  quantiles: Quantiles<SingleValueData>
+  quantiles: Quantiles<DatedSingleValueData>
 }
 
 type Quantiles<
-  Value = SingleValueData,
+  Value = DatedSingleValueData,
   Values = Accessor<Value[] | null>,
 > = Record<QuantileKey, Values>
 
-type QuantileSignals = Record<QuantileKey, Signal<SingleValueData[] | null>>
+type QuantileSignals = Record<
+  QuantileKey,
+  Signal<DatedSingleValueData[] | null>
+>
 
 type QuantileKey =
   | 0.1

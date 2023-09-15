@@ -3,16 +3,17 @@ export const computeAverage = (values: number[]) =>
   values.length
 
 export const computeMovingAverage = <
-  Value extends WhitespaceData = SingleValueData,
+  Value extends DatedWhitespaceData = DatedSingleValueData,
 >(
   dataset: Value[] | null,
   interval: number,
-): SingleValueData[] => {
+): DatedSingleValueData[] => {
   if (!dataset?.length) return []
 
   console.log(`${interval}D MA: computing...`)
 
   return dataset.map((data, index) => ({
+    date: data.date,
     time: data.time,
     value: computeAverage([
       ...(index + 1 < interval ? new Array(interval - index - 1).fill(0) : []),
@@ -24,19 +25,19 @@ export const computeMovingAverage = <
 }
 
 export const computeWeeklyMovingAverage = <
-  Value extends WhitespaceData = SingleValueData,
+  Value extends DatedWhitespaceData = DatedSingleValueData,
 >(
   dataset: Value[] | null,
 ) => computeMovingAverage(dataset, 7)
 
 export const computeMonthlyMovingAverage = <
-  Value extends WhitespaceData = SingleValueData,
+  Value extends DatedWhitespaceData = DatedSingleValueData,
 >(
   dataset: Value[] | null,
 ) => computeMovingAverage(dataset, 30)
 
 export const computeYearlyMovingAverage = <
-  Value extends WhitespaceData = SingleValueData,
+  Value extends DatedWhitespaceData = DatedSingleValueData,
 >(
   dataset: Value[] | null,
 ) => computeMovingAverage(dataset, 365)

@@ -29,8 +29,6 @@ export const computeQuantile = (
   dataset: Dataset & RatiosAddOn,
   quantile: number,
 ) => {
-  console.log(`${quantile}% Q: computing...`)
-
   const {
     values,
     ratios: { values: ratios, offset },
@@ -38,7 +36,11 @@ export const computeQuantile = (
 
   let sortedRatios: number[] = []
 
-  return ratios().map(({ time, value: ratio }, dataIndex) => {
+  if (!ratios().length) return []
+
+  console.log(`${quantile}% Q: computing...`)
+
+  return ratios().map(({ date, time, value: ratio }, dataIndex) => {
     sortedInsert(sortedRatios, ratio)
 
     const length = dataIndex + 1
@@ -58,6 +60,7 @@ export const computeQuantile = (
     }
 
     return {
+      date,
       time,
       value: value * (values()?.at(dataIndex + offset())?.value || 1),
     }

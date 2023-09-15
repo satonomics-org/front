@@ -19,13 +19,7 @@ export const applyPreset: ApplyPreset = ({ chart, datasets }) => {
 
   sopr.fetch()
 
-  createEffect(() => {
-    series.setData(
-      (sopr.values() || []).map((data) => ({
-        ...data,
-      })),
-    )
-  })
+  createEffect(() => series.setData(sopr.values() || []))
 
   return {
     halved: true,

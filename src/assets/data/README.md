@@ -4,7 +4,7 @@ Scroll to the left as far as needed, get the data from the Network tab, store it
 
 ```js
 x.result[0].candlesticks.map((c) => ({
-  time: new Date(c.ct * 1000).toJSON().split('T')[0],
+  date: new Date(c.ct * 1000).toJSON().split('T')[0],
   open: Number(c.op),
   high: Number(c.hp),
   low: Number(c.lp),

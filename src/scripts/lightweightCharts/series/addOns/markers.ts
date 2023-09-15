@@ -3,7 +3,7 @@ import { colors, priceToUSLocale, sortWhitespaceDataArray } from '/src/scripts'
 export const setMinMaxMarkers = (
   chart: IChartApi,
   series: ISeriesApi<'Line' | 'Candlestick'>,
-  candlesticks: CandlestickData[],
+  candlesticks: DatedCandlestickData[],
   range: LogicalRange | null,
 ) => {
   const isLeftPriceScaleVisible = chart.priceScale('left').options().visible
@@ -16,7 +16,7 @@ export const setMinMaxMarkers = (
     : []
 
   if (slicedDataList.length) {
-    const markers: SeriesMarker<Time>[] = []
+    const markers: (SeriesMarker<Time> & Dated)[] = []
 
     const seriesIsCandlestick = series.seriesType() === 'Candlestick'
 
@@ -61,6 +61,7 @@ export const setMinMaxMarkers = (
           candle &&
           markers.push({
             ...markerOptions,
+            date: candle.date,
             time: candle.time,
             color: isLeftPriceScaleVisible ? colors.offWhite() : colors.white(),
             size: 0,

@@ -9,7 +9,7 @@ export const Footer = () => {
         href="mailto:contact@satonomics.xyz"
         full
       >
-        <span class="w-full text-left">Contact us</span>
+        <span class="w-full text-left">Contact</span>
       </Interactive>
       <Interactive
         component={'a'}
@@ -20,6 +20,16 @@ export const Footer = () => {
         rel="noopener noreferrer"
       >
         <span class="w-full text-left">Source Code</span>
+      </Interactive>
+      <Interactive
+        component={'a'}
+        rightIcon={IconTablerAnalyze}
+        href="https://counter.dev/dashboard.html?user=wjfpwo2032fk&token=GAP9y3FM4o0%3D"
+        full
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        <span class="w-full text-left">Analytics</span>
       </Interactive>
 
       {/* <Button

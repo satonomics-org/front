@@ -31,15 +31,16 @@ export const generateApplyPreset =
       priceScaleId: 'left',
     })
 
-    const candlesticks = datasets.candlesticks.values()
-
     createEffect(() => {
+      const candlesticks = datasets.candlesticks.values()
+
       const dataset = (candlesticks || []).map((candle) => {
         const color = isMainSeriesCandlesticks
           ? darken(convertCandleToColor(candle), 0.33)
           : colors.neutral[600]
 
         return {
+          date: candle.date,
           time: candle.time,
           value: (volumeInDollars ? candle.close : 1) * candle.volume,
           color,
@@ -48,12 +49,7 @@ export const generateApplyPreset =
 
       volume.setData(dataset)
 
-      ma.setData(
-        computeMonthlyMovingAverage(dataset).map((data) => ({
-          time: data.time,
-          value: data.value,
-        })),
-      )
+      ma.setData(computeMonthlyMovingAverage(dataset))
     })
 
     return {

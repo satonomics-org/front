@@ -1,7 +1,7 @@
 import { Button } from '/src/components'
 
 interface Props {
-  close: () => void
+  close: VoidFunction
 }
 
 export const DialogButtonClose = (props: Props) => {

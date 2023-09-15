@@ -1,6 +1,6 @@
 import { applyDifferentLinesPreset, colors } from '/src/scripts'
 
-export const applyPreset: ApplyPreset = ({ chart, datasets }) => {
+export const applyPreset: ApplyPreset = ({ chart, datasets }) =>
   applyDifferentLinesPreset({
     chart,
     list: [
@@ -21,4 +21,3 @@ export const applyPreset: ApplyPreset = ({ chart, datasets }) => {
       },
     ],
   })
-}

@@ -16,7 +16,7 @@ ColorSpace.register(sRGB)
 ColorSpace.register(Lab)
 ColorSpace.register(OKLCH)
 
-export const convertCandleToColor = (candle: CandlestickData) =>
+export const convertCandleToColor = (candle: DatedCandlestickData) =>
   (candle.close || 1) > (candle.open || 0) ? colors.up : colors.down
 
 export const mixColors = (

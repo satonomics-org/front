@@ -1,13 +1,4 @@
-import {
-  chartState,
-  colors,
-  computeMonthlyMovingAverage,
-  convertCandleToColor,
-  createHistogramSeries,
-  createLineSeries,
-  darken,
-  resetLeftPriceScale,
-} from '/src/scripts'
+import { resetLeftPriceScale } from '/src/scripts'
 
 export const applyPreset: ApplyPreset = ({ chart, datasets }) => {
   resetLeftPriceScale(chart, {

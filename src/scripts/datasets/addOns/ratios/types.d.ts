@@ -1,8 +1,8 @@
-type DatasetWithRatio = Dataset<SingleValueData> & RatiosAddOn
+type DatasetWithRatio = Dataset<DatedSingleValueData> & RatiosAddOn
 
 type RatiosAddOn = {
   ratios: {
-    values: Accessor<SingleValueData[]>
+    values: Accessor<DatedSingleValueData[]>
     offset: Accessor<number>
   }
 }

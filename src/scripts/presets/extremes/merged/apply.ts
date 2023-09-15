@@ -1,5 +1,3 @@
-import { applyPreset as applyCyclePreset } from '../cycle/apply'
-import { applyPreset as applyLocalPreset } from '../local/apply'
 import { applyExtremesPreset } from '../utils'
 
 export const applyPreset: ApplyPreset = ({ chart, datasets }) =>

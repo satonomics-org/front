@@ -70,31 +70,10 @@ export const applyAveragesPreset = (params: {
 
   dataset.fetch()
 
-  createEffect(() => {
-    daily.setData(
-      (dataset.values() || []).map((data) => ({
-        ...data,
-      })),
-    )
-
-    weekly.setData(
-      (dataset.averages.weekly() || []).map((data) => ({
-        ...data,
-      })),
-    )
-
-    monthly.setData(
-      (dataset.averages.monthly() || []).map((data) => ({
-        ...data,
-      })),
-    )
-
-    yearly.setData(
-      (dataset.averages.yearly() || []).map((data) => ({
-        ...data,
-      })),
-    )
-  })
+  createEffect(() => daily.setData(dataset.values() || []))
+  createEffect(() => weekly.setData(dataset.averages.weekly() || []))
+  createEffect(() => monthly.setData(dataset.averages.monthly() || []))
+  createEffect(() => yearly.setData(dataset.averages.yearly() || []))
 
   return {
     halved: true,

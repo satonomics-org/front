@@ -24,10 +24,13 @@ export const krakenAPI = {
 
       if (!Array.isArray(result)) return
 
-      const [time, _, open, high, low, close, __, volume] = result[1]
+      const [timestamp, _, open, high, low, close, __, volume] = result[1]
+
+      const dateStr = dateToString(new Date(Number(timestamp) * 1000))
 
       const candle: CandlestickDataWithVolume = {
-        time: dateToString(new Date(Number(time) * 1000)),
+        date: dateStr,
+        time: dateStr,
         open: Number(open),
         high: Number(high),
         low: Number(low),
