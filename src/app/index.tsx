@@ -1,5 +1,5 @@
 import { scheduleIdle } from '@solid-primitives/scheduled'
-import { createTimer } from '@solid-primitives/timer'
+import { createTimer, makeTimer } from '@solid-primitives/timer'
 import { Meta, Title } from '@solidjs/meta'
 import { getOwner, runWithOwner } from 'solid-js'
 
@@ -104,20 +104,33 @@ export const App = () => {
     localStorage.setItem('favorites', JSON.stringify(state.favorites()))
   }
 
-  // const fetches = (Object.entries(resources) as Entries<Resources>)
-  //   .map(([_, value]) => value)
-  //   .flatMap((value) => ('fetch' in value ? [value.fetch] : []))
+  const owner = getOwner()
+  run(async () => {
+    if ('serviceWorker' in navigator) {
+      try {
+        const registration = await navigator.serviceWorker.register('/sw.js')
 
-  // const owner = getOwner()
-  // createTimer(
-  //   () => {
-  //     console.log('eh')
+        registration.addEventListener('updatefound', () => {
+          const worker = registration.installing
 
-  //     fetches.pop()?.(owner)
-  //   },
-  //   5 * ONE_SECOND_IN_MS,
-  //   setInterval,
-  // )
+          worker?.addEventListener('statechange', () => {
+            if (
+              worker.state === 'activated' &&
+              navigator.serviceWorker.controller
+            ) {
+              // store.updateAvailable = true
+              ;(Object.entries(resources) as Entries<Resources>)
+                .map(([_, value]) => value)
+                .flatMap((value) => ('fetch' in value ? [value.fetch] : []))
+                .forEach((fetch) => fetch(owner))
+            }
+          })
+        })
+      } catch (error) {
+        console.error(`Registration failed with ${error}`)
+      }
+    }
+  })
 
   return (
     <>
