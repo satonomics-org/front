@@ -17,8 +17,6 @@ export const applyPreset: ApplyPreset = ({ chart, datasets }) => {
 
   const { sopr } = datasets
 
-  sopr.fetch()
-
   createEffect(() => series.setData(sopr.values() || []))
 
   return {

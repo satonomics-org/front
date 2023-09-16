@@ -48,8 +48,6 @@ export const applyPreset: ApplyPreset = ({ chart, datasets }) => {
       priceScaleId: 'left',
     })
 
-    dataset.fetch()
-
     createEffect(() => series.setData(dataset.values() || []))
   })
 

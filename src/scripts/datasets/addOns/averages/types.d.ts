@@ -1,15 +1,15 @@
 type DatasetWithAverages<
-  Value extends DatedWhitespaceData = DatedSingleValueData,
-> = Dataset<Value> & AveragesAddOn
+  T extends DatedWhitespaceData[] = DatedSingleValueData[],
+> = Dataset<T> & AveragesAddOn
 
 type AveragesAddOn = {
   averages: Averages<DatedSingleValueData>
 }
 
-type Averages<
-  Value = DatedSingleValueData,
-  Values = Accessor<Value[]>,
-> = Record<MovingAverageKey, Values>
+type Averages<T = DatedSingleValueData> = Record<
+  MovingAverageKey,
+  Accessor<T[]>
+>
 
 type AveragesSignals = Record<MovingAverageKey, Signal<DatedSingleValueData[]>>
 

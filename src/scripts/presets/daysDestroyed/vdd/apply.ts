@@ -11,11 +11,7 @@ export const applyPreset: ApplyPreset = ({ chart, datasets }) => {
 
   const series = createHistogramSeries(chart)
 
-  const { vddMultiple } = datasets
-
-  vddMultiple.fetch()
-
-  createEffect(() => series.setData(vddMultiple.values() || []))
+  createEffect(() => series.setData(datasets.vddMultiple.values() || []))
 
   return {
     halved: true,

@@ -68,8 +68,6 @@ export const applyAveragesPreset = (params: {
     title: '1Y MA',
   })
 
-  dataset.fetch()
-
   createEffect(() => daily.setData(dataset.values() || []))
   createEffect(() => weekly.setData(dataset.averages.weekly() || []))
   createEffect(() => monthly.setData(dataset.averages.monthly() || []))

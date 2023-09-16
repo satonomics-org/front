@@ -1,10 +1,11 @@
 import { createLazyMemo } from '@solid-primitives/memo'
-import { getOwner } from 'solid-js'
 
 import {
   colors,
   computeYearlyMovingAverage,
   convertCandlesticksToSingleValueDataset,
+  convertCandleToColor,
+  darken,
 } from '/src/scripts'
 
 import { addAverages, addQuantiles } from './addOns'
@@ -12,6 +13,7 @@ import { addRatios } from './addOns/ratios'
 import {
   createEntities30DBalanceChangeDataset,
   createEntities90DBalanceChangeDataset,
+  createExtremeQuantilesDataset,
   createLazyDataset,
   createResourceDataset,
 } from './creators'
@@ -20,23 +22,15 @@ export const USABLE_CANDLESTICKS_START_DATE = '2012-01-01'
 
 export const createDatasets = (resources: Resources) => {
   const closes = addAverages(
-    createLazyDataset({
-      fetch: resources.candlesticks.fetch,
-      values: createLazyMemo(() =>
-        convertCandlesticksToSingleValueDataset(
-          resources.candlesticks.values(),
-        ),
-      ),
-    }),
+    createLazyDataset(() =>
+      convertCandlesticksToSingleValueDataset(datasets.candlesticks.values()),
+    ),
   )
 
   const datasets: Datasets = {
     candlesticks: createResourceDataset(resources.candlesticks),
     closes,
     closesRecord: {
-      fetch() {
-        resources.candlesticks.fetch(getOwner())
-      },
       values: createLazyMemo(() =>
         (closes.values() || []).reduce(
           (obj, { date, value }) => {
@@ -47,32 +41,34 @@ export const createDatasets = (resources: Resources) => {
         ),
       ),
     },
-    weeklyMA: addQuantiles(
-      addRatios(
-        createLazyDataset({
-          fetch: resources.candlesticks.fetch,
-          values: closes.averages.weekly,
-        }),
-        closes.values,
+    volumeInBitcoin: addAverages(
+      createLazyDataset(() =>
+        (datasets.candlesticks.values() || []).map((candle) => ({
+          date: candle.date,
+          time: candle.time,
+          value: candle.volume,
+          color: darken(convertCandleToColor(candle), 0.33),
+        })),
       ),
+    ),
+    volumeInDollars: addAverages(
+      createLazyDataset(() =>
+        (datasets.candlesticks.values() || []).map((candle) => ({
+          date: candle.date,
+          time: candle.time,
+          value: candle.close * candle.volume,
+          color: darken(convertCandleToColor(candle), 0.33),
+        })),
+      ),
+    ),
+    weeklyMA: addQuantiles(
+      addRatios(createLazyDataset(closes.averages.weekly), closes.values),
     ),
     monthlyMA: addQuantiles(
-      addRatios(
-        createLazyDataset({
-          fetch: resources.candlesticks.fetch,
-          values: closes.averages.monthly,
-        }),
-        closes.values,
-      ),
+      addRatios(createLazyDataset(closes.averages.monthly), closes.values),
     ),
     yearlyMA: addQuantiles(
-      addRatios(
-        createLazyDataset({
-          fetch: resources.candlesticks.fetch,
-          values: closes.averages.yearly,
-        }),
-        closes.values,
-      ),
+      addRatios(createLazyDataset(closes.averages.yearly), closes.values),
     ),
     sthRealizedPrice: addQuantiles(
       addRatios(
@@ -116,8 +112,16 @@ export const createDatasets = (resources: Resources) => {
         closes.values,
       ),
     ),
-    netRealizedProfitAndLoss: createResourceDataset(
-      resources.netRealizedProfitAndLoss,
+    netRealizedProfitAndLoss: addAverages(
+      createResourceDataset({
+        fetch: resources.netRealizedProfitAndLoss.fetch,
+        values: createLazyMemo(() =>
+          (resources.netRealizedProfitAndLoss.values() || []).map((data) => ({
+            ...data,
+            color: darken(data.value < 0 ? colors.down : colors.up, 0.25),
+          })),
+        ),
+      }),
     ),
     sopr: createResourceDataset(resources.sopr),
     planktonRealizedPrice: addQuantiles(
@@ -199,7 +203,7 @@ export const createDatasets = (resources: Resources) => {
     cvdd: addQuantiles(
       addRatios(createResourceDataset(resources.cvdd), closes.values),
     ),
-    fundingRates: createLazyDataset({
+    fundingRates: createResourceDataset({
       fetch: resources.fundingRates.fetch,
       values: createLazyMemo(() =>
         (resources.fundingRates.values() || []).map(
@@ -212,7 +216,7 @@ export const createDatasets = (resources: Resources) => {
         ),
       ),
     }),
-    vddMultiple: createLazyDataset({
+    vddMultiple: createResourceDataset({
       fetch: resources.vddMultiple.fetch,
       values: createLazyMemo(() =>
         (resources.vddMultiple.values() || []).map(({ date, time, value }) => {
@@ -245,44 +249,96 @@ export const createDatasets = (resources: Resources) => {
     sthInLoss: createResourceDataset(resources.sthInLoss),
     hashrate: addAverages(createResourceDataset(resources.hashrate)),
     minersRevenueInDollars: addAverages(
-      createLazyDataset({
+      createResourceDataset({
         fetch: resources.minersRevenue.fetch,
         values: createLazyMemo(() =>
           (resources.minersRevenue.values() || []).map(
             ({ date, time, value }) => ({
               date,
               time,
-              value: value * datasets.closesRecord.values()[date],
+              value: value * (datasets.closesRecord.values()?.[date] || 1),
             }),
           ),
         ),
       }),
     ),
     puellMultiple: addAverages(
-      createLazyDataset({
-        fetch: resources.minersRevenue.fetch,
-        values: createLazyMemo(() => {
-          const dailyDataset = datasets.minersRevenueInDollars.values() || []
+      createLazyDataset(() => {
+        const dailyDataset = datasets.minersRevenueInDollars.values() || []
 
-          const yearlyDataset = computeYearlyMovingAverage(dailyDataset)
+        const yearlyDataset = computeYearlyMovingAverage(dailyDataset)
 
-          return dailyDataset.map(({ date, time, value }, index) => {
-            const yearlyValue = yearlyDataset[index].value
+        return dailyDataset.map(({ date, time, value }, index) => {
+          const yearlyValue = yearlyDataset[index].value
 
-            return {
-              date,
-              time,
-              value: value / yearlyValue,
-            }
-          })
-        }),
+          return {
+            date,
+            time,
+            value: value / yearlyValue,
+          }
+        })
       }),
     ),
     stablecoinsMarketCaps: createResourceDataset(
       resources.stablecoinsMarketCaps,
     ),
+    combinedStablecoinsMarketCaps: createLazyDataset(() =>
+      Object.entries(
+        (datasets.stablecoinsMarketCaps.values() || [])?.reduce(
+          (combined, stablecoin) => {
+            stablecoin.dataset.forEach(
+              ({ date, value }) =>
+                (combined[date] = (combined[date] || 0) + value),
+            )
+            return combined
+          },
+          {} as Record<string, number>,
+        ),
+      )
+        .map(([date, value]) => ({
+          date,
+          time: date,
+          value,
+        }))
+        .sort(
+          ({ date: a }, { date: b }) =>
+            new Date(a).valueOf() - new Date(b).valueOf(),
+        ),
+    ),
     '30DBalanceChanges': createEntities30DBalanceChangeDataset(resources),
     '90DBalanceChanges': createEntities90DBalanceChangeDataset(resources),
+    localExtremes: createExtremeQuantilesDataset(() => [
+      datasets.oneMonthRealizedPrice.quantiles,
+      datasets.threeMonthsRealizedPrice.quantiles,
+      datasets.sthRealizedPrice.quantiles,
+      datasets.sixMonthsRealizedPrice.quantiles,
+      datasets.monthlyMA.quantiles,
+      datasets.weeklyMA.quantiles,
+    ]),
+    cycleExtremes: createExtremeQuantilesDataset(() => [
+      datasets.oneYearRealizedPrice.quantiles,
+      datasets.realizedPrice.quantiles,
+      datasets.twoYearsRealizedPrice.quantiles,
+      datasets.lthRealizedPrice.quantiles,
+      datasets.planktonRealizedPrice.quantiles,
+      datasets.shrimpsRealizedPrice.quantiles,
+      datasets.crabsRealizedPrice.quantiles,
+      datasets.fishRealizedPrice.quantiles,
+      datasets.sharksRealizedPrice.quantiles,
+      datasets.whalesRealizedPrice.quantiles,
+      datasets.humpbacksRealizedPrice.quantiles,
+      datasets.balancedPrice.quantiles,
+      datasets.trueMeanPrice.quantiles,
+      datasets.cointimePrice.quantiles,
+      datasets.vaultedPrice.quantiles,
+      datasets.cvdd.quantiles,
+      datasets.yearlyMA.quantiles,
+      datasets.terminalPrice.quantiles,
+    ]),
+    mergedExtremes: createExtremeQuantilesDataset(() => [
+      datasets.localExtremes,
+      datasets.cycleExtremes,
+    ]),
   }
 
   return datasets

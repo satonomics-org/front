@@ -3,7 +3,7 @@ import { darken as _darken, colors, createLineSeries } from '/src/scripts'
 export const createQuantilesLineSeries = (
   chart: IChartApi,
   options: { left?: true; darken?: boolean } & DeepPartialLineOptions = {},
-) => {
+): Record<ExtremeQuantileKey, ISeriesApi<'Line'>> => {
   const { left, darken } = options
 
   const createQuantileSeries = (color: string) =>

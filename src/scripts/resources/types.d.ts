@@ -54,21 +54,21 @@ type ResourceKey =
 interface Resources
   extends Record<
     Exclude<ResourceKey, 'candlesticks' | 'stablecoinsMarketCaps'>,
-    ResourceHTTP<DatedSingleValueData>
+    ResourceHTTP<DatedSingleValueData[]>
   > {
-  candlesticks: ResourceHTTP<CandlestickDataWithVolume>
-  stablecoinsMarketCaps: ResourceHTTP<GroupedSingleValues>
+  candlesticks: ResourceHTTP<CandlestickDataWithVolume[]>
+  stablecoinsMarketCaps: ResourceHTTP<GroupedSingleValues[]>
   latestCandle: ResourceWS<CandlestickDataWithVolume>
 }
 
-interface ResourceHTTP<Value = DatedSingleValueData, Values = Value[] | null> {
-  fetch: (owner: Owner | null) => Promise<void>
-  values: ASS<Values>
+interface ResourceHTTP<T = DatedSingleValueData[]> {
+  fetch: (owner: Owner | null) => void
+  values: ASS<T | null>
 }
 
-interface ResourceWS<Value> {
+interface ResourceWS<T> {
   live: Accessor<boolean>
-  latest: Accessor<Value | null>
+  latest: Accessor<T | null>
   open: VoidFunction
   close: VoidFunction
 }

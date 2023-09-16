@@ -1,31 +1,28 @@
 import { makeEventListener } from '@solid-primitives/event-listener'
+import { leading, throttle } from '@solid-primitives/scheduled'
 import { makeTimer } from '@solid-primitives/timer'
 import { runWithOwner } from 'solid-js'
-import { unwrap } from 'solid-js/store'
 
+import { TEN_MINUTES_IN_MS, TEN_SECOND_IN_MS } from '/src/scripts'
 import { createASS } from '/src/solid'
 
-import { TEN_MINUTES_IN_MS } from '../utils'
-
-export const createResourceHTTP = <Value>(
-  fetch: () => Promise<Value[]>,
-  valuesOptions?: SignalOptions<Value[] | null>,
+export const createResourceHTTP = <T>(
+  fetch: () => Promise<T>,
+  valuesOptions?: SignalOptions<T | null>,
 ) => {
   const values = createASS(
-    null as Value[] | null,
+    null as T | null,
     valuesOptions ?? {
       equals: false,
     },
   )
 
   let lastSuccessfulFetch: Date | null
-
   let dispose: VoidFunction
 
-  const resource: ResourceHTTP<Value> = {
-    async fetch(owner) {
-      dispose?.()
-
+  const debouncedFetch = leading(
+    throttle,
+    async (owner: Owner | null) => {
       if (
         !lastSuccessfulFetch ||
         new Date().valueOf() - lastSuccessfulFetch.valueOf() > TEN_MINUTES_IN_MS
@@ -35,22 +32,25 @@ export const createResourceHTTP = <Value>(
         if (Array.isArray(fetchedValues)) {
           lastSuccessfulFetch = new Date()
 
-          console.log('values: setting...')
-          values.set(fetchedValues)
+          values.set(() => {
+            console.log('values: setting...')
+            return fetchedValues
+          })
         }
       }
 
+      dispose?.()
       runWithOwner(owner, async () => {
-        dispose = makeTimer(
-          () => {
-            resource.fetch(owner)
-          },
-          TEN_MINUTES_IN_MS,
-          setTimeout,
-        )
-
+        dispose = makeTimer(() => debouncedFetch, TEN_MINUTES_IN_MS, setTimeout)
         onCleanup(dispose)
       })
+    },
+    TEN_SECOND_IN_MS,
+  )
+
+  const resource: ResourceHTTP<T> = {
+    fetch(owner) {
+      debouncedFetch(owner)
     },
     values,
   }
@@ -58,19 +58,19 @@ export const createResourceHTTP = <Value>(
   return resource
 }
 
-export const createResourceWS = <Value>(
-  creator: (callback: (value: Value) => void) => WebSocket,
+export const createResourceWS = <T>(
+  creator: (callback: (value: T) => void) => WebSocket,
 ) => {
   let ws: WebSocket | null = null
 
   const live = createASS(false)
-  const latest = createASS<Value | null>(null)
+  const latest = createASS<T | null>(null)
 
   let clearFocusListener: VoidFunction | undefined
 
   let clearOnlineListener: VoidFunction | undefined
 
-  const resource: ResourceWS<Value> = {
+  const resource: ResourceWS<T> = {
     live,
     latest,
     open() {

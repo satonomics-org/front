@@ -55,8 +55,6 @@ export const generateApplyPreset =
         autoscaleInfoProvider: percentageAutoscaleInfoProvider,
       })
 
-      dataset.fetch()
-
       createEffect(() => series.setData(dataset.values() || []))
     })
 

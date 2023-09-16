@@ -22,7 +22,7 @@ const checkIfUpClose = (chart: IChartApi, range?: LogicalRange | null) => {
 
 export const applyPriceSeries = (
   chart: IChartApi,
-  candlesticks: CandlestickDataWithVolume[],
+  datasets: Datasets,
   options?: PriceSeriesOptions,
 ) => {
   if (!chart) return
@@ -38,17 +38,25 @@ export const applyPriceSeries = (
     chart.priceScale('left').options().visible
 
   if (seriesType === 'Candlestick') {
-    chartState.priceSeries = createCandlesticksSeries(chart, {
+    const series = createCandlesticksSeries(chart, {
       inverseColors: false,
       lowerOpacity,
       ...options?.seriesOptions,
     })
+
+    series.setData(datasets.candlesticks.values() || [])
+
+    chartState.priceSeries = series
   } else {
-    chartState.priceSeries = createLineSeries(chart, {
+    const series = createLineSeries(chart, {
       color: lowerOpacity ? colors.offWhite() : colors.white(),
       autoscaleInfoProvider: createAutoscaleInfoProvider(true),
       ...options?.seriesOptions,
     })
+
+    series.setData(datasets.closes.values() || [])
+
+    chartState.priceSeries = series
   }
 
   chartState.priceSeries.priceScale().applyOptions({
@@ -63,7 +71,11 @@ export const applyPriceSeries = (
     ...options?.priceScaleOptions,
   })
 
-  finalizePriceSeries(chart, chartState.priceSeries, candlesticks)
+  finalizePriceSeries(
+    chart,
+    chartState.priceSeries,
+    datasets.candlesticks.values() || [],
+  )
 }
 
 const finalizePriceSeries = (
@@ -71,13 +83,6 @@ const finalizePriceSeries = (
   series: ISeriesApi<'Line' | 'Candlestick'>,
   candlesticks: CandlestickDataWithVolume[],
 ) => {
-  series.setData(
-    candlesticks.map((data) => ({
-      ...data,
-      value: data.close,
-    })),
-  )
-
   if (chartState.range) {
     chart.timeScale().setVisibleLogicalRange(chartState.range)
   }
@@ -111,7 +116,7 @@ const finalizePriceSeries = (
         setMinMaxMarkers(chart, series, candlesticks, range)
       }
     } catch {}
-  }, 250)
+  }, 200)
 
   chart.timeScale().subscribeVisibleLogicalRangeChange(debouncedCallback)
 }

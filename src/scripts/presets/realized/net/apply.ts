@@ -1,10 +1,7 @@
 import {
   colors,
-  computeMonthlyMovingAverage,
-  computeWeeklyMovingAverage,
   createHistogramSeries,
   createLineSeries,
-  darken,
   resetLeftPriceScale,
 } from '/src/scripts'
 
@@ -33,22 +30,13 @@ export const applyPreset: ApplyPreset = ({ chart, datasets }) => {
 
   const { netRealizedProfitAndLoss } = datasets
 
-  netRealizedProfitAndLoss.fetch()
+  createEffect(() => daily.setData(netRealizedProfitAndLoss.values() || []))
 
-  createEffect(() => {
-    const dataset = netRealizedProfitAndLoss.values() || []
+  createEffect(() => weekly.setData(netRealizedProfitAndLoss.averages.weekly()))
 
-    daily.setData(
-      dataset.map((data) => ({
-        ...data,
-        color: darken(data.value < 0 ? colors.down : colors.up),
-      })),
-    )
-
-    weekly.setData(computeWeeklyMovingAverage(dataset))
-
-    monthly.setData(computeMonthlyMovingAverage(dataset))
-  })
+  createEffect(() =>
+    monthly.setData(netRealizedProfitAndLoss.averages.monthly()),
+  )
 
   return {
     halved: true,

@@ -1,33 +1,23 @@
 import { createLazyMemo } from '@solid-primitives/memo'
-import { debounce, leading } from '@solid-primitives/scheduled'
 import { getOwner } from 'solid-js'
 
 import { colors, stepColors } from '/src/scripts'
 
-export const createResourceDataset = <Value>({
+export const createResourceDataset = <T>({
   values,
   fetch,
-}: ResourceHTTP<Value>): Dataset<Value> => ({
-  values: () => {
-    // leading(debounce, fetch, 1_000)
-    return values()
-  },
-  fetch() {
+}: {
+  fetch: (owner: Owner | null) => void
+  values: Accessor<T | null>
+}): Dataset<T> => ({
+  values: createLazyMemo(() => {
     fetch(getOwner())
-  },
+    return values()
+  }),
 })
 
-export const createLazyDataset = <Value>({
-  fetch,
-  values,
-}: {
-  fetch: ResourceHTTP<Value>['fetch'] | ResourceHTTP<Value>['fetch'][]
-  values: Accessor<Value[]>
-}): Dataset<Value> => ({
-  values,
-  fetch() {
-    ;[fetch].flat().forEach((fetch) => fetch(getOwner()))
-  },
+export const createLazyDataset = <T>(calc: () => T): Dataset<T> => ({
+  values: createLazyMemo(calc),
 })
 
 export const createEntities30DBalanceChangeDataset = (resources: Resources) =>
@@ -58,25 +48,25 @@ export const createEntitiesBalanceChangeDataset = (
 })
 
 export const createEntity30DBalanceChangeDataset = <
-  Value extends DatedSingleValueData,
+  T extends DatedSingleValueData,
 >(
-  resource: ResourceHTTP<Value>,
+  resource: ResourceHTTP<T[]>,
   size: number,
 ) => createEntityBalanceChangeDataset(resource, size, 30)
 
 export const createEntity90DBalanceChangeDataset = <
-  Value extends DatedSingleValueData,
+  T extends DatedSingleValueData,
 >(
-  resource: ResourceHTTP<Value>,
+  resource: ResourceHTTP<T[]>,
   size: number,
 ) => createEntityBalanceChangeDataset(resource, size, 90)
 
-const createEntityBalanceChangeDataset = <Value extends DatedSingleValueData>(
-  { fetch, values }: ResourceHTTP<Value>,
+const createEntityBalanceChangeDataset = <T extends DatedSingleValueData>(
+  { fetch, values }: ResourceHTTP<T[]>,
   size: number,
   offset: number,
 ) =>
-  createLazyDataset({
+  createResourceDataset({
     fetch,
     values: createLazyMemo(
       () =>
@@ -119,3 +109,46 @@ const getBalanceChangeColor = (value: number) =>
     { color: ups[10], range: [4.5, 5] },
     { color: ups[11], range: [5, Infinity] },
   ].find(({ range }) => value >= range[0] && value < range[1])?.color
+
+export const createExtremeQuantilesDataset = (
+  datasets: Accessor<ExtremeQuantiles[]>,
+): ExtremesDataset => ({
+  '0.1': createLazyExtremeValues(datasets, 0.1),
+  '0.5': createLazyExtremeValues(datasets, 0.5),
+  '1': createLazyExtremeValues(datasets, 1),
+  '99': createLazyExtremeValues(datasets, 99),
+  '99.5': createLazyExtremeValues(datasets, 99.5),
+  '99.9': createLazyExtremeValues(datasets, 99.9),
+})
+
+const createLazyExtremeValues = (
+  datasets: Accessor<ExtremeQuantiles[]>,
+  quantileValue: ExtremeQuantileKey,
+) =>
+  createLazyMemo(() => {
+    console.log('lazy extreme: computing...')
+
+    const comparator = quantileValue < 50 ? Math.max : Math.min
+
+    return datasets().some((dataset) => !dataset[quantileValue]()?.length)
+      ? []
+      : (
+          datasets()
+            .flatMap((dataset) => [dataset[quantileValue]() || []])
+            .reduce(
+              (shortest, current) =>
+                !shortest || current.length < shortest.length
+                  ? current
+                  : shortest,
+              null as DatedSingleValueData[] | null,
+            ) || []
+        ).map(({ time, date }, index) => ({
+          time,
+          date,
+          value: comparator(
+            ...datasets().map(
+              (dataset) => dataset[quantileValue]()?.[index].value || NaN,
+            ),
+          ),
+        }))
+  })

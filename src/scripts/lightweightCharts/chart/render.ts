@@ -13,7 +13,6 @@ const whitespaceDataset: DatedWhitespaceData[] = []
 let dispose: VoidFunction | undefined = undefined
 
 export const renderChart = async (params: {
-  candlesticks: CandlestickDataWithVolume[]
   id: string
   datasets: Datasets
   latestCandle: Accessor<CandlestickDataWithVolume | null>
@@ -28,7 +27,7 @@ export const renderChart = async (params: {
         renderChart(params)
       }
 
-      const { candlesticks, id, datasets } = params
+      const { id, datasets } = params
 
       console.log(`preset: ${id}`)
 
@@ -36,7 +35,7 @@ export const renderChart = async (params: {
 
       const { chart } = chartState
 
-      if (!chart || !candlesticks.length) return
+      if (!chart || !datasets.candlesticks.values()?.length) return
 
       try {
         const whitespaceSeries = createLineSeries(chart)
@@ -55,7 +54,7 @@ export const renderChart = async (params: {
               datasets,
             }) || undefined
 
-        applyPriceSeries(chart, candlesticks, options)
+        applyPriceSeries(chart, datasets, options)
 
         updateLastCandlestick(params.latestCandle())
       } catch {}

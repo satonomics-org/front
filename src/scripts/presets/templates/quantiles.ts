@@ -16,17 +16,15 @@ export const applyQuantilesPreset = (params: {
     visible: left,
   })
 
-  const mainSeries = createLineSeries(chart, {
-    color,
-    autoscaleInfoProvider: undefined,
-  })
-
   const quantilesSeriesList = createQuantilesLineSeries(chart, {
     left,
     darken: true,
   })
 
-  dataset.fetch()
+  const mainSeries = createLineSeries(chart, {
+    color,
+    autoscaleInfoProvider: undefined,
+  })
 
   createEffect(() => mainSeries.setData(dataset.values() || []))
 

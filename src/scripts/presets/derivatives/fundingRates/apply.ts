@@ -10,8 +10,6 @@ export const applyPreset: ApplyPreset = ({ chart, datasets }) => {
 
   const { fundingRates } = datasets
 
-  fundingRates.fetch()
-
   createEffect(() => series.setData(fundingRates.values() || []))
 
   return {

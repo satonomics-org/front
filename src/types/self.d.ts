@@ -26,3 +26,11 @@ type DatedHistogramData = import('lightweight-charts').HistogramData & Dated
 type DeepPartialLineOptions = DeepPartial<
   LineStyleOptions & SeriesOptionsCommon
 >
+
+type Entries<T> = {
+  [K in keyof T]: [K, T[K]]
+}[keyof T][]
+
+type KeysOfValue<T, TCondition> = {
+  [K in keyof T]: T[K] extends TCondition ? K : never
+}[keyof T]

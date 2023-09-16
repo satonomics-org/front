@@ -21,8 +21,6 @@ export const applyDifferentLinesPreset = ({
       autoscaleInfoProvider: undefined,
     })
 
-    dataset?.fetch()
-
     createEffect(() => series.setData(dataset?.values() || values?.() || []))
   })
 }

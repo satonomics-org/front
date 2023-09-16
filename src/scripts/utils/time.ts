@@ -1,3 +1,4 @@
 export const ONE_SECOND_IN_MS = 1_000
-export const ONE_MINUTE_IN_MS = 60 * ONE_SECOND_IN_MS
+export const TEN_SECOND_IN_MS = 10 * ONE_SECOND_IN_MS
+export const ONE_MINUTE_IN_MS = 6 * TEN_SECOND_IN_MS
 export const TEN_MINUTES_IN_MS = 10 * ONE_MINUTE_IN_MS

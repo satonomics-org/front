@@ -7,10 +7,10 @@ import {
 } from '/src/scripts'
 
 export const addAverages = <
-  Value extends DatedWhitespaceData = DatedSingleValueData,
+  T extends DatedWhitespaceData = DatedSingleValueData,
 >(
-  dataset: Dataset<Value>,
-): Dataset<Value> & AveragesAddOn => ({
+  dataset: Dataset<T[]>,
+): Dataset<T[]> & AveragesAddOn => ({
   ...dataset,
   averages: {
     weekly: createLazyMemo(() => computeWeeklyMovingAverage(dataset.values())),

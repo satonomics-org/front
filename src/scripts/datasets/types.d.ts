@@ -1,6 +1,5 @@
-interface Dataset<Value = DatedSingleValueData> {
-  values: Accessor<Value[] | null>
-  fetch: VoidFunction
+interface Dataset<T = DatedSingleValueData[]> {
+  values: Accessor<T | null>
 }
 
 type DatasetKey = keyof Datasets
@@ -14,17 +13,18 @@ interface Datasets
       | 'stablecoinsMarketCaps'
       | 'vddMultiple'
       | 'fundingRates'
+      | 'netRealizedProfitAndLoss'
     >,
-    Dataset<DatedSingleValueData>
+    Dataset<DatedSingleValueData[]>
   > {
-  candlesticks: Dataset<CandlestickDataWithVolume>
+  candlesticks: Dataset<CandlestickDataWithVolume[]>
   closes: DatasetWithAverages
-  closesRecord: {
-    values: Accessor<Record<string, number>>
-    fetch: VoidFunction
-  }
-  vddMultiple: Dataset<DatedHistogramData>
-  fundingRates: Dataset<DatedHistogramData>
+  closesRecord: Dataset<Record<string, number>>
+  volumeInBitcoin: DatasetWithAverages<DatedHistogramData[]>
+  volumeInDollars: DatasetWithAverages<DatedHistogramData[]>
+  netRealizedProfitAndLoss: DatasetWithAverages<DatedHistogramData[]>
+  vddMultiple: Dataset<DatedHistogramData[]>
+  fundingRates: Dataset<DatedHistogramData[]>
   weeklyMA: DatasetWithQuantiles
   monthlyMA: DatasetWithQuantiles
   yearlyMA: DatasetWithQuantiles
@@ -53,13 +53,22 @@ interface Datasets
   minersRevenueInDollars: DatasetWithAverages
   puellMultiple: DatasetWithAverages
   hashrate: DatasetWithAverages
-  stablecoinsMarketCaps: Dataset<GroupedSingleValues>
+  stablecoinsMarketCaps: Dataset<GroupedSingleValues[]>
   '30DBalanceChanges': GroupedDatasetsByEntityName
   '90DBalanceChanges': GroupedDatasetsByEntityName
+  combinedStablecoinsMarketCaps: Dataset
+  localExtremes: ExtremesDataset
+  cycleExtremes: ExtremesDataset
+  mergedExtremes: ExtremesDataset
 }
 
+type ExtremesDataset = Record<
+  ExtremeQuantileKey,
+  Accessor<DatedSingleValueData[] | null>
+>
+
 type GroupedDatasetsByEntityName = GroupedByEntity<
-  Dataset<DatedSingleValueData>
+  Dataset<DatedSingleValueData[]>
 >
 
 type GroupedByEntity<T> = Record<EntityName, T>

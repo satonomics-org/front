@@ -10,7 +10,7 @@ import {
 } from '/src/scripts'
 
 export const generateApplyPreset =
-  (volumeInDollars = false): ApplyPreset =>
+  (key: 'volumeInBitcoin' | 'volumeInDollars'): ApplyPreset =>
   ({ chart, datasets }) => {
     resetLeftPriceScale(chart, {
       visible: true,
@@ -22,34 +22,27 @@ export const generateApplyPreset =
 
     const volume = createHistogramSeries(chart)
 
-    const isMainSeriesCandlesticks = chartState.seriesType !== 'Line'
-
     const ma = createLineSeries(chart, {
-      color: isMainSeriesCandlesticks
-        ? colors.yellow[500]
-        : colors.neutral[200],
       priceScaleId: 'left',
     })
 
     createEffect(() => {
-      const candlesticks = datasets.candlesticks.values()
+      const isMainSeriesCandlesticks = chartState.seriesType !== 'Line'
 
-      const dataset = (candlesticks || []).map((candle) => {
-        const color = isMainSeriesCandlesticks
-          ? darken(convertCandleToColor(candle), 0.33)
-          : colors.neutral[600]
-
-        return {
-          date: candle.date,
-          time: candle.time,
-          value: (volumeInDollars ? candle.close : 1) * candle.volume,
-          color,
-        }
+      ma.applyOptions({
+        color: isMainSeriesCandlesticks
+          ? colors.yellow[500]
+          : colors.neutral[200],
       })
 
-      volume.setData(dataset)
+      volume.setData(
+        (datasets[key].values() || []).map((value) => ({
+          ...value,
+          color: isMainSeriesCandlesticks ? value.color : colors.neutral[600],
+        })),
+      )
 
-      ma.setData(computeMonthlyMovingAverage(dataset))
+      ma.setData(datasets[key].averages.monthly())
     })
 
     return {

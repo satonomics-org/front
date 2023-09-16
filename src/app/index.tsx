@@ -1,21 +1,26 @@
+import { scheduleIdle } from '@solid-primitives/scheduled'
+import { createTimer } from '@solid-primitives/timer'
 import { Meta, Title } from '@solidjs/meta'
+import { getOwner, runWithOwner } from 'solid-js'
 
 import packageJSONRaw from '/src/../package.json?raw'
 import { Chart, classPropToString, DialogCore, Labeled } from '/src/components'
+import { env } from '/src/env'
 import {
   cleanChart,
   createDatasets,
   createResources,
+  ONE_SECOND_IN_MS,
   presetsGroups,
   priceToUSLocale,
   renderChart,
   run,
   scrollIntoView,
+  TEN_SECOND_IN_MS,
   updateLastCandlestick,
 } from '/src/scripts'
 import { createASS } from '/src/solid'
 
-import { env } from '../env'
 import { Header, Live, Menu, Preset } from './components'
 import { createDarkModeTimer } from './scripts'
 
@@ -71,9 +76,8 @@ export const App = () => {
 
     if (candlesticks.length) {
       renderChart({
-        candlesticks,
-        id: state.selectedPreset(),
         datasets,
+        id: state.selectedPreset(),
         latestCandle: resources.latestCandle.latest,
       })
     }
@@ -99,6 +103,21 @@ export const App = () => {
 
     localStorage.setItem('favorites', JSON.stringify(state.favorites()))
   }
+
+  // const fetches = (Object.entries(resources) as Entries<Resources>)
+  //   .map(([_, value]) => value)
+  //   .flatMap((value) => ('fetch' in value ? [value.fetch] : []))
+
+  // const owner = getOwner()
+  // createTimer(
+  //   () => {
+  //     console.log('eh')
+
+  //     fetches.pop()?.(owner)
+  //   },
+  //   5 * ONE_SECOND_IN_MS,
+  //   setInterval,
+  // )
 
   return (
     <>

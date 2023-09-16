@@ -74,6 +74,12 @@ export const colors = {
   profit: twc.green[500],
   down: twc.red[500],
   up: twc.green[500],
+  Tether: twc.emerald[500],
+  'USD Coin': twc.blue[500],
+  'Binance USD': twc.yellow[500],
+  Dai: twc.amber[500],
+  TrueUSD: twc.indigo[500],
+  Frax: twc.neutral[500],
 }
 
 const colorToHex = (color: ColorTypes | number) =>
