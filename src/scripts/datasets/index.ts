@@ -6,6 +6,7 @@ import {
   convertCandlesticksToSingleValueDataset,
   convertCandleToColor,
   darken,
+  ONE_DAY_IN_MS,
 } from '/src/scripts'
 
 import { addAverages, addQuantiles } from './addOns'
@@ -248,6 +249,37 @@ export const createDatasets = (resources: Resources) => {
     lthInLoss: createResourceDataset(resources.lthInLoss),
     sthInLoss: createResourceDataset(resources.sthInLoss),
     hashrate: addAverages(createResourceDataset(resources.hashrate)),
+    hashPrice: addAverages(
+      createLazyDataset(() => {
+        const hashrate = datasets.hashrate.values() || []
+        const minersRevenue = datasets.minersRevenueInDollars.values() || []
+        const firstMinersRevenue = minersRevenue.at(0)
+
+        if (!minersRevenue.length || !hashrate.length || !firstMinersRevenue)
+          return []
+
+        let offset = hashrate.findIndex(
+          ({ date }) => date === firstMinersRevenue.date,
+        )
+
+        return minersRevenue.map(({ date, time, value }, index) => {
+          const hashDate = hashrate.at(index + offset)?.date
+
+          if (date !== hashDate) {
+            offset += Math.ceil(
+              (new Date(date).getTime() - new Date(hashDate || '').getTime()) /
+                ONE_DAY_IN_MS,
+            )
+          }
+
+          return {
+            date,
+            time,
+            value: value / (hashrate.at(index + offset)?.value || 0),
+          }
+        })
+      }),
+    ),
     minersRevenueInDollars: addAverages(
       createResourceDataset({
         fetch: resources.minersRevenue.fetch,

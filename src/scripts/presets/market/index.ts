@@ -6,6 +6,6 @@ export const marketPresetsGroup = {
   list: [
     krakenBitcoinVolumePreset,
     krakenDollarVolumePreset,
-    stablecoinsMarketCapsPreset,
+    // stablecoinsMarketCapsPreset,
   ],
 }

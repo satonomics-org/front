@@ -1,9 +1,7 @@
 import { makeEventListener } from '@solid-primitives/event-listener'
 import { leading, throttle } from '@solid-primitives/scheduled'
-import { makeTimer } from '@solid-primitives/timer'
-import { runWithOwner } from 'solid-js'
 
-import { TEN_MINUTES_IN_MS, TEN_SECOND_IN_MS } from '/src/scripts'
+import { ONE_SECOND_IN_MS, TEN_SECOND_IN_MS } from '/src/scripts'
 import { createASS } from '/src/solid'
 
 export const createResourceHTTP = <T>(
@@ -17,17 +15,20 @@ export const createResourceHTTP = <T>(
     },
   )
 
-  let lastSuccessfulFetch: Date | null
-  let dispose: VoidFunction
+  const loading = createASS(false)
 
-  const debouncedFetch = leading(
+  let lastSuccessfulFetch: Date | null
+
+  const throttledFetch = leading(
     throttle,
-    async (owner: Owner | null) => {
+    async () => {
       if (
         !lastSuccessfulFetch ||
-        new Date().valueOf() - lastSuccessfulFetch.valueOf() > TEN_MINUTES_IN_MS
+        new Date().valueOf() - lastSuccessfulFetch.valueOf() > TEN_SECOND_IN_MS
       ) {
+        loading.set(true)
         const fetchedValues = await fetch()
+        loading.set(false)
 
         if (Array.isArray(fetchedValues)) {
           lastSuccessfulFetch = new Date()
@@ -38,21 +39,14 @@ export const createResourceHTTP = <T>(
           })
         }
       }
-
-      dispose?.()
-      runWithOwner(owner, async () => {
-        dispose = makeTimer(() => debouncedFetch, TEN_MINUTES_IN_MS, setTimeout)
-        onCleanup(dispose)
-      })
     },
-    TEN_SECOND_IN_MS,
+    ONE_SECOND_IN_MS,
   )
 
   const resource: ResourceHTTP<T> = {
-    fetch(owner) {
-      debouncedFetch(owner)
-    },
+    fetch: throttledFetch,
     values,
+    loading,
   }
 
   return resource

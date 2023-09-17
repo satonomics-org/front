@@ -1,5 +1,4 @@
 import { createLazyMemo } from '@solid-primitives/memo'
-import { getOwner } from 'solid-js'
 
 import { colors, stepColors } from '/src/scripts'
 
@@ -7,11 +6,11 @@ export const createResourceDataset = <T>({
   values,
   fetch,
 }: {
-  fetch: (owner: Owner | null) => void
+  fetch: () => void
   values: Accessor<T | null>
 }): Dataset<T> => ({
   values: createLazyMemo(() => {
-    fetch(getOwner())
+    fetch()
     return values()
   }),
 })

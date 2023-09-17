@@ -1,7 +1,4 @@
-import { scheduleIdle } from '@solid-primitives/scheduled'
-import { createTimer, makeTimer } from '@solid-primitives/timer'
 import { Meta, Title } from '@solidjs/meta'
-import { getOwner, runWithOwner } from 'solid-js'
 
 import packageJSONRaw from '/src/../package.json?raw'
 import { Chart, classPropToString, DialogCore, Labeled } from '/src/components'
@@ -10,18 +7,16 @@ import {
   cleanChart,
   createDatasets,
   createResources,
-  ONE_SECOND_IN_MS,
   presetsGroups,
   priceToUSLocale,
   renderChart,
   run,
   scrollIntoView,
-  TEN_SECOND_IN_MS,
   updateLastCandlestick,
 } from '/src/scripts'
 import { createASS } from '/src/solid'
 
-import { Header, Live, Menu, Preset } from './components'
+import { Header, Menu, Network, Preset, Update } from './components'
 import { createDarkModeTimer } from './scripts'
 
 const packageJSON = JSON.parse(packageJSONRaw)
@@ -92,6 +87,12 @@ export const App = () => {
       )?.name || '',
   )
 
+  const fetching = createMemo(() =>
+    Object.values(resources)
+      .filter((resource) => 'loading' in resource)
+      .some((resource: ResourceHTTP) => resource.loading()),
+  )
+
   const favorite = (id: string) => {
     state.favorites.set((favorites) => {
       favorites.includes(id)
@@ -104,34 +105,6 @@ export const App = () => {
     localStorage.setItem('favorites', JSON.stringify(state.favorites()))
   }
 
-  const owner = getOwner()
-  run(async () => {
-    if ('serviceWorker' in navigator) {
-      try {
-        const registration = await navigator.serviceWorker.register('/sw.js')
-
-        registration.addEventListener('updatefound', () => {
-          const worker = registration.installing
-
-          worker?.addEventListener('statechange', () => {
-            if (
-              worker.state === 'activated' &&
-              navigator.serviceWorker.controller
-            ) {
-              // store.updateAvailable = true
-              ;(Object.entries(resources) as Entries<Resources>)
-                .map(([_, value]) => value)
-                .flatMap((value) => ('fetch' in value ? [value.fetch] : []))
-                .forEach((fetch) => fetch(owner))
-            }
-          })
-        })
-      } catch (error) {
-        console.error(`Registration failed with ${error}`)
-      }
-    }
-  })
-
   return (
     <>
       <Title>
@@ -143,6 +116,8 @@ export const App = () => {
         })}
       </Title>
       <Meta name="description" content={packageJSON.description} />
+
+      <Update resources={resources} />
 
       <div
         class={classPropToString([
@@ -175,7 +150,10 @@ export const App = () => {
                   : 'opacity-0',
               ]}
             />
-            <Live live={resources.latestCandle.live()} />
+            <Network
+              live={resources.latestCandle.live()}
+              fetching={fetching()}
+            />
           </div>
           <div class="md:hidden">
             <hr />

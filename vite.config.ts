@@ -38,7 +38,6 @@ export default defineConfig({
               switch (origin) {
                 case 'http://localhost:8000':
                 case 'https://satonomics.shuttleapp.rs':
-                case 'https://api.kraken.com':
                   return true
                 default:
                   return false

@@ -1,3 +1,5 @@
+import { makeTimer } from '@solid-primitives/timer'
+
 import {
   chartState,
   colors,
@@ -5,8 +7,8 @@ import {
   createCandlesticksSeries,
   createLineSeries,
   createPriceLine,
-  debounce,
   setMinMaxMarkers,
+  setTimeScale,
   updateLastCandlestick,
 } from '/src/scripts'
 
@@ -83,40 +85,11 @@ const finalizePriceSeries = (
   series: ISeriesApi<'Line' | 'Candlestick'>,
   candlesticks: CandlestickDataWithVolume[],
 ) => {
-  if (chartState.range) {
-    chart.timeScale().setVisibleLogicalRange(chartState.range)
-  }
-
   chartState.priceLine = createPriceLine(series)
 
   updateLastCandlestick(candlesticks.at(-1))
 
   setMinMaxMarkers(chart, series, candlesticks, chartState.range)
 
-  const debouncedCallback = debounce((range: LogicalRange | null) => {
-    range = range || chartState.range
-    chartState.range = range
-
-    localStorage.setItem('range', JSON.stringify(range))
-
-    try {
-      const seriesType = checkIfUpClose(chart, range)
-      chartState.seriesType = seriesType
-
-      if (
-        (seriesType === 'Candlestick' && series.seriesType() === 'Line') ||
-        (seriesType === 'Line' && series.seriesType() === 'Candlestick')
-      ) {
-        chart
-          .timeScale()
-          .unsubscribeVisibleLogicalRangeChange(debouncedCallback)
-
-        chartState.reset?.()
-      } else {
-        setMinMaxMarkers(chart, series, candlesticks, range)
-      }
-    } catch {}
-  }, 200)
-
-  chart.timeScale().subscribeVisibleLogicalRangeChange(debouncedCallback)
+  setTimeScale(chart, series, candlesticks)
 }

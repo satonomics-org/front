@@ -1,4 +1,5 @@
 export * from './header'
-export * from './live'
+export * from './network'
 export * from './menu'
 export * from './preset'
+export * from './update'

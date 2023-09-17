@@ -62,8 +62,9 @@ interface Resources
 }
 
 interface ResourceHTTP<T = DatedSingleValueData[]> {
-  fetch: (owner: Owner | null) => void
+  fetch: VoidFunction
   values: ASS<T | null>
+  loading: ASS<boolean>
 }
 
 interface ResourceWS<T> {

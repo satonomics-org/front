@@ -1,5 +1,3 @@
-import { getOwner } from 'solid-js'
-
 import { backEndAPI, krakenAPI } from '/src/scripts'
 
 import { createResourceHTTP, createResourceWS } from './creators'
@@ -82,7 +80,7 @@ export const createResources = () => {
     ),
   }
 
-  resources.candlesticks.fetch(getOwner())
+  resources.candlesticks.fetch()
   resources.latestCandle.open()
 
   return resources

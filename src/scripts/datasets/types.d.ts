@@ -53,6 +53,7 @@ interface Datasets
   minersRevenueInDollars: DatasetWithAverages
   puellMultiple: DatasetWithAverages
   hashrate: DatasetWithAverages
+  hashPrice: DatasetWithAverages
   stablecoinsMarketCaps: Dataset<GroupedSingleValues[]>
   '30DBalanceChanges': GroupedDatasetsByEntityName
   '90DBalanceChanges': GroupedDatasetsByEntityName

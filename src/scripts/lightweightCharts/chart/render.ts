@@ -1,3 +1,5 @@
+import { getOwner } from 'solid-js'
+
 import {
   applyPriceSeries,
   chartState,
@@ -16,7 +18,7 @@ export const renderChart = async (params: {
   id: string
   datasets: Datasets
   latestCandle: Accessor<CandlestickDataWithVolume | null>
-}) => {
+}) =>
   untrack(() => {
     dispose?.()
 
@@ -60,4 +62,3 @@ export const renderChart = async (params: {
       } catch {}
     })
   })
-}
