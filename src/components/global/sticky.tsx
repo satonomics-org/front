@@ -5,7 +5,7 @@ interface Props extends ParentProps {
 export const Sticky = (props: Props) => {
   return (
     <div class="fixed inset-x-0 top-0 z-10 flex items-center gap-x-6 border border-white bg-black px-6 py-2 sm:px-3 sm:before:flex-1">
-      <p class="text-sm leading-6 text-white">{props.children}</p>
+      <p class="leading-6 text-white">{props.children}</p>
       <div class="flex flex-1 justify-end">
         <button
           type="button"
@@ -14,7 +14,7 @@ export const Sticky = (props: Props) => {
         >
           <span class="sr-only">Dismiss</span>
           <svg
-            class="h-5 w-5 text-white"
+            class="h-5 w-5"
             viewBox="0 0 20 20"
             fill="currentColor"
             aria-hidden="true"

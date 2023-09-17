@@ -1,5 +1,5 @@
 import { Sticky } from '/src/components'
-import { TEN_SECOND_IN_MS } from '/src/scripts'
+import { FIVE_SECOND_IN_MS } from '/src/scripts'
 import { createASS } from '/src/solid'
 
 interface Props {
@@ -27,7 +27,7 @@ export const Update = (props: Props) => {
                 .flatMap((value) => ('fetch' in value ? [value.fetch] : []))
                 .forEach((fetch) => fetch())
 
-              setTimeout(() => updateAvailable.set(true), TEN_SECOND_IN_MS)
+              setTimeout(() => updateAvailable.set(true), FIVE_SECOND_IN_MS)
             }
           })
         })
@@ -35,15 +35,15 @@ export const Update = (props: Props) => {
     }
   })
   return (
-    <Show when={updateAvailable()}>
-      <Sticky onClose={() => updateAvailable.set(false)}>
-        <span> A new version is available. </span>{' '}
-        <span class="inline-block">
-          <a class="font-bold text-white underline" href="/">
-            Restart <span aria-hidden="true">&rarr;</span>
-          </a>
-        </span>
-      </Sticky>
-    </Show>
+    // <Show when={updateAvailable()}>
+    <Sticky onClose={() => updateAvailable.set(false)}>
+      <span> A new version is available. </span>{' '}
+      <span class="inline-block">
+        <a class="font-bold text-white underline" href="/">
+          Restart <span aria-hidden="true">&rarr;</span>
+        </a>
+      </span>
+    </Sticky>
+    // </Show>
   )
 }
