@@ -35,15 +35,15 @@ export const Update = (props: Props) => {
     }
   })
   return (
-    // <Show when={updateAvailable()}>
-    <Sticky onClose={() => updateAvailable.set(false)}>
-      <span> A new version is available. </span>{' '}
-      <span class="inline-block">
-        <a class="font-bold text-white underline" href="/">
-          Restart <span aria-hidden="true">&rarr;</span>
-        </a>
-      </span>
-    </Sticky>
-    // </Show>
+    <Show when={updateAvailable()}>
+      <Sticky onClose={() => updateAvailable.set(false)}>
+        <span> A new version is available. </span>{' '}
+        <span class="inline-block">
+          <a class="font-bold text-white underline" href="/">
+            Restart <span aria-hidden="true">&rarr;</span>
+          </a>
+        </span>
+      </Sticky>
+    </Show>
   )
 }
