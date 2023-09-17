@@ -7,7 +7,7 @@ interface Props {
 
 export const Network = (props: Props) => {
   return (
-    <span class="absolute bottom-0 right-0 mb-1.5 mr-3 flex items-center space-x-1.5">
+    <span class="absolute bottom-0 right-0 mb-1.5 mr-2.5 flex items-center space-x-1">
       <span
         class={classPropToString([
           props.fetching
