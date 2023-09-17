@@ -2,7 +2,15 @@
   publish = "dist"
   command = "pnpm run build"
 
+[[edge_functions]]
+  path = "/fetch/*"
+  function = "fetch"
+
 [[redirects]]
   from = "/*"
   to = "/index.html"
   status = 200
+
+[dev]
+  autoLaunch = false
+  command = "pnpm vite"
