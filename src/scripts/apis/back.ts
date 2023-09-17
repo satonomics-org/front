@@ -5,7 +5,8 @@ const useProdURL =
 
 const api = {
   baseUrl: useProdURL
-    ? 'https://satonomics.shuttleapp.rs'
+    ? // ? 'https://satonomics.shuttleapp.rs'
+      'https://edge.satonomics.xyz/fetch'
     : 'http://localhost:8000',
   async fetch(path: string, init?: RequestInit, tries = 12): Promise<Response> {
     const url = `${this.baseUrl}${path}`
