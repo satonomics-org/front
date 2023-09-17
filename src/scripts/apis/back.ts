@@ -4,12 +4,14 @@ const useProdURL =
   import.meta.env.VITE_TEST_PROD || location.protocol === 'https:'
 
 const api = {
-  baseUrl: useProdURL
-    ? // ? 'https://satonomics.shuttleapp.rs'
-      'https://edge.satonomics.xyz/fetch'
-    : 'http://localhost:8000',
   async fetch(path: string, init?: RequestInit, tries = 12): Promise<Response> {
-    const url = `${this.baseUrl}${path}`
+    const baseUrl = useProdURL
+      ? tries > 6
+        ? 'https://edge.satonomics.xyz/fetch'
+        : 'https://satonomics.shuttleapp.rs'
+      : 'http://localhost:8000'
+
+    const url = `${baseUrl}${path}`
 
     import.meta.env.MODE !== 'test' && console.log(`fetch: ${url}`)
 
