@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 export const debounce = <F extends (...args: any[]) => any>(
   callback: F,
   wait = 250,

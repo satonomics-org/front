@@ -42,7 +42,7 @@ export const App = () => {
 
   const resources = createResources()
 
-  const datasets = createDatasets(resources)
+  const datasets = createDatasets(resources.http)
 
   createDarkModeTimer()
 
@@ -58,10 +58,10 @@ export const App = () => {
     window.history.replaceState(null, '', urlParams.toString())
   })
 
-  createEffect(() => updateLastCandlestick(resources.latestCandle.latest()))
+  createEffect(() => updateLastCandlestick(resources.ws.latestCandle.latest()))
 
   createEffect(() => {
-    const latestClose = resources.latestCandle.latest()?.close
+    const latestClose = resources.ws.latestCandle.latest()?.close
 
     latestClose && console.log('close:', latestClose)
   })
@@ -73,7 +73,7 @@ export const App = () => {
       renderChart({
         datasets,
         id: state.selectedPreset(),
-        latestCandle: resources.latestCandle.latest,
+        latestCandle: resources.ws.latestCandle.latest,
       })
     }
   })
@@ -109,7 +109,7 @@ export const App = () => {
     <>
       <Title>
         {run(() => {
-          const last = resources.latestCandle.latest()
+          const last = resources.ws.latestCandle.latest()
           return `${
             last ? `${priceToUSLocale(last.close, false)} | ` : ''
           }Satonomics`
@@ -144,14 +144,14 @@ export const App = () => {
           <div class="relative h-full w-full flex-1 overflow-x-hidden">
             <Chart
               class={[
-                resources.candlesticks.values()?.length &&
-                resources.latestCandle.latest()
+                resources.http.candlesticks.values()?.length &&
+                resources.ws.latestCandle.latest()
                   ? 'opacity-100'
                   : 'opacity-0',
               ]}
             />
             <Network
-              live={resources.latestCandle.live()}
+              live={resources.ws.latestCandle.live()}
               fetching={fetching()}
             />
           </div>

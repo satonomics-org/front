@@ -4,8 +4,8 @@ interface Props extends ParentProps {
 
 export const Sticky = (props: Props) => {
   return (
-    <div class="fixed inset-x-0 top-0 z-10 flex items-center gap-x-6 border border-white bg-black px-6 py-2 sm:px-3 sm:before:flex-1">
-      <p class="leading-6 text-white">{props.children}</p>
+    <div class="fixed inset-x-0 top-0 z-10 flex items-center gap-x-6 border border-white bg-black px-6 py-2 text-white dark:border-opacity-80 dark:text-white/80 sm:px-3 sm:before:flex-1">
+      <p class="leading-6">{props.children}</p>
       <div class="flex flex-1 justify-end">
         <button
           type="button"

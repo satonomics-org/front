@@ -7,11 +7,6 @@ type CandlestickDataWithVolumeWithoutTime = Omit<
   'time'
 >
 
-interface GroupedSingleValues {
-  name: string
-  dataset: DatedSingleValueData[]
-}
-
 interface Dated {
   date: string
 }

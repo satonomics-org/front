@@ -32,24 +32,6 @@ export default defineConfig({
       workbox: {
         skipWaiting: true,
         globPatterns: ['**/*.{js,css,html,ico,png,svg,json,woff2,ttf,md}'],
-        runtimeCaching: [
-          {
-            urlPattern: ({ url: { origin } }) => {
-              switch (origin) {
-                case 'http://localhost:8000':
-                case 'https://satonomics.shuttleapp.rs':
-                case 'https://edge.satonomics.xyz':
-                  return true
-                default:
-                  return false
-              }
-            },
-            handler: 'NetworkFirst',
-            options: {
-              cacheName: 'api-cache',
-            },
-          },
-        ],
       },
     }),
 

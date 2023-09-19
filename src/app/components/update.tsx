@@ -22,9 +22,8 @@ export const Update = (props: Props) => {
               worker.state === 'activated' &&
               navigator.serviceWorker.controller
             ) {
-              ;(Object.entries(props.resources) as Entries<Resources>)
-                .map(([_, value]) => value)
-                .flatMap((value) => ('fetch' in value ? [value.fetch] : []))
+              ;(Object.entries(props.resources) as Entries<ResourcesHTTP>)
+                .map(([_, value]) => value.fetch)
                 .forEach((fetch) => fetch())
 
               setTimeout(() => updateAvailable.set(true), FIVE_SECOND_IN_MS)

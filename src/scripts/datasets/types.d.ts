@@ -54,10 +54,8 @@ interface Datasets
   puellMultiple: DatasetWithAverages
   hashrate: DatasetWithAverages
   hashPrice: DatasetWithAverages
-  stablecoinsMarketCaps: Dataset<GroupedSingleValues[]>
   '30DBalanceChanges': GroupedDatasetsByEntityName
   '90DBalanceChanges': GroupedDatasetsByEntityName
-  combinedStablecoinsMarketCaps: Dataset
   localExtremes: ExtremesDataset
   cycleExtremes: ExtremesDataset
   mergedExtremes: ExtremesDataset

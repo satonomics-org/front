@@ -51,20 +51,34 @@ type ResourceKey =
   | 'hashrate'
   | 'stablecoinsMarketCaps'
 
-interface Resources
+interface Resources {
+  http: ResourcesHTTP
+  ws: ResourcesWS
+}
+
+interface ResourcesHTTP
   extends Record<
     Exclude<ResourceKey, 'candlesticks' | 'stablecoinsMarketCaps'>,
     ResourceHTTP<DatedSingleValueData[]>
   > {
-  candlesticks: ResourceHTTP<CandlestickDataWithVolume[]>
-  stablecoinsMarketCaps: ResourceHTTP<GroupedSingleValues[]>
+  candlesticks: ResourceHTTP<
+    CandlestickDataWithVolumeWithoutTime[],
+    CandlestickDataWithVolume[]
+  >
+}
+
+interface ResourcesWS {
   latestCandle: ResourceWS<CandlestickDataWithVolume>
 }
 
-interface ResourceHTTP<T = DatedSingleValueData[]> {
+interface ResourceHTTP<
+  T extends Array<any> = DatedSingleValueData[],
+  F extends Array<any> = T,
+> {
   fetch: VoidFunction
-  values: ASS<T | null>
+  values: ASS<F | null>
   loading: ASS<boolean>
+  url: URL
 }
 
 interface ResourceWS<T> {

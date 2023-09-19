@@ -19,20 +19,24 @@ export const createLazyDataset = <T>(calc: () => T): Dataset<T> => ({
   values: createLazyMemo(calc),
 })
 
-export const createEntities30DBalanceChangeDataset = (resources: Resources) =>
+export const createEntities30DBalanceChangeDataset = (
+  resources: ResourcesHTTP,
+) =>
   createEntitiesBalanceChangeDataset(
     resources,
     createEntity30DBalanceChangeDataset,
   )
 
-export const createEntities90DBalanceChangeDataset = (resources: Resources) =>
+export const createEntities90DBalanceChangeDataset = (
+  resources: ResourcesHTTP,
+) =>
   createEntitiesBalanceChangeDataset(
     resources,
     createEntity90DBalanceChangeDataset,
   )
 
 export const createEntitiesBalanceChangeDataset = (
-  resources: Resources,
+  resources: ResourcesHTTP,
   createDataset:
     | typeof createEntity30DBalanceChangeDataset
     | typeof createEntity90DBalanceChangeDataset,

@@ -9,8 +9,7 @@ import {
   ONE_DAY_IN_MS,
 } from '/src/scripts'
 
-import { addAverages, addQuantiles } from './addOns'
-import { addRatios } from './addOns/ratios'
+import { addAverages, addQuantiles, addRatios } from './addOns'
 import {
   createEntities30DBalanceChangeDataset,
   createEntities90DBalanceChangeDataset,
@@ -21,7 +20,7 @@ import {
 
 export const USABLE_CANDLESTICKS_START_DATE = '2012-01-01'
 
-export const createDatasets = (resources: Resources) => {
+export const createDatasets = (resources: ResourcesHTTP) => {
   const closes = addAverages(
     createLazyDataset(() =>
       convertCandlesticksToSingleValueDataset(datasets.candlesticks.values()),
@@ -311,32 +310,32 @@ export const createDatasets = (resources: Resources) => {
         })
       }),
     ),
-    stablecoinsMarketCaps: createResourceDataset(
-      resources.stablecoinsMarketCaps,
-    ),
-    combinedStablecoinsMarketCaps: createLazyDataset(() =>
-      Object.entries(
-        (datasets.stablecoinsMarketCaps.values() || [])?.reduce(
-          (combined, stablecoin) => {
-            stablecoin.dataset.forEach(
-              ({ date, value }) =>
-                (combined[date] = (combined[date] || 0) + value),
-            )
-            return combined
-          },
-          {} as Record<string, number>,
-        ),
-      )
-        .map(([date, value]) => ({
-          date,
-          time: date,
-          value,
-        }))
-        .sort(
-          ({ date: a }, { date: b }) =>
-            new Date(a).valueOf() - new Date(b).valueOf(),
-        ),
-    ),
+    // stablecoinsMarketCaps: createResourceDataset(
+    //   resources.stablecoinsMarketCaps,
+    // ),
+    // combinedStablecoinsMarketCaps: createLazyDataset(() =>
+    //   Object.entries(
+    //     (datasets.stablecoinsMarketCaps.values() || [])?.reduce(
+    //       (combined, stablecoin) => {
+    //         stablecoin.dataset.forEach(
+    //           ({ date, value }) =>
+    //             (combined[date] = (combined[date] || 0) + value),
+    //         )
+    //         return combined
+    //       },
+    //       {} as Record<string, number>,
+    //     ),
+    //   )
+    //     .map(([date, value]) => ({
+    //       date,
+    //       time: date,
+    //       value,
+    //     }))
+    //     .sort(
+    //       ({ date: a }, { date: b }) =>
+    //         new Date(a).valueOf() - new Date(b).valueOf(),
+    //     ),
+    // ),
     '30DBalanceChanges': createEntities30DBalanceChangeDataset(resources),
     '90DBalanceChanges': createEntities90DBalanceChangeDataset(resources),
     localExtremes: createExtremeQuantilesDataset(() => [

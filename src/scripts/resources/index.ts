@@ -1,86 +1,102 @@
-import { backEndAPI, krakenAPI } from '/src/scripts'
+import cachedCandlesticks from '/src/assets/data/btcusd.json'
+import { backEndFetch, computeBackEndURL, krakenAPI } from '/src/scripts'
 
-import { createResourceHTTP, createResourceWS } from './creators'
+import {
+  createBackEndResource,
+  createResourceHTTP,
+  createResourceWS,
+} from './creators'
 
 export const createResources = () => {
   const resources: Resources = {
-    candlesticks: createResourceHTTP(backEndAPI.fetchCandlesticks),
-    latestCandle: createResourceWS(krakenAPI.createLiveCandleWebsocket),
-    sthRealizedPrice: createResourceHTTP(backEndAPI.fetchSTHRealizedPrice),
-    lthRealizedPrice: createResourceHTTP(backEndAPI.fetchLTHRealizedPrice),
-    oneMonthRealizedPrice: createResourceHTTP(backEndAPI.fetch1MRealizedPrice),
-    threeMonthsRealizedPrice: createResourceHTTP(
-      backEndAPI.fetch3MRealizedPrice,
+    http: createResourcesHTTP(),
+    ws: createResourcesWS(),
+  }
+
+  return resources
+}
+
+export const createResourcesHTTP = () => {
+  const candlesticks = createResourceHTTP<
+    CandlestickDataWithVolumeWithoutTime[],
+    CandlestickDataWithVolume[]
+  >({
+    url: computeBackEndURL(
+      `/candlesticks?since=${
+        new Date(cachedCandlesticks.at(-1)?.date || 0).valueOf() / 1000
+      }`,
     ),
-    sixMonthsRealizedPrice: createResourceHTTP(backEndAPI.fetch6MRealizedPrice),
-    oneYearRealizedPrice: createResourceHTTP(backEndAPI.fetch1YRealizedPrice),
-    twoYearsRealizedPrice: createResourceHTTP(backEndAPI.fetch2YRealizedPrice),
-    netRealizedProfitAndLoss: createResourceHTTP(
-      backEndAPI.fetchNetRealizedProfitAndLoss,
-    ),
-    sopr: createResourceHTTP(backEndAPI.fetchSOPR),
-    planktonRealizedPrice: createResourceHTTP(
-      backEndAPI.fetchPlanktonRealizedPrice,
-    ),
-    shrimpsRealizedPrice: createResourceHTTP(
-      backEndAPI.fetchShrimpsRealizedPrice,
-    ),
-    crabsRealizedPrice: createResourceHTTP(backEndAPI.fetchCrabsRealizedPrice),
-    fishRealizedPrice: createResourceHTTP(backEndAPI.fetchFishRealizedPrice),
-    sharksRealizedPrice: createResourceHTTP(
-      backEndAPI.fetchSharksRealizedPrice,
-    ),
-    whalesRealizedPrice: createResourceHTTP(
-      backEndAPI.fetchWhalesRealizedPrice,
-    ),
-    humpbacksRealizedPrice: createResourceHTTP(
-      backEndAPI.fetchHumpbacksRealizedPrice,
-    ),
-    planktonBalances: createResourceHTTP(backEndAPI.fetchPlanktonBalances),
-    shrimpsBalances: createResourceHTTP(backEndAPI.fetchShrimpsBalances),
-    crabsBalances: createResourceHTTP(backEndAPI.fetchCrabsBalances),
-    fishBalances: createResourceHTTP(backEndAPI.fetchFishBalances),
-    sharksBalances: createResourceHTTP(backEndAPI.fetchSharksBalances),
-    whalesBalances: createResourceHTTP(backEndAPI.fetchWhalesBalances),
-    humpbacksBalances: createResourceHTTP(backEndAPI.fetchHumpbacksBalances),
-    planktonDistribution: createResourceHTTP(
-      backEndAPI.fetchPlanktonDistribution,
-    ),
-    shrimpsDistribution: createResourceHTTP(
-      backEndAPI.fetchShrimpsDistribution,
-    ),
-    crabsDistribution: createResourceHTTP(backEndAPI.fetchCrabsDistribution),
-    fishDistribution: createResourceHTTP(backEndAPI.fetchFishDistribution),
-    sharksDistribution: createResourceHTTP(backEndAPI.fetchSharksDistribution),
-    whalesDistribution: createResourceHTTP(backEndAPI.fetchWhalesDistribution),
-    humpbacksDistribution: createResourceHTTP(
-      backEndAPI.fetchHumpbacksDistribution,
-    ),
-    terminalPrice: createResourceHTTP(backEndAPI.fetchTerminalPrice),
-    realizedPrice: createResourceHTTP(backEndAPI.fetchRealizedPrice),
-    balancedPrice: createResourceHTTP(backEndAPI.fetchBalancedPrice),
-    cointimePrice: createResourceHTTP(backEndAPI.fetchCointimePrice),
-    trueMeanPrice: createResourceHTTP(backEndAPI.fetchTrueMeanPrice),
-    vaultedPrice: createResourceHTTP(backEndAPI.fetchVaultedPrice),
-    cvdd: createResourceHTTP(backEndAPI.fetchCVDD),
-    fundingRates: createResourceHTTP(backEndAPI.fetchFundingRates),
-    vddMultiple: createResourceHTTP(backEndAPI.fetchVDDMultiple),
-    minersRevenue: createResourceHTTP(backEndAPI.fetchMinersRevenue),
-    supplyInProfit: createResourceHTTP(backEndAPI.fetchSupplyInProfit),
-    supplyInLoss: createResourceHTTP(backEndAPI.fetchSupplyInLoss),
-    lthSupply: createResourceHTTP(backEndAPI.fetchLTHSupply),
-    sthSupply: createResourceHTTP(backEndAPI.fetchSTHSupply),
-    lthInProfit: createResourceHTTP(backEndAPI.fetchLTHInProfit),
-    sthInProfit: createResourceHTTP(backEndAPI.fetchSTHInProfit),
-    lthInLoss: createResourceHTTP(backEndAPI.fetchLTHInLoss),
-    sthInLoss: createResourceHTTP(backEndAPI.fetchSTHInLoss),
-    hashrate: createResourceHTTP(backEndAPI.fetchHashrate),
-    stablecoinsMarketCaps: createResourceHTTP(
-      backEndAPI.fetchStablecoinsMarketCaps,
-    ),
+    customFetch: backEndFetch,
+    cached: cachedCandlesticks,
+    map: (candlestick) => ({
+      ...candlestick,
+      time: candlestick.date,
+    }),
+  })
+
+  const resources: ResourcesHTTP = {
+    candlesticks,
+    sthRealizedPrice: createBackEndResource(`/sth-realized-price`),
+    lthRealizedPrice: createBackEndResource(`/lth-realized-price`),
+    oneMonthRealizedPrice: createBackEndResource(`/1m-realized-price`),
+    threeMonthsRealizedPrice: createBackEndResource(`/3m-realized-price`),
+    sixMonthsRealizedPrice: createBackEndResource(`/6m-realized-price`),
+    oneYearRealizedPrice: createBackEndResource(`/1y-realized-price`),
+    twoYearsRealizedPrice: createBackEndResource(`/2y-realized-price`),
+    netRealizedProfitAndLoss: createBackEndResource(`/net-realized-pnl`),
+    sopr: createBackEndResource(`/sopr`),
+    planktonRealizedPrice: createBackEndResource(`/plankton-realized-price`),
+    shrimpsRealizedPrice: createBackEndResource(`/shrimps-realized-price`),
+    crabsRealizedPrice: createBackEndResource(`/crabs-realized-price`),
+    fishRealizedPrice: createBackEndResource(`/fish-realized-price`),
+    sharksRealizedPrice: createBackEndResource(`/sharks-realized-price`),
+    whalesRealizedPrice: createBackEndResource(`/whales-realized-price`),
+    humpbacksRealizedPrice: createBackEndResource(`/humpbacks-realized-price`),
+    planktonBalances: createBackEndResource(`/plankton-balances`),
+    shrimpsBalances: createBackEndResource(`/shrimps-balances`),
+    crabsBalances: createBackEndResource(`/crabs-balances`),
+    fishBalances: createBackEndResource(`/fish-balances`),
+    sharksBalances: createBackEndResource(`/sharks-balances`),
+    whalesBalances: createBackEndResource(`/whales-balances`),
+    humpbacksBalances: createBackEndResource(`/humpbacks-balances`),
+    planktonDistribution: createBackEndResource(`/plankton-distribution`),
+    shrimpsDistribution: createBackEndResource(`/shrimps-distribution`),
+    crabsDistribution: createBackEndResource(`/crabs-distribution`),
+    fishDistribution: createBackEndResource(`/fish-distribution`),
+    sharksDistribution: createBackEndResource(`/sharks-distribution`),
+    whalesDistribution: createBackEndResource(`/whales-distribution`),
+    humpbacksDistribution: createBackEndResource(`/humpbacks-distribution`),
+    terminalPrice: createBackEndResource(`/terminal-price`),
+    realizedPrice: createBackEndResource(`/realized-price`),
+    balancedPrice: createBackEndResource(`/balanced-price`),
+    cointimePrice: createBackEndResource(`/cointime-price`),
+    trueMeanPrice: createBackEndResource(`/true-mean-price`),
+    vaultedPrice: createBackEndResource(`/vaulted-price`),
+    cvdd: createBackEndResource(`/cvdd`),
+    fundingRates: createBackEndResource(`/funding-rates`),
+    vddMultiple: createBackEndResource(`/vdd-multiple`),
+    minersRevenue: createBackEndResource(`/miners-revenue`),
+    supplyInProfit: createBackEndResource(`/supply-in-profit`),
+    supplyInLoss: createBackEndResource(`/supply-in-loss`),
+    lthSupply: createBackEndResource(`/lth-supply`),
+    sthSupply: createBackEndResource(`/sth-supply`),
+    lthInProfit: createBackEndResource(`/lth-in-profit`),
+    sthInProfit: createBackEndResource(`/sth-in-profit`),
+    lthInLoss: createBackEndResource(`/lth-in-loss`),
+    sthInLoss: createBackEndResource(`/sth-in-loss`),
+    hashrate: createBackEndResource(`/hashrate`),
   }
 
   resources.candlesticks.fetch()
+
+  return resources
+}
+
+export const createResourcesWS = () => {
+  const resources: ResourcesWS = {
+    latestCandle: createResourceWS(krakenAPI.createLiveCandleWebsocket),
+  }
+
   resources.latestCandle.open()
 
   return resources

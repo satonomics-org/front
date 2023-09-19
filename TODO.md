@@ -1,19 +1,14 @@
-Fix:
+### Fix
 
-- Candlestick fetch issues
+---
 
-Tests:
+### QOL
 
-- Cache fetches
-- Back end fetches
+---
 
-QOL:
+### UX
 
-- Use Deno KV for quicker and saved responses
-- Compress API responses
-
-UX:
-
+- Add legend
 - Mobile view favorites in horizontal bar
 - Button to fast forward to today
 - Update values in fetch only if more or new last is different
@@ -23,12 +18,17 @@ UX:
 - Add choice between: Stacked vs not stacked
 - Add periodic fetch
 
-DX:
+---
+
+### DX
 
 - Fix fetched dataset by adding missing dates
 
-Presets:
+---
 
+### Presets
+
+- All price lines
 - Pi cycles
 - Show momentums on all presets (When bear and when bull)
 - Show Top/Bottom on all presets (When bear and when bull)
@@ -39,7 +39,7 @@ Presets:
 - Miners
 - Sats per dollar
 - vs M1
-- vs Global monetary liquidity
+- vs Global monetary liquidity (which also has a 4 year cycle)
 - Circulating supply
 - vs real estate
 - vs NASDAQ
