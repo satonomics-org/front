@@ -3,7 +3,7 @@ import { FIVE_SECOND_IN_MS } from '/src/scripts'
 import { createASS } from '/src/solid'
 
 interface Props {
-  resources: Resources
+  resources: ResourcesHTTP
 }
 
 export const Update = (props: Props) => {

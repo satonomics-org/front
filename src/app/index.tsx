@@ -117,7 +117,7 @@ export const App = () => {
       </Title>
       <Meta name="description" content={packageJSON.description} />
 
-      <Update resources={resources} />
+      <Update resources={resources.http} />
 
       <div
         class={classPropToString([
