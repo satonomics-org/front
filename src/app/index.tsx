@@ -44,6 +44,8 @@ export const App = () => {
 
   const datasets = createDatasets(resources.http)
 
+  const { latestCandle } = resources.ws
+
   createDarkModeTimer()
 
   let scrollablePresets: HTMLDivElement | undefined
@@ -58,10 +60,10 @@ export const App = () => {
     window.history.replaceState(null, '', urlParams.toString())
   })
 
-  createEffect(() => updateLastCandlestick(resources.ws.latestCandle.latest()))
+  createEffect(() => updateLastCandlestick(latestCandle.latest()))
 
   createEffect(() => {
-    const latestClose = resources.ws.latestCandle.latest()?.close
+    const latestClose = latestCandle.latest()?.close
 
     latestClose && console.log('close:', latestClose)
   })
@@ -73,7 +75,7 @@ export const App = () => {
       renderChart({
         datasets,
         id: state.selectedPreset(),
-        latestCandle: resources.ws.latestCandle.latest,
+        latestCandle: latestCandle.latest,
       })
     }
   })
@@ -109,7 +111,7 @@ export const App = () => {
     <>
       <Title>
         {run(() => {
-          const last = resources.ws.latestCandle.latest()
+          const last = latestCandle.latest()
           return `${
             last ? `${priceToUSLocale(last.close, false)} | ` : ''
           }Satonomics`
@@ -145,15 +147,12 @@ export const App = () => {
             <Chart
               class={[
                 resources.http.candlesticks.values()?.length &&
-                resources.ws.latestCandle.latest()
+                latestCandle.latest()
                   ? 'opacity-100'
                   : 'opacity-0',
               ]}
             />
-            <Network
-              live={resources.ws.latestCandle.live()}
-              fetching={fetching()}
-            />
+            <Network live={latestCandle.live()} fetching={fetching()} />
           </div>
           <div class="md:hidden">
             <hr />
