@@ -22,7 +22,15 @@ const testBackEndAPI = (tries: number) => () => {
 
         const json = await result.json()
 
-        console.log(json)
+        const array = name === 'candlesticks' ? json : convertJSONToValues(json)
+
+        if (!Array.isArray(array)) {
+          console.log(result)
+          console.log(json)
+          console.log(array)
+
+          throw Error(`Problem with ${name}`)
+        }
 
         expect(
           (name === 'candlesticks' ? json : convertJSONToValues(json)).pop(),
