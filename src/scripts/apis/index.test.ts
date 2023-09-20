@@ -32,9 +32,11 @@ const testBackEndAPI = (tries: number) => () => {
           throw Error(`Problem with ${name}`)
         }
 
-        expect(
-          (name === 'candlesticks' ? json : convertJSONToValues(json)).pop(),
-        ).toBeDefined()
+        const lastValue = array.at(-1)
+
+        console.log(name, lastValue)
+
+        expect(lastValue).toBeDefined()
       })
     },
   )
