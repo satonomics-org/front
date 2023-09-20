@@ -13,6 +13,9 @@ export const createResources = () => {
     ws: createResourcesWS(),
   }
 
+  resources.http.candlesticks.fetch()
+  resources.ws.latestCandle.open()
+
   return resources
 }
 
@@ -87,7 +90,7 @@ export const createResourcesHTTP = () => {
     hashrate: createBackEndResource(`/hashrate`),
   }
 
-  resources.candlesticks.fetch()
+  candlesticks.fetch()
 
   return resources
 }

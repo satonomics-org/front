@@ -7,7 +7,7 @@ type DatasetKey = keyof Datasets
 interface Datasets
   extends Record<
     Exclude<
-      ResourceKey,
+      ResourceHTTPKey,
       | 'candlesticks'
       | 'minersRevenue'
       | 'stablecoinsMarketCaps'

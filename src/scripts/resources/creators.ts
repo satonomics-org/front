@@ -100,6 +100,8 @@ export const createResourceHTTP = <
 
       const _values = await reponseToValues(fetchedResult)
 
+      console.log(_values)
+
       if (_values) {
         lastSuccessfulFetch = new Date()
 
@@ -161,7 +163,11 @@ export const createResourceWS = <T>(
         }
       }
 
-      clearFocusListener = makeEventListener(window, 'focus', reinitWebSocket)
+      clearFocusListener = makeEventListener(
+        document,
+        'visibilitychange',
+        () => !document.hidden && reinitWebSocket(),
+      )
 
       clearOnlineListener = makeEventListener(window, 'online', reinitWebSocket)
     },
