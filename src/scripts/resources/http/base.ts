@@ -1,9 +1,9 @@
 import { leading, throttle } from '@solid-primitives/scheduled'
 
 import {
-  backEndFetch,
   computeBackEndURL,
   ONE_SECOND_IN_MS,
+  retryingFetch,
   TEN_SECOND_IN_MS,
 } from '/src/scripts'
 import { createASS } from '/src/solid'
@@ -22,7 +22,7 @@ export const convertJSONToValues = (json: any) =>
 export const createBackEndResource = (path: string) =>
   createResourceHTTP<DatedSingleValueData[]>({
     url: computeBackEndURL(path),
-    customFetch: backEndFetch,
+    customFetch: retryingFetch,
     transform: convertJSONToValues,
   })
 
@@ -37,7 +37,7 @@ export const createResourceHTTP = <
   map,
 }: {
   url: string
-  customFetch: (path: string, init?: RequestInit) => Promise<Response>
+  customFetch: (path: string, init?: RequestInit) => Promise<ResponseWithJSON>
   transform?: (json: any) => T | undefined
   map?: (current: T[number], index: number, arr: T[number][]) => F[number]
   cached?: T
@@ -48,8 +48,8 @@ export const createResourceHTTP = <
 
   let lastSuccessfulFetch: Date | null
 
-  const reponseToValues = async (reponse: Response) => {
-    const json = await reponse.json()
+  const reponseToValues = async (response: ResponseWithJSON) => {
+    const json = response.jsoned || (await response.json())
     return transform ? transform(json) : (json as T)
   }
 
@@ -98,8 +98,6 @@ export const createResourceHTTP = <
       const clonedFetchedResult = fetchedResult.clone()
 
       const _values = await reponseToValues(fetchedResult)
-
-      console.log(_values)
 
       if (_values) {
         lastSuccessfulFetch = new Date()

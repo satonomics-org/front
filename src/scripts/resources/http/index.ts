@@ -1,5 +1,5 @@
 import cachedCandlesticks from '/src/assets/data/btcusd.json'
-import { backEndFetch, computeBackEndURL } from '/src/scripts'
+import { computeBackEndURL, retryingFetch } from '/src/scripts'
 
 import { createBackEndResource, createResourceHTTP } from './base'
 
@@ -13,7 +13,7 @@ export const createResourcesHTTP = () => {
         new Date(cachedCandlesticks.at(-1)?.date || 0).valueOf() / 1000
       }`,
     ),
-    customFetch: backEndFetch,
+    customFetch: retryingFetch,
     cached: cachedCandlesticks,
     map: (candlestick) => ({
       ...candlestick,

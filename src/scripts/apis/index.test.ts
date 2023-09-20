@@ -1,10 +1,10 @@
 import { describe, expect, test } from 'vitest'
 
 import {
-  backEndFetch,
   CHANGE_URL_AT_TRY,
   computeBackEndURL,
   DEFAULT_NUMBER_OF_TRIES,
+  retryingFetch,
 } from '/src/scripts'
 
 import { createResourcesHTTP } from '../resources/http'
@@ -18,7 +18,7 @@ const testBackEndAPI = (tries: number) => () => {
       const href = computeBackEndURL(url.pathname, tries)
 
       return test(href, async () => {
-        const result = await backEndFetch(href, undefined, tries)
+        const result = await retryingFetch(href, undefined, tries)
 
         const json = await result.json()
 
