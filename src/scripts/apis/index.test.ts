@@ -4,11 +4,11 @@ import {
   backEndFetch,
   CHANGE_URL_AT_TRY,
   computeBackEndURL,
-  createResourcesHTTP,
   DEFAULT_NUMBER_OF_TRIES,
 } from '/src/scripts'
 
-import { convertJSONToValues } from '../resources/creators'
+import { createResourcesHTTP } from '../resources/http'
+import { convertJSONToValues } from '../resources/http/base'
 
 const testBackEndAPI = (tries: number) => () => {
   const resources = createResourcesHTTP()
@@ -21,6 +21,8 @@ const testBackEndAPI = (tries: number) => () => {
         const result = await backEndFetch(href, undefined, tries)
 
         const json = await result.json()
+
+        console.log(json)
 
         expect(
           (name === 'candlesticks' ? json : convertJSONToValues(json)).pop(),
