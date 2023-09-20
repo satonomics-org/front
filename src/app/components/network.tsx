@@ -2,15 +2,21 @@ import { classPropToString } from '/src/components'
 
 interface Props {
   live: boolean
-  fetching: boolean
+  resources: ResourcesHTTP
 }
 
 export const Network = (props: Props) => {
+  const fetching = createMemo(() =>
+    Object.values(props.resources)
+      .filter((resource) => 'loading' in resource)
+      .some((resource: ResourceHTTP) => resource.loading()),
+  )
+
   return (
     <span class="absolute bottom-0 right-0 mb-1.5 mr-2.5 flex items-center space-x-1">
       <span
         class={classPropToString([
-          props.fetching
+          fetching()
             ? 'text-yellow-500'
             : props.live
             ? 'text-green-500'
@@ -22,7 +28,7 @@ export const Network = (props: Props) => {
       </span>
       <span class="relative flex h-3 w-3">
         <Show
-          when={props.fetching}
+          when={fetching()}
           fallback={
             <>
               <Show when={props.live}>

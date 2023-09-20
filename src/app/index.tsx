@@ -89,12 +89,6 @@ export const App = () => {
       )?.name || '',
   )
 
-  const fetching = createMemo(() =>
-    Object.values(resources)
-      .filter((resource) => 'loading' in resource)
-      .some((resource: ResourceHTTP) => resource.loading()),
-  )
-
   const favorite = (id: string) => {
     state.favorites.set((favorites) => {
       favorites.includes(id)
@@ -152,7 +146,7 @@ export const App = () => {
                   : 'opacity-0',
               ]}
             />
-            <Network live={latestCandle.live()} fetching={fetching()} />
+            <Network live={latestCandle.live()} resources={resources.http} />
           </div>
           <div class="md:hidden">
             <hr />

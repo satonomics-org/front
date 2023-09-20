@@ -2,6 +2,7 @@
 import { fileURLToPath } from 'url'
 import { faviconsPlugin } from '@darkobits/vite-plugin-favicons'
 import autoprefixer from 'autoprefixer'
+import { visualizer } from 'rollup-plugin-visualizer'
 import tailwindcss from 'tailwindcss'
 import unpluginAutoImport from 'unplugin-auto-import/vite'
 import unpluginIconsResolver from 'unplugin-icons/resolver'
@@ -77,6 +78,21 @@ export default defineConfig({
           offset: 15,
         },
       },
+    }),
+
+    visualizer({
+      template: 'treemap',
+      filename: './docs/visualizer/treemap.html',
+    }),
+
+    visualizer({
+      template: 'network',
+      filename: './docs/visualizer/network.html',
+    }),
+
+    visualizer({
+      template: 'sunburst',
+      filename: './docs/visualizer/sunburst.html',
     }),
   ],
   server: {
