@@ -1,11 +1,8 @@
-interface CandlestickDataWithVolume extends DatedCandlestickData {
+interface FullCandlestick extends DatedCandlestickData {
   volume: number
 }
 
-type CandlestickDataWithVolumeWithoutTime = Omit<
-  CandlestickDataWithVolume,
-  'time'
->
+type FetchedCandlestick = Omit<FullCandlestick, 'time'>
 
 interface Dated {
   date: string

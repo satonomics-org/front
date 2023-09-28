@@ -1,4 +1,10 @@
-import { colors, priceToUSLocale, sortWhitespaceDataArray } from '/src/scripts'
+import {
+  colors,
+  computeNumberOfDaysBetweenTwoDates,
+  GENESIS_DAY,
+  priceToUSLocale,
+  sortWhitespaceDataArray,
+} from '/src/scripts'
 
 export const setMinMaxMarkers = (
   chart: IChartApi,
@@ -8,10 +14,15 @@ export const setMinMaxMarkers = (
 ) => {
   const isLeftPriceScaleVisible = chart.priceScale('left').options().visible
 
+  const offset = computeNumberOfDaysBetweenTwoDates(
+    new Date(candlesticks.at(0)?.date || 0),
+    new Date(GENESIS_DAY),
+  )
+
   const slicedDataList = range
     ? candlesticks.slice(
-        Math.ceil(range.from < 0 ? 0 : range.from),
-        Math.floor(range.to) + 1,
+        Math.ceil(range.from - offset < 0 ? 0 : range.from - offset),
+        Math.floor(range.to - offset) + 1,
       )
     : []
 

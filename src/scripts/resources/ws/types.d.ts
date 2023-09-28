@@ -1,5 +1,5 @@
 interface ResourcesWS {
-  latestCandle: ResourceWS<CandlestickDataWithVolume>
+  latestCandle: ResourceWS<FullCandlestick>
 }
 
 interface ResourceWS<T> {

@@ -12,7 +12,6 @@ import {
   renderChart,
   run,
   scrollIntoView,
-  updateLastCandlestick,
 } from '/src/scripts'
 import { createASS } from '/src/solid'
 
@@ -59,8 +58,6 @@ export const App = () => {
 
     window.history.replaceState(null, '', urlParams.toString())
   })
-
-  createEffect(() => updateLastCandlestick(latestCandle.latest()))
 
   createEffect(() => {
     const latestClose = latestCandle.latest()?.close

@@ -55,7 +55,7 @@ export const createStandardVariationsLineSeries = (
 export const setStandardVariationsDatasets = (
   standardVariationsList: ReturnType<typeof createStandardVariationsLineSeries>,
   dataset: DatedSingleValueData[],
-  candlesticks: CandlestickDataWithVolume[] | undefined,
+  candlesticks: FullCandlestick[] | undefined,
 ) => {
   const start =
     candlesticks?.findIndex(

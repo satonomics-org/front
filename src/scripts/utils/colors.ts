@@ -16,8 +16,17 @@ ColorSpace.register(sRGB)
 ColorSpace.register(Lab)
 ColorSpace.register(OKLCH)
 
-export const convertCandleToColor = (candle: DatedCandlestickData) =>
-  (candle.close || 1) > (candle.open || 0) ? colors.up : colors.down
+export const convertCandleToColor = (
+  candle: DatedCandlestickData,
+  inverse?: boolean,
+) =>
+  (candle.close || 1) > (candle.open || 0)
+    ? !inverse
+      ? colors.up
+      : colors.down
+    : !inverse
+    ? colors.down
+    : colors.up
 
 export const mixColors = (
   color1: string,
@@ -74,12 +83,17 @@ export const colors = {
   profit: twc.green[500],
   down: twc.red[500],
   up: twc.green[500],
-  Tether: twc.emerald[500],
-  'USD Coin': twc.blue[500],
-  'Binance USD': twc.yellow[500],
-  Dai: twc.amber[500],
-  TrueUSD: twc.indigo[500],
-  Frax: twc.neutral[500],
+  bitcoin: twc.orange[500],
+  ethereum: twc.indigo[500],
+  usdt: twc.emerald[500],
+  usdc: twc.blue[500],
+  ust: twc.red[500],
+  busd: twc.yellow[500],
+  usdd: twc.emerald[500],
+  frax: twc.neutral[500],
+  dai: twc.amber[500],
+  tusd: twc.indigo[500],
+  pyusd: twc.blue[500],
 }
 
 const colorToHex = (color: ColorTypes | number) =>

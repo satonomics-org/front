@@ -20,29 +20,22 @@ export const convertJSONToValues = (json: any) =>
     : undefined
 
 export const createBackEndResource = (path: string) =>
-  createResourceHTTP<DatedSingleValueData[]>({
+  createResourceHTTP({
     url: computeBackEndURL(path),
     customFetch: retryingFetch,
     transform: convertJSONToValues,
   })
 
-export const createResourceHTTP = <
-  T extends Array<any>,
-  F extends Array<any> = T,
->({
+export const createResourceHTTP = <T extends Array<any>>({
   url,
   customFetch,
   transform,
-  cached,
-  map,
 }: {
   url: string
   customFetch: (path: string, init?: RequestInit) => Promise<ResponseWithJSON>
   transform?: (json: any) => T | undefined
-  map?: (current: T[number], index: number, arr: T[number][]) => F[number]
-  cached?: T
 }) => {
-  const values = createASS(null as F | null)
+  const values = createASS(null as T | null)
 
   const loading = createASS(false)
 
@@ -53,21 +46,11 @@ export const createResourceHTTP = <
     return transform ? transform(json) : (json as T)
   }
 
-  const setValues = (_values: T) =>
-    values.set(() => {
-      const final = [...(cached || ([] as unknown as T)), ..._values]
-
-      if (map) {
-        const modifiedFinal = final.map(map)
-        return modifiedFinal as F
-      } else {
-        return final as F
-      }
-    })
-
   const throttledFetch = leading(
     throttle,
     async () => {
+      const url = resource.url
+
       if (
         lastSuccessfulFetch &&
         new Date().valueOf() - lastSuccessfulFetch.valueOf() < TEN_SECOND_IN_MS
@@ -81,33 +64,33 @@ export const createResourceHTTP = <
       try {
         cache = await caches.open('resources-cache')
 
-        const cachedResult = await cache.match(url)
+        const cachedResponse = await cache.match(url.toString())
 
-        if (cachedResult) {
-          const _values = await reponseToValues(cachedResult)
+        if (cachedResponse) {
+          const _values = await reponseToValues(cachedResponse)
 
           if (_values) {
             console.log('values: setting cached...')
-            setValues(_values)
+            values.set(() => _values)
           }
         }
       } catch {}
 
-      const fetchedResult = await customFetch(url)
+      const fetchedResponse = await customFetch(url.toString())
 
-      const clonedFetchedResult = fetchedResult.clone()
+      const clonedResponse = fetchedResponse.clone()
 
-      const _values = await reponseToValues(fetchedResult)
+      const _values = await reponseToValues(fetchedResponse)
 
       if (_values) {
         lastSuccessfulFetch = new Date()
 
         if (cache) {
-          await cache.put(url, clonedFetchedResult)
+          await cache.put(url, clonedResponse)
         }
 
         console.log('values: setting fetched...')
-        setValues(_values)
+        values.set(() => _values)
       }
 
       loading.set(false)
@@ -115,7 +98,7 @@ export const createResourceHTTP = <
     ONE_SECOND_IN_MS,
   )
 
-  const resource: ResourceHTTP<T, F> = {
+  const resource: ResourceHTTP<T> = {
     fetch: throttledFetch,
     values,
     loading,

@@ -1,18 +1,42 @@
-import { chartState, colors, convertCandleToColor } from '/src/scripts'
+import {
+  chartState,
+  colors,
+  convertCandleToColor,
+  convertNormalCandleToGoldPerBitcoinCandle,
+  convertNormalCandleToSatCandle,
+} from '/src/scripts'
 
 export const updateLastCandlestick = (
-  candlestick?: CandlestickDataWithVolume | null,
+  candlestick: DatedCandlestickData | null,
+  datasets: Datasets,
+  options?: PriceSeriesOptions,
 ) => {
   if (!candlestick || !chartState.chart) return
 
+  const isInGoldMode = options?.priceMode === 'gold'
+  const isInSatsMode = options?.priceMode === 'sats'
+
   try {
-    chartState.priceSeries?.update({ ...candlestick, value: candlestick.close })
+    const copied = {
+      ...(isInSatsMode
+        ? convertNormalCandleToSatCandle(candlestick)
+        : isInGoldMode
+        ? convertNormalCandleToGoldPerBitcoinCandle(
+            candlestick,
+            datasets.goldPrice.values()?.at(-1)?.value,
+          )
+        : candlestick),
+      value: 0,
+    }
+    copied.value = copied.close
+
+    chartState.priceSeries?.update(copied)
 
     chartState.priceLine?.applyOptions({
-      price: candlestick.close,
+      price: copied.value,
       color:
         chartState.priceSeries?.seriesType() === 'Candlestick'
-          ? convertCandleToColor(candlestick)
+          ? convertCandleToColor(copied, isInSatsMode)
           : colors.white(),
     })
   } catch {}

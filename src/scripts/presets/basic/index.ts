@@ -1,6 +1,8 @@
-import { minimalPreset } from './minimal'
+import { dollarsPerBitcoinPreset } from './dollarsPerBitcoin'
+import { goldPerBitcoinPreset } from './goldPerBitcoin'
+import { satsPerDollarPreset } from './satsPerDollar'
 
 export const basicPresetsGroup = {
   name: 'Basic',
-  list: [minimalPreset],
+  list: [dollarsPerBitcoinPreset, satsPerDollarPreset, goldPerBitcoinPreset],
 }

@@ -1,5 +1,5 @@
 import { hashPricePreset } from './hashPrice'
-import { hashratePreset } from './hashrate'
+import { hashRatePreset } from './hashRate'
 import { puellMultiplePreset } from './puell'
 import { minersRevenueBitcoinPreset } from './revenueBitcoin'
 import { minersRevenueDollarsPreset } from './revenueDollars'
@@ -7,7 +7,7 @@ import { minersRevenueDollarsPreset } from './revenueDollars'
 export const minersPresetsGroup = {
   name: 'Miners',
   list: [
-    hashratePreset,
+    hashRatePreset,
     minersRevenueBitcoinPreset,
     minersRevenueDollarsPreset,
     puellMultiplePreset,

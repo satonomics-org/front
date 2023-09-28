@@ -4,4 +4,5 @@ interface PriceSeriesOptions {
   inverseColors?: boolean
   seriesOptions?: DeepPartial<SeriesOptionsCommon>
   priceScaleOptions?: DeepPartial<PriceScaleOptions>
+  priceMode?: 'normal' | 'sats' | 'gold'
 }

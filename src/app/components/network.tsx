@@ -9,7 +9,7 @@ export const Network = (props: Props) => {
   const fetching = createMemo(() =>
     Object.values(props.resources)
       .filter((resource) => 'loading' in resource)
-      .some((resource: ResourceHTTP) => resource.loading()),
+      .some((resource: ResourceHTTP<any>) => resource.loading()),
   )
 
   return (

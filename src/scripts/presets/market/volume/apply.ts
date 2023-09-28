@@ -1,8 +1,6 @@
 import {
   chartState,
   colors,
-  computeMonthlyMovingAverage,
-  convertCandleToColor,
   createHistogramSeries,
   createLineSeries,
   darken,

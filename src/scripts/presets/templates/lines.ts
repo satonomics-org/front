@@ -3,24 +3,40 @@ import { createLineSeries, resetLeftPriceScale } from '/src/scripts'
 export const applyDifferentLinesPreset = ({
   chart,
   list,
+  priceScaleOptions,
 }: {
   chart: IChartApi
+  priceScaleOptions?: FullPriceScaleOptions
   list: {
-    dataset?: Dataset
-    values?: Accessor<DatedSingleValueData[] | null>
+    dataset: Dataset
     color: string
-    title: string
+    title?: string
   }[]
 }) => {
-  resetLeftPriceScale(chart)
+  const { halved } = priceScaleOptions || {}
 
-  list.forEach(({ dataset, values, color, title }) => {
+  resetLeftPriceScale(chart, {
+    visible: halved,
+    ...priceScaleOptions,
+  })
+
+  list.forEach(({ dataset, color, title }) => {
     const series = createLineSeries(chart, {
       color,
       title,
-      autoscaleInfoProvider: undefined,
+      ...(halved
+        ? {
+            priceScaleId: 'left',
+          }
+        : {
+            autoscaleInfoProvider: undefined,
+          }),
     })
 
-    createEffect(() => series.setData(dataset?.values() || values?.() || []))
+    createEffect(() => series.setData(dataset?.values() || []))
   })
+
+  return {
+    halved,
+  }
 }

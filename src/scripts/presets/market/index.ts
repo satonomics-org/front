@@ -1,4 +1,5 @@
-import { stablecoinsMarketCapsPreset } from './stablecoins'
+import { sthPriceHighLowPreset } from './highLow'
+import { marketCapsPresets } from './marketCaps'
 import { krakenBitcoinVolumePreset, krakenDollarVolumePreset } from './volume'
 
 export const marketPresetsGroup = {
@@ -6,6 +7,7 @@ export const marketPresetsGroup = {
   list: [
     krakenBitcoinVolumePreset,
     krakenDollarVolumePreset,
-    // stablecoinsMarketCapsPreset,
+    sthPriceHighLowPreset,
+    ...marketCapsPresets,
   ],
 }

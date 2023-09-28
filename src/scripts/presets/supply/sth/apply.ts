@@ -1,4 +1,9 @@
-import { colors, createLineSeries, resetLeftPriceScale } from '/src/scripts'
+import {
+  colors,
+  createHistogramSeries,
+  createLineSeries,
+  resetLeftPriceScale,
+} from '/src/scripts'
 
 export const applyPreset: ApplyPreset = ({ chart, datasets }) => {
   resetLeftPriceScale(chart, {
@@ -24,11 +29,25 @@ export const applyPreset: ApplyPreset = ({ chart, datasets }) => {
     title: 'Profit',
   })
 
-  const { sthSupply, sthInProfit, sthInLoss } = datasets
+  // const momentum = createHistogramSeries(chart, {
+  //   priceScaleId: undefined,
+  // })
+
+  const { sthSupply, sthInProfit, sthInLoss, sthReturnsMomentum } = datasets
 
   createEffect(() => all.setData(sthSupply.values() || []))
   createEffect(() => profit.setData(sthInProfit.values() || []))
   createEffect(() => loss.setData(sthInLoss.values() || []))
+  // createEffect(() =>
+  //   momentum.setData(
+  //     (sthReturnsMomentum.values() || []).map(({ date, time, value }) => ({
+  //       date,
+  //       time,
+  //       value: 1,
+  //       color: value ? colors.up : colors.down,
+  //     })),
+  //   ),
+  // )
 
   return {
     halved: true,

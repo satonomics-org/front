@@ -1,5 +1,3 @@
-import { makeTimer } from '@solid-primitives/timer'
-
 import {
   chartState,
   colors,
@@ -9,7 +7,6 @@ import {
   createPriceLine,
   setMinMaxMarkers,
   setTimeScale,
-  updateLastCandlestick,
 } from '/src/scripts'
 
 const checkIfUpClose = (chart: IChartApi, range?: LogicalRange | null) => {
@@ -39,14 +36,23 @@ export const applyPriceSeries = (
     options?.halved ??
     chart.priceScale('left').options().visible
 
+  const priceMode = options?.priceMode
+  const candlesticks = (
+    priceMode === 'sats'
+      ? datasets.satsPrice
+      : priceMode === 'gold'
+      ? datasets.goldPerBitcoin
+      : datasets.candlesticks
+  ).values
+
   if (seriesType === 'Candlestick') {
     const series = createCandlesticksSeries(chart, {
-      inverseColors: false,
+      inverseColors: priceMode === 'sats',
       lowerOpacity,
       ...options?.seriesOptions,
     })
 
-    series.setData(datasets.candlesticks.values() || [])
+    createEffect(() => series.setData(candlesticks() || []))
 
     chartState.priceSeries = series
   } else {
@@ -56,7 +62,16 @@ export const applyPriceSeries = (
       ...options?.seriesOptions,
     })
 
-    series.setData(datasets.closes.values() || [])
+    createEffect(() =>
+      series.setData(
+        (priceMode === 'sats'
+          ? datasets.satsPriceCloses
+          : priceMode === 'gold'
+          ? datasets.goldPerBitcoinCloses
+          : datasets.closes
+        ).values() || [],
+      ),
+    )
 
     chartState.priceSeries = series
   }
@@ -73,23 +88,11 @@ export const applyPriceSeries = (
     ...options?.priceScaleOptions,
   })
 
-  finalizePriceSeries(
-    chart,
-    chartState.priceSeries,
-    datasets.candlesticks.values() || [],
-  )
-}
+  const series = chartState.priceSeries
 
-const finalizePriceSeries = (
-  chart: IChartApi,
-  series: ISeriesApi<'Line' | 'Candlestick'>,
-  candlesticks: CandlestickDataWithVolume[],
-) => {
   chartState.priceLine = createPriceLine(series)
 
-  updateLastCandlestick(candlesticks.at(-1))
+  setMinMaxMarkers(chart, series, candlesticks() || [], chartState.range)
 
-  setMinMaxMarkers(chart, series, candlesticks, chartState.range)
-
-  setTimeScale(chart, series, candlesticks)
+  setTimeScale(chart, series, candlesticks() || [])
 }

@@ -1,6 +1,7 @@
 export * from './math'
 
 export * from './colors'
+export * from './consts'
 export * from './date'
 export * from './debounce'
 export * from './locale'

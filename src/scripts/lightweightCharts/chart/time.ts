@@ -5,7 +5,7 @@ import { chartState, debounce, setMinMaxMarkers } from '/src/scripts'
 export const setTimeScale = (
   chart: IChartApi,
   series: ISeriesApi<'Line' | 'Candlestick'>,
-  candlesticks: CandlestickDataWithVolume[],
+  candlesticks: DatedCandlestickData[],
 ) => {
   const debouncedCallback = debounce((range: LogicalRange | null) => {
     try {

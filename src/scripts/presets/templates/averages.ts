@@ -44,34 +44,36 @@ export const applyAveragesPreset = (params: {
           monthly: colors.cyan[500],
         }
 
-  const daily = createLineSeries(chart, {
-    ...options,
-    color: darken(palette.daily),
-    title: 'Raw',
-  })
+  ;[
+    {
+      color: darken(palette.daily),
+      title: 'Raw',
+      dataset: dataset.values,
+    },
+    {
+      color: palette.weekly,
+      title: '1W MA',
+      dataset: dataset.averages.weekly,
+    },
+    {
+      color: palette.monthly,
+      title: '1M MA',
+      dataset: dataset.averages.monthly,
+    },
+    {
+      color: colors.white(),
+      title: '1Y MA',
+      dataset: dataset.averages.yearly,
+    },
+  ].forEach(({ color, title, dataset }) => {
+    const series = createLineSeries(chart, {
+      ...options,
+      color,
+      title,
+    })
 
-  const weekly = createLineSeries(chart, {
-    ...options,
-    color: palette.weekly,
-    title: '1W MA',
+    createEffect(() => series.setData(dataset() || []))
   })
-
-  const monthly = createLineSeries(chart, {
-    ...options,
-    color: palette.monthly,
-    title: '1M MA',
-  })
-
-  const yearly = createLineSeries(chart, {
-    ...options,
-    color: colors.white(),
-    title: '1Y MA',
-  })
-
-  createEffect(() => daily.setData(dataset.values() || []))
-  createEffect(() => weekly.setData(dataset.averages.weekly() || []))
-  createEffect(() => monthly.setData(dataset.averages.monthly() || []))
-  createEffect(() => yearly.setData(dataset.averages.yearly() || []))
 
   return {
     halved: true,

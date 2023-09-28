@@ -35,10 +35,10 @@
   "devDependencies": {
     "@darkobits/vite-plugin-favicons": "^0.3.0",
     "@ianvs/prettier-plugin-sort-imports": "^4.1.0",
-    "@iconify-json/tabler": "^1.1.91",
+    "@iconify-json/tabler": "^1.1.92",
     "@tailwindcss/container-queries": "^0.1.1",
-    "@types/marked": "^5.0.1",
-    "autoprefixer": "^10.4.15",
+    "@types/marked": "^5.0.2",
+    "autoprefixer": "^10.4.16",
     "jsdom": "^22.1.0",
     "postcss": "^8.4.30",
     "prettier": "^3.0.3",
@@ -52,6 +52,6 @@
     "vite-plugin-pwa": "^0.16.5",
     "vite-plugin-solid": "^2.7.0",
     "vite-plugin-solid-svg": "^0.6.4",
-    "vitest": "^0.34.4"
+    "vitest": "^0.34.5"
   }
 }

@@ -1,5 +1,3 @@
-import { getOwner } from 'solid-js'
-
 import {
   applyPriceSeries,
   chartState,
@@ -17,7 +15,7 @@ let dispose: VoidFunction | undefined = undefined
 export const renderChart = async (params: {
   id: string
   datasets: Datasets
-  latestCandle: Accessor<CandlestickDataWithVolume | null>
+  latestCandle: Accessor<FullCandlestick | null>
 }) =>
   untrack(() => {
     dispose?.()
@@ -29,7 +27,7 @@ export const renderChart = async (params: {
         renderChart(params)
       }
 
-      const { id, datasets } = params
+      const { id, datasets, latestCandle } = params
 
       console.log(`preset: ${id}`)
 
@@ -58,7 +56,13 @@ export const renderChart = async (params: {
 
         applyPriceSeries(chart, datasets, options)
 
-        updateLastCandlestick(params.latestCandle())
+        createEffect(() =>
+          updateLastCandlestick(
+            latestCandle() || datasets.candlesticks.values()?.at(-1) || null,
+            datasets,
+            options,
+          ),
+        )
       } catch {}
     })
   })
